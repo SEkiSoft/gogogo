@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
-func handler(w http.ReposonseWriter, r *http.Request) {
+func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "You have reached %s\n", r.URL.Path[1:]);
 }
 
