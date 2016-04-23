@@ -1,1 +1,5 @@
 package ai
+
+func NextMove() {
+	
+}
