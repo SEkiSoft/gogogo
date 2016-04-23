@@ -1,9 +1,8 @@
 package main 
 
 import (
-	"ai"
-	"controller"
-	"model"
+	//"gogogo/ai"
+	"gogogo/model"
 )
 
 func main () {
