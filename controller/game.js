@@ -8,6 +8,11 @@ function newGame(boardLines, ai) {
 	return 12345;
 }
 
+//Existing game
+function existingGame(gameID) {
+	//Loads existing game from server
+}
+
 //Send move
 function sendMove(x, y, player) {
 	//Sends move to server
@@ -19,6 +24,16 @@ function sendMove(x, y, player) {
 }
 
 //Get state
-function getState() {
+function getState(gameID) {
 	//Gets current game state from server
+}
+
+//Draw grid
+function drawGrid(boardLines) {
+	//Draws grid onto HTML5 canvas
+}
+
+//Draw stones
+function drawStones(black, white) {
+	//Draws black and white stones onto the board
 }
