@@ -11,16 +11,23 @@ function newGame(boardLines, ai) {
 //Existing game
 function existingGame(gameID) {
 	//Loads existing game from server
+	//Using POST
 }
 
 //Send move
 function sendMove(x, y, player) {
-	//Sends move to server
+	//Sends move to server using POST
 	//Returns:
 	//	-1: communication error
 	//	 0: invalid move
 	//   1: valid move, accepted
 	return -1; 
+}
+
+//Get AI move
+function getAI() {
+	//Query AI move from server using POST
+	return [0, 0];
 }
 
 //Get state

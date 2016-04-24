@@ -1,6 +1,7 @@
 package model
 
 import (
+	"gogogo/ai"
 	"fmt"
 	"net/http"
 )
@@ -26,3 +27,5 @@ func ServerStart() {
 	http.ListenAndServe(":8080", nil);
 }
 
+//TODO:
+//Database work
