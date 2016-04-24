@@ -4,6 +4,8 @@ import (
 	"gogogo/ai"
 	"fmt"
 	"net/http"
+	"database/sql"
+	"github.com/mattn/sql-lite3"
 )
 
 //Main handler for requests
