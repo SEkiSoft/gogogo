@@ -2,30 +2,29 @@ package model
 
 import (
 	"gogogo/ai"
-	"fmt"
+	"html/template"
 	"net/http"
 	"database/sql"
 	"github.com/mattn/sql-lite3"
 )
 
-//Main handler for requests
-func Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "You have reached %s\n", r.URL.Path[1:]);
+//Handler to create or load game
+func gameHandler(w http.ResponseWriter, r *http.Request) {
 	//Find gameID in database
 		//Send game via JSON if found
 	//Otherwise create new game
 		//Send new game via JSON
-	//Deal with POST requests for moves
 }
 
-//Process board
-func processBoard() {
-	//Processes the current game state
-	//Takes out pieces as needed
+//Handler for moves
+func moveHandler(w http.ResponseWriter, r *http.Request) {
+	//Handle moves as needed
+	//Refresh view
 }
 
 func ServerStart() {
-	http.HandleFunc("/", Handler);
+	http.HandleFunc("/game/", gameHandler);
+	http.HandleFunc("/game/move/", moveHandler);
 	http.ListenAndServe(":8080", nil);
 }
 
