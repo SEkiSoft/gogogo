@@ -9,9 +9,9 @@ import (
 )
 
 type Board struct {
-	numLines int;
-	board [][]int;
-	id int;
+	numLines uint;
+	board [][]uint;
+	id string;
 }
 
 //Handler to create or load game
