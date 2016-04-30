@@ -11,6 +11,7 @@ import (
 type Board struct {
 	numLines int;
 	board [][]int;
+	id int;
 }
 
 //Handler to create or load game
@@ -34,6 +35,8 @@ func moveHandler(w http.ResponseWriter, r *http.Request) {
 //Load game
 func loadGame(id string) Board{
 	//Gets gameID, and loads game
+	b := new(Board);
+	b.id = id;
 }
 
 func ServerStart() {
