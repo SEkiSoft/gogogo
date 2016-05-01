@@ -4,6 +4,7 @@ import (
 	"gogogo/ai"
 	"html/template"
 	"net/http"
+	"io"
 	"database/sql"
 	"github.com/mattn/sql-lite3"
 )
@@ -16,7 +17,42 @@ type Board struct {
 
 const idLen int = 8;
 
-//Handler to create or load game
+//Get valid ID
+//Random generation
+func initRand() {
+	rand.Seed(time.Now().UnixNano());
+}
+const randRunes =[]rune("1234567890abcdefghijklmnopqrstuvwxyz");
+func randID() string {
+	b := make([]rune, idLen);
+	for i := range b {
+		b[i] = randRunes[rand.Intn(len(randRunes))];
+	}
+	return string(b);
+}
+
+//Handler to create new game
+func newGameHandler(w http.ResponseWriter, r *http.Request) {
+	//Return next available ID
+	id := randID();
+
+	//Check for ID availability
+	//Highly unlikely
+
+
+	//Init game
+	initGame(id);
+
+	//Send ID
+	io.WriteString(w, id);
+}
+
+//Initialize game to DB
+func initGame(id string) {
+
+}
+
+//Handler to load game
 func gameHandler(w http.ResponseWriter, r *http.Request) {
 	//Find gameID in database
 	id := r.URL.Path[len("/game/"):len("/game/")+idLen];
@@ -59,6 +95,7 @@ func loadGame(id string) Board{
 
 func ServerStart() {
 	http.HandleFunc("/game/", gameHandler);
+	http.HandleFunc("/newgame/", newGameHandler);
 	http.HandleFunc("/move/", moveHandler);
 	http.HandleFunc("/ai/", aiHandler);
 	http.ListenAndServe(":80", nil);

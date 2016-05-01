@@ -1,11 +1,22 @@
 //Client Side JavaScript code
 //Game state is stored server side, client sends moves only
 
+//Server URL
+const serverRoot = "http://localhost";
+var id = "";
+
 //New Game
 function newGame(boardLines, ai) {
 	//Tells the server to start a new game
-	//Returns game ID
-	return 12345;
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', "$serverRoot/newGame", false);
+	xhr.send();
+
+	//Gets game ID
+	id = JSON.parse(xhr.responseText).id;
+
+	//Loads game state
+	drawGame(id);
 }
 
 //Existing game
@@ -26,13 +37,23 @@ function sendMove(x, y, player, gameID) {
 
 //Get AI move
 function getAI() {
-	//Query AI move from server using POST
-	return [0, 0];
+	//Query AI move from server
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', "$serverRoot/ai/$id", false);
+	xhr.send();
+
+	//Get response
+	var response = JSON.parse(xhr.responseText);
+	var x = response.x;
+	var y = response.y;
+	var gg = response.gg;
+
+	//Process response
 }
 
-//Get state
-function getState(gameID) {
-	//Gets current game state from server
+//Draw game
+function drawGame(gameID) {
+
 }
 
 //Draw grid
