@@ -53,6 +53,27 @@ func NextMove(board model.Board, player int) (uint, uint, bool){
 	gp := make([]uint, cur);
 }
 
+/*
+AI Modelling:
+Every combination of (playerGroups, playerLiberties, playerStones, opponentGroups, opponentLiberties, opponentStones) represent a situation
+Next moves are represented by pG, pL, pS, oG, oL, oS and an operator.
+Operators are +, -, * (don't care), < (<= current), > (>= current), and =
+Analyze the current situation:
+-If encountered before, choose best move if SAMPLE_COUNT > THRESHOLD
+-Otherwise, search other situations using constraints: min(pG, pL, pS), vary each variable up to max(pG, pL, pS) - min
+-Otherwise, pick a move at random
+*/
+
+/*
+Machine Learning:
+Record every move made, and the preceding situations
+Record winning player
+Propagate back data
+Update winning probabilities of each move at each given situation
+Analysis runs both ways
+Run analysis in batches (every day?)
+*/
+
 //DFS time
 func findGroup(g *[][]int, x int, y int, player int, cur int) {
 	if(board[i][j] == player) {
