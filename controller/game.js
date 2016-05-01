@@ -15,7 +15,7 @@ function existingGame(gameID) {
 }
 
 //Send move
-function sendMove(x, y, player) {
+function sendMove(x, y, player, gameID) {
 	//Sends move to server using POST
 	//Returns:
 	//	-1: communication error
