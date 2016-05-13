@@ -5,17 +5,29 @@ import (
 	"html/template"
 	"net/http"
 	"io"
+	"log"
+	"encoding/json"
 	"database/sql"
-	"github.com/mattn/sql-lite3"
+	_ "github.com/mxk/go-sqlite/sqlite3"
 )
 
 type Board struct {
-	numLines uint;
-	board [][]uint;
-	id string;
+	numLines uint
+	board [][]uint
+	id string
 }
 
 const idLen int = 8;
+
+func ServerStart() {
+	http.HandleFunc("/game/", gameHandler)
+	http.HandleFunc("/newgame/", newGameHandler)
+	http.HandleFunc("/move/", moveHandler)
+	http.HandleFunc("/ai/", aiHandler)
+	http.ListenAndServe(":80", nil)
+	//Disabling HTTPS for now
+	//http.ListenAndServe(":443", nil);
+}
 
 //Get valid ID
 //Random generation
@@ -24,39 +36,86 @@ func initRand() {
 }
 const randRunes =[]rune("1234567890abcdefghijklmnopqrstuvwxyz");
 func randID() string {
-	b := make([]rune, idLen);
+	b := make([]rune, idLen)
 	for i := range b {
-		b[i] = randRunes[rand.Intn(len(randRunes))];
+		b[i] = randRunes[rand.Intn(len(randRunes))]
 	}
-	return string(b);
+	return string(b)
 }
 
 //Handler to create new game
 func newGameHandler(w http.ResponseWriter, r *http.Request) {
+	//Get board size
+	s := r.URL.Path[len("/game/"):len("/game/")+2]
+	size, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	//Return next available ID
-	id := randID();
+	id := randID()
 
-	//Check for ID availability
-	//Highly unlikely
+	//Open DB connection
+	db, err := sql.Open("sqlite3", "user:password@tcp(127.0.0.1:3306)/hello")
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	//Ping DB
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//Attempt to get game from DB
+	rows, err := db.Query("SELECT * FROM games WHERE id = ?;", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Until unique row found
+	while(rows != nil) {
+		id = randId()
+		ros, err := db.Query("SELECT * FROM games WHERE id = ?;", id)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	//Init game
-	initGame(id);
+	initGame(db, id, size)
 
 	//Send ID
-	io.WriteString(w, id);
+	w.Header().Set("Content-Type", "application/javascript")
+	idJson := make(map[string]string)
+	idJson["id"] = id;
+	json.NewEncoder(w).Encode(Payload{idJson})
+
 }
 
 //Initialize game to DB
-func initGame(id string) {
+func initGame(db *sql.DB, id string, size int) {
+	board := int[][]
+	turn := 0;
 
+	//Open DB connection
+	db, err := sql.Open("sqlite3", "user:password@tcp(127.0.0.1:3306)/hello")
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Insert into DB
+	res, err := db.Exec("INSERT INTO games(id, board, size, turn) VALUES(?, ?, ?, ?);", id, board, size, turn)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db.Close();
 }
 
 //Handler to load game
 func gameHandler(w http.ResponseWriter, r *http.Request) {
 	//Find gameID in database
-	id := r.URL.Path[len("/game/"):len("/game/")+idLen];
-	b := loadGame(id);
+	id := r.URL.Path[len("/game/"):len("/game/")+idLen]
+	b := loadGame(id)
 	//Send game via JSON
 }
 
@@ -92,16 +151,3 @@ func loadGame(id string) Board{
 	b := new(Board);
 	b.id = id;
 }
-
-func ServerStart() {
-	http.HandleFunc("/game/", gameHandler);
-	http.HandleFunc("/newgame/", newGameHandler);
-	http.HandleFunc("/move/", moveHandler);
-	http.HandleFunc("/ai/", aiHandler);
-	http.ListenAndServe(":80", nil);
-	//Disabling HTTPS for now
-	//http.ListenAndServe(":443", nil);
-}
-
-//TODO:
-//Database work
