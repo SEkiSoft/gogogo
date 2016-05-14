@@ -11,31 +11,25 @@ import (
 	_ "github.com/mxk/go-sqlite/sqlite3"
 )
 
+const idLen int = 8
+const randRunes =[]rune("1234567890abcdefghijklmnopqrstuvwxyz")
+
 type Board struct {
 	numLines uint
 	board [][]uint
 	id string
 }
 
-const idLen int = 8;
-
 func ServerStart() {
 	http.HandleFunc("/game/", gameHandler)
 	http.HandleFunc("/newgame/", newGameHandler)
 	http.HandleFunc("/move/", moveHandler)
 	http.HandleFunc("/ai/", aiHandler)
-	http.ListenAndServe(":80", nil)
-	//Disabling HTTPS for now
-	//http.ListenAndServe(":443", nil);
+	http.ListenAndServe(":8070", nil)
 }
 
-//Get valid ID
-//Random generation
-func initRand() {
-	rand.Seed(time.Now().UnixNano());
-}
-const randRunes =[]rune("1234567890abcdefghijklmnopqrstuvwxyz");
 func randID() string {
+	rand.Seed(time.Now().UnixNano());
 	b := make([]rune, idLen)
 	for i := range b {
 		b[i] = randRunes[rand.Intn(len(randRunes))]
@@ -45,34 +39,22 @@ func randID() string {
 
 //Handler to create new game
 func newGameHandler(w http.ResponseWriter, r *http.Request) {
-	//Get board size
 	s := r.URL.Path[len("/game/"):len("/game/")+2]
 	size, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//Return next available ID
 	id := randID()
 
-	//Open DB connection
 	db, err := sql.Open("sqlite3", "user:password@tcp(127.0.0.1:3306)/hello")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	//Ping DB
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//Attempt to get game from DB
 	rows, err := db.Query("SELECT * FROM games WHERE id = ?;", id)
 	if err != nil {
 		log.Fatal(err)
 	}
-	//Until unique row found
 	while(rows != nil) {
 		id = randId()
 		ros, err := db.Query("SELECT * FROM games WHERE id = ?;", id)
@@ -80,22 +62,18 @@ func newGameHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	}
-
-	//Init game
 	initGame(db, id, size)
 
-	//Send ID
 	w.Header().Set("Content-Type", "application/javascript")
 	idJson := make(map[string]string)
 	idJson["id"] = id;
 	json.NewEncoder(w).Encode(Payload{idJson})
-
 }
 
 //Initialize game to DB
 func initGame(db *sql.DB, id string, size int) {
 	board := int[][]
-	turn := 0;
+	turn := 0
 
 	//Open DB connection
 	db, err := sql.Open("sqlite3", "user:password@tcp(127.0.0.1:3306)/hello")
@@ -108,7 +86,7 @@ func initGame(db *sql.DB, id string, size int) {
 		log.Fatal(err)
 	}
 
-	db.Close();
+	db.Close()
 }
 
 //Handler to load game
@@ -122,11 +100,11 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 //Handler for moves
 func moveHandler(w http.ResponseWriter, r *http.Request) {
 	//Handle moves as needed
-	idx := len("/move/") + idLen;
-	id := r.URL.Path[len("/move/"):len("/move/")+idLen];
-	player := r.URL.Path[idx:idx+2];
-	x := r.URL.Path[idx+2:idx+4];
-	y := r.URL.Path[idx+4:idx+6];
+	idx := len("/move/") + idLen
+	id := r.URL.Path[len("/move/"):len("/move/")+idLen]
+	player := r.URL.Path[idx:idx+2]
+	x := r.URL.Path[idx+2:idx+4]
+	y := r.URL.Path[idx+4:idx+6]
 	//Process move
 	//Write move to DB
 	//Rely on client to refresh view
@@ -135,12 +113,12 @@ func moveHandler(w http.ResponseWriter, r *http.Request) {
 //AI queries
 func aiHandler(w http.ResponseWriter, r *http.Request) {
 	//Get id and player
-	idx := len("/ai/") + idLen;
-	id := r.URL.Path[len("/ai/"):len("/ai/")+idLen];
-	player := r.URL.Path[idx:idx+2];
+	idx := len("/ai/") + idLen
+	id := r.URL.Path[len("/ai/"):len("/ai/")+idLen]
+	player := r.URL.Path[idx:idx+2]
 
 	//Call AI
-	x, y, gg := ai.NextMove(loadGame(id), player);
+	x, y, gg := ai.NextMove(loadGame(id), player)
 
 	//Send moves to client
 }
@@ -148,6 +126,6 @@ func aiHandler(w http.ResponseWriter, r *http.Request) {
 //Load game
 func loadGame(id string) Board{
 	//Gets gameID, and loads game
-	b := new(Board);
-	b.id = id;
+	b := new(Board)
+	b.id = id
 }
