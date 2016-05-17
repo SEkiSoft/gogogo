@@ -1,15 +1,10 @@
-package ai
-
-type Point struct {
-	uint x
-	uint y
-}
+package model
 
 //NextMove based on board state, whether the player is a 1 or a 2
 //Returns x, y, GG
 // GG = true, ai surrenders
 //Currently does not look-ahead moves
-func NextMove(board model.Board, player int) (uint, uint, bool){
+func (g *Game) NextMove(player bool) Point, bool {
 	//Find groups (assumes dead groups have been removed)
 	//Classify each group as alive, dead, or unsettled
 	//Find number of liberties for each group
@@ -20,7 +15,7 @@ func NextMove(board model.Board, player int) (uint, uint, bool){
 	//4. Kill difficult opponent groups
 
 	//Find groups
-	for i:=0; i < board.numLines; i++ {
+	for i:=0; i < g.board.numLines; i++ {
 		for j:=0; j < board.numLines; j++ {
 			g[i][j] = -1
 		}
@@ -31,8 +26,8 @@ func NextMove(board model.Board, player int) (uint, uint, bool){
 	//White - 2
 	//Empty - 0
 	var cur uint = 0
-	for i:=0; i < len(board); i++ {
-		for j:=0; j < len(board); j++ {
+	for i:=0; i < g.NumLines; i++ {
+		for j:=0; j < g.NumLines; j++ {
 			if(g[i][j] == -1) {
 				findGroup(g, i, j, board[i][j], cur);
 				cur++

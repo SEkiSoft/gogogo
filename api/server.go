@@ -1,7 +1,6 @@
-package model
+package server
 
 import (
-	"gogogo/ai"
 	"html/template"
 	"net/http"
 	"io"
@@ -11,15 +10,6 @@ import (
 	_ "github.com/mxk/go-sqlite/sqlite3"
 )
 
-const idLen int = 8
-const randRunes =[]rune("1234567890abcdefghijklmnopqrstuvwxyz")
-
-type Board struct {
-	numLines uint
-	board [][]uint
-	id string
-}
-
 func ServerStart() {
 	http.HandleFunc("/game/", gameHandler)
 	http.HandleFunc("/newgame/", newGameHandler)
@@ -28,13 +18,45 @@ func ServerStart() {
 	http.ListenAndServe(":8070", nil)
 }
 
-func randID() string {
-	rand.Seed(time.Now().UnixNano());
-	b := make([]rune, idLen)
-	for i := range b {
-		b[i] = randRunes[rand.Intn(len(randRunes))]
-	}
-	return string(b)
+//Handler to load game
+func gameHandler(w http.ResponseWriter, r *http.Request) {
+	//Find gameID in database
+	id := r.URL.Path[len("/game/"):len("/game/")+idLen]
+	b := loadGame(id)
+	//Send game via JSON
+}
+
+//Handler for moves
+func moveHandler(w http.ResponseWriter, r *http.Request) {
+	//Handle moves as needed
+	idx := len("/move/") + idLen
+	id := r.URL.Path[len("/move/"):len("/move/")+idLen]
+	player := r.URL.Path[idx:idx+2]
+	x := r.URL.Path[idx+2:idx+4]
+	y := r.URL.Path[idx+4:idx+6]
+	//Process move
+	//Write move to DB
+	//Rely on client to refresh view
+}
+
+//AI queries
+func aiHandler(w http.ResponseWriter, r *http.Request) {
+	//Get id and player
+	idx := len("/ai/") + idLen
+	id := r.URL.Path[len("/ai/"):len("/ai/")+idLen]
+	player := r.URL.Path[idx:idx+2]
+
+	//Call AI
+	x, y, gg := ai.NextMove(loadGame(id), player)
+
+	//Send moves to client
+}
+
+//Load game
+func loadGame(id string) Board{
+	//Gets gameID, and loads game
+	b := new(Board)
+	b.id = id
 }
 
 //Handler to create new game
@@ -87,45 +109,4 @@ func initGame(db *sql.DB, id string, size int) {
 	}
 
 	db.Close()
-}
-
-//Handler to load game
-func gameHandler(w http.ResponseWriter, r *http.Request) {
-	//Find gameID in database
-	id := r.URL.Path[len("/game/"):len("/game/")+idLen]
-	b := loadGame(id)
-	//Send game via JSON
-}
-
-//Handler for moves
-func moveHandler(w http.ResponseWriter, r *http.Request) {
-	//Handle moves as needed
-	idx := len("/move/") + idLen
-	id := r.URL.Path[len("/move/"):len("/move/")+idLen]
-	player := r.URL.Path[idx:idx+2]
-	x := r.URL.Path[idx+2:idx+4]
-	y := r.URL.Path[idx+4:idx+6]
-	//Process move
-	//Write move to DB
-	//Rely on client to refresh view
-}
-
-//AI queries
-func aiHandler(w http.ResponseWriter, r *http.Request) {
-	//Get id and player
-	idx := len("/ai/") + idLen
-	id := r.URL.Path[len("/ai/"):len("/ai/")+idLen]
-	player := r.URL.Path[idx:idx+2]
-
-	//Call AI
-	x, y, gg := ai.NextMove(loadGame(id), player)
-
-	//Send moves to client
-}
-
-//Load game
-func loadGame(id string) Board{
-	//Gets gameID, and loads game
-	b := new(Board)
-	b.id = id
 }
