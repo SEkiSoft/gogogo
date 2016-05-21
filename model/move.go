@@ -5,6 +5,7 @@ type Move struct {
 	GameId	 string `json:"game_id"`
 	X	 	 uint	`json:"move_x"`
 	Y		 uint	`json:"move_y"`
+	CreateAt int64	`json:"create_at"`
 }
 
 func (m *Move) ToJson() string {
@@ -14,6 +15,10 @@ func (m *Move) ToJson() string {
 	} else {
 		return string(s)
 	}
+}
+
+func (m *Move) PreSave() string {
+	m.CreateAt = GetMillis()
 }
 
 func MoveFromJson(data io.Reader) *Move {

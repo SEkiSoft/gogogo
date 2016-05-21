@@ -1,4 +1,4 @@
-package model
+package ai
 
 //NextMove based on board state, whether the player is a 1 or a 2
 //Returns x, y, GG

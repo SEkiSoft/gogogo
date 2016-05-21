@@ -2,10 +2,8 @@ package model
 
 import (
 	"encoding/json"
-	"io"
-	"unicode/utf8"
-	"bytes"
 	"encoding/base32"
+	"io"
 )
 
 const (
@@ -67,13 +65,4 @@ func (g *Game) PreSave() {
 
 func (g *Game) PreUpdate() {
 	g.UpdateAt = GetMillis()
-}
-
-func NewID() string {
-	var b bytes.Buffer
-	encoder := base32.NewEncoder(encoding, &b)
-	encoder.Write(uuid.NewRandom())
-	encoder.Close()
-	b.Truncate(ID_LENGTH)
-	return b.String()
 }
