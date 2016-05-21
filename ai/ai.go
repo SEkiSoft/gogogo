@@ -1,10 +1,14 @@
 package ai
 
+import (
+	"gogogo/model"
+)
+
 //NextMove based on board state, whether the player is a 1 or a 2
 //Returns x, y, GG
 // GG = true, ai surrenders
 //Currently does not look-ahead moves
-func (g *Game) NextMove(player bool) Point, bool {
+func (g *model.Game) NextMove(player bool) model.Move {
 	//Find groups (assumes dead groups have been removed)
 	//Classify each group as alive, dead, or unsettled
 	//Find number of liberties for each group
@@ -15,9 +19,10 @@ func (g *Game) NextMove(player bool) Point, bool {
 	//4. Kill difficult opponent groups
 
 	//Find groups
-	for i:=0; i < g.board.numLines; i++ {
-		for j:=0; j < board.numLines; j++ {
-			g[i][j] = -1
+	b := g.Board;
+	for i:=0; i < g.NumLines; i++ {
+		for j:=0; j < g.NumLines; j++ {
+			b[i][j] = -1
 		}
 	}
 
@@ -28,8 +33,8 @@ func (g *Game) NextMove(player bool) Point, bool {
 	var cur uint = 0
 	for i:=0; i < g.NumLines; i++ {
 		for j:=0; j < g.NumLines; j++ {
-			if(g[i][j] == -1) {
-				findGroup(g, i, j, board[i][j], cur);
+			if(b[i][j] == -1) {
+				findGroup(b, i, j, g.Board[i][j], cur);
 				cur++
 			}
 		}
@@ -70,7 +75,7 @@ Run analysis in batches (every day?)
 */
 
 //DFS time
-func findGroup(g *[][]int, x int, y int, player int, cur int) {
+func findGroup(g *[][]uint, x int, y int, player int, cur int) {
 	if(board[i][j] == player) {
 		g[i][j] = cur
 

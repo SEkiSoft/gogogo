@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"html/template"
@@ -7,14 +7,13 @@ import (
 	"log"
 	"encoding/json"
 	"database/sql"
+	"gogogo/model"
 	_ "github.com/mxk/go-sqlite/sqlite3"
 )
 
 func ServerStart() {
 	http.HandleFunc("/game/", gameHandler)
-	http.HandleFunc("/newgame/", newGameHandler)
 	http.HandleFunc("/move/", moveHandler)
-	http.HandleFunc("/ai/", aiHandler)
 	http.ListenAndServe(":8070", nil)
 }
 
@@ -37,26 +36,6 @@ func moveHandler(w http.ResponseWriter, r *http.Request) {
 	//Process move
 	//Write move to DB
 	//Rely on client to refresh view
-}
-
-//AI queries
-func aiHandler(w http.ResponseWriter, r *http.Request) {
-	//Get id and player
-	idx := len("/ai/") + idLen
-	id := r.URL.Path[len("/ai/"):len("/ai/")+idLen]
-	player := r.URL.Path[idx:idx+2]
-
-	//Call AI
-	x, y, gg := ai.NextMove(loadGame(id), player)
-
-	//Send moves to client
-}
-
-//Load game
-func loadGame(id string) Board{
-	//Gets gameID, and loads game
-	b := new(Board)
-	b.id = id
 }
 
 //Handler to create new game
