@@ -1,10 +1,10 @@
 package model
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"fmt"
 	"encoding/base32"
 	"encoding/json"
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 

@@ -1,10 +1,9 @@
-package main 
+package main
 
 import (
-	//"gogogo/ai"
 	"gogogo/model"
 )
 
-func main () {
-	model.ServerStart();
+func main() {
+	model.ServerStart()
 }

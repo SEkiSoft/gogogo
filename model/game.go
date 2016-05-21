@@ -1,28 +1,28 @@
 package model
 
 import (
-	"encoding/json"
 	"encoding/base32"
+	"encoding/json"
 	"io"
 )
 
 const (
-	ENCODING = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
-	ID_LENGTH = 26
+	ENCODING     = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
+	ID_LENGTH    = 26
 	MAX_NUMLINES = 19
 	MIN_NUMLINES = 13
 )
 
 type Game struct {
-	Board 		[][]uint `json:"board"`
-	NumLines 	uint	 `json:"numlines"`
-	Turn 		bool	 `json:"turn"`
-	Id 			string	 `json:"id"`
-	IdBlack		string   `json:"id_black"`
-	IdWhite		string   `json:"id_white"`
-	CreateAt	int64	 `json:"create_at"`
-	UpdateAt    int64  	 `json:"update_at"`
-	DeleteAt    int64  	 `json:"delete_at"`
+	Board    [][]uint `json:"board"`
+	NumLines uint     `json:"numlines"`
+	Turn     bool     `json:"turn"`
+	Id       string   `json:"id"`
+	IdBlack  string   `json:"id_black"`
+	IdWhite  string   `json:"id_white"`
+	CreateAt int64    `json:"create_at"`
+	UpdateAt int64    `json:"update_at"`
+	DeleteAt int64    `json:"delete_at"`
 }
 
 func (g *Game) ToJson() string {
@@ -47,9 +47,9 @@ func GameFromJson(data io.Reader) *Game {
 
 func (g *Game) IsValid() bool {
 	if NumLines < MIN_NUMLINES || NumLines > MAX_NUMLINES {
-		return false;
+		return false
 	} else {
-		return true;
+		return true
 	}
 }
 

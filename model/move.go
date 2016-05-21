@@ -2,10 +2,10 @@ package model
 
 type Move struct {
 	PlayerId string `json:"player_id"`
-	GameId	 string `json:"game_id"`
-	X	 	 uint	`json:"move_x"`
-	Y		 uint	`json:"move_y"`
-	CreateAt int64	`json:"create_at"`
+	GameId   string `json:"game_id"`
+	X        uint   `json:"move_x"`
+	Y        uint   `json:"move_y"`
+	CreateAt int64  `json:"create_at"`
 }
 
 func (m *Move) ToJson() string {

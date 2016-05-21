@@ -2,17 +2,17 @@ package model
 
 import (
 	"encoding/json"
-	"io"
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
+	"io"
 )
 
 type Error struct {
-	Id			string					`json:"id"`
-	Message		string					`json:"message"`
-	RequestId 	string					`json:"request_id"`
-	StatusCode 	int						`json:"status_code"`
-	Where		string					`json:"-"`
-	params		map[string]interface{}	`json:"-"`
+	Id         string                 `json:"id"`
+	Message    string                 `json:"message"`
+	RequestId  string                 `json:"request_id"`
+	StatusCode int                    `json:"status_code"`
+	Where      string                 `json:"-"`
+	params     map[string]interface{} `json:"-"`
 }
 
 func (er *Error) ToString() string {
