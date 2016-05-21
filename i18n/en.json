@@ -1,0 +1,30 @@
+[
+	{
+		"id": "model.player.is_valid.id.error",
+		"translation": "Player ID is invalid"
+	},
+	{
+		"id": "model.player.is_valid.create_at.error",
+		"translation": "Player time created is invalid"
+	},
+	{
+		"id": "model.player.is_valid.update_at.error",
+		"translation": "Player time updated is invalid"
+	},
+	{
+		"id": "model.player.is_valid.username.error",
+		"translation": "Player username is invalid"
+	},
+	{
+		"id": "model.player.is_valid.email.error",
+		"translation": "Player email is invalid"
+	},
+	{
+		"id": "model.error.decode_json.error",
+		"translation": "Unable to decode error from json"
+	},
+	{
+		"id": "model.move.error",
+		"translation": "Move is invalid"
+	},
+]
