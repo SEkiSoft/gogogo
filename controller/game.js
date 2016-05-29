@@ -1,3 +1,6 @@
+// Copyright (c) 2016 David Lu
+// See License.txt
+
 //Client Side JavaScript code
 //Game state is stored server side, client sends moves only
 
