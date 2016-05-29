@@ -206,7 +206,7 @@ func (gs SqlGameStore) GetTotalFinishedGamesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games WHERE Finished"); err != nil {
+		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games WHERE Finished = 1"); err != nil {
 			result.Err = model.NewLocError("SqlGameStore.GetTotalFinishedGamesCount", "Get total finished games count error", nil, err.Error())
 		} else {
 			result.Data = count
