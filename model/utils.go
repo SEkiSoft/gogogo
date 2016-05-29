@@ -8,9 +8,14 @@ import (
 	"time"
 )
 
+const (
+	ENCODING     = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
+	ID_LENGTH    = 12
+)
+
 func NewID() string {
 	var b bytes.Buffer
-	encoder := base32.NewEncoder(encoding, &b)
+	encoder := base32.NewEncoder(ENCODING, &b)
 	encoder.Write(uuid.NewRandom())
 	encoder.Close()
 	b.Truncate(ID_LENGTH)

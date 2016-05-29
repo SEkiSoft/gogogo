@@ -7,8 +7,6 @@ import (
 )
 
 const (
-	ENCODING     = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
-	ID_LENGTH    = 26
 	MAX_NUMLINES = 19
 	MIN_NUMLINES = 13
 )

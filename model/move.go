@@ -3,6 +3,7 @@ package model
 type Move struct {
 	PlayerId string `json:"player_id"`
 	GameId   string `json:"game_id"`
+	Id       string `json:"id"`
 	X        uint   `json:"move_x"`
 	Y        uint   `json:"move_y"`
 	CreateAt int64  `json:"create_at"`
@@ -19,6 +20,10 @@ func (m *Move) ToJson() string {
 
 func (m *Move) PreSave() string {
 	m.CreateAt = GetMillis()
+
+	if m.Id == nil {
+		m.Id = NewId();
+	}
 }
 
 func MoveFromJson(data io.Reader) *Move {
