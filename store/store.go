@@ -4,9 +4,7 @@
 package store
 
 import (
-	l4g "github.com/alecthomas/log4go"
 	"github.com/davidlu1997/gogogo/model"
-	"time"
 )
 
 type StoreResult struct {
