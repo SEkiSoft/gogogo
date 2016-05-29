@@ -225,8 +225,8 @@ func (gs SqlGameStore) PermanentDelete(gameId string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ps.GetMaster().Exec("DELETE FROM Players WHERE Id = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.PermanentDelete", "Permanent delete player error", nil, "playerId="+playerId+", "+err.Error())
+		if _, err := gs.GetMaster().Exec("DELETE FROM Games WHERE Id = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
+			result.Err = model.NewLocError("SqlGameStore.PermanentDelete", "Permanent delete game error", nil, "game_id="+gameId+", "+err.Error())
 		}
 
 		storeChannel <- result
