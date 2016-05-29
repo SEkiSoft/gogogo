@@ -14,6 +14,15 @@ type StoreResult struct {
 
 type StoreChannel chan StoreResult
 
+func Must(sc StoreChannel) interface{} {
+	r := <-sc
+	if r.Err != nil {
+		panic(r.Err)
+	}
+
+	return r.Data
+}
+
 type Store interface {
 	Game() GameStore
 	Player() PlayerStore
@@ -26,20 +35,17 @@ type GameStore interface {
 	Save(game *model.Game) StoreChannel
 	Update(game *model.Game) StoreChannel
 	Get(id string) StoreChannel
+	GetAll() StoreChannel
 	GetGamesByOnePlayerId(playerId string) StoreChannel
 	GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChannel
-	GetGamesByOnePlayerName(playerName string) StoreChannel
-	GetGamesByTwoPlayerName(player1Name, player2Name string) StoreChannel
-	GetAll() StoreChannel
 	GetTotalGamesCount() StoreChannel
-	GetTotalActiveGamesCount() StoreChannel
+	GetTotalFinishedGamesCount() StoreChannel
 	PermanentDelete(gameId String) StoreChannel
 }
 
 type PlayerStore interface {
 	Save(player *model.Player) StoreChannel
 	Update(player *model.Player) StoreChannel
-	UpdateUpdateAt(playerId string) StoreChannel
 	UpdatePassword(playerId, newPassword string) StoreChannel
 	Get(id string) StoreChannel
 	GetAll() StoreChannel

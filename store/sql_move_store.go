@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/davidlu1997/gogogo/model"
-	"strings"
 )
 
 type SqlMoveStore struct {
