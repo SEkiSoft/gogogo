@@ -5,7 +5,6 @@ package model
 
 import (
 	"encoding/json"
-	goi18n "github.com/nicksnyder/go-i18n/i18n"
 	"io"
 )
 
@@ -20,14 +19,6 @@ type Error struct {
 
 func (er *Error) ToString() string {
 	return er.Where + ": " + er.Message + ", " + er.StatusCode
-}
-
-func (er *Error) Translate(T goi18n.TranslateFunc) {
-	if er.params == nil {
-		er.Message = T(er.Id)
-	} else {
-		er.Message = T(er.Id, er.params)
-	}
 }
 
 func (er *Error) ToJson() string {
@@ -46,7 +37,7 @@ func ErrorFromJson(data io.reader) *Error {
 	if err == nil {
 		return &er
 	} else {
-		return NewLocError("ErrorFromJson", "model.error.decode_json.error", nil, err.Error())
+		return NewLocError("ErrorFromJson", "JSON decoding error", nil, err.Error())
 	}
 }
 

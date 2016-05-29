@@ -13,7 +13,7 @@ import (
 
 const (
 	ENCODING  = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
-	ID_LENGTH = 12
+	ID_LENGTH = 24
 )
 
 func NewID() string {

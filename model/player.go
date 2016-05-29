@@ -30,24 +30,24 @@ type Player struct {
 }
 
 func (p *Player) IsValid() *Error {
-	if len(p.Id) != 26 {
-		return NewLocError("Player.IsValid", "model.player.is_valid.id.error", nil, "")
+	if len(p.Id) != 24 {
+		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
 	}
 
 	if p.CreateAt == 0 {
-		return NewLocError("Player.IsValid", "model.player.is_valid.create_at.error", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.Id)
 	}
 
-	if p.CreateAt == 0 {
-		return NewLocError("Player.IsValid", "model.player.is_valid.update_at.error", nil, "player_id="+p.Id)
+	if p.UpdateAt == 0 {
+		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.Id)
 	}
 
 	if !IsValidUsername(p.Username) {
-		return NewLocError("Player.IsValid", "model.player.is_valid.username.error", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Username is invalid", nil, "player_id="+p.Id)
 	}
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
-		return NewLocError("Player.IsValid", "model.player.is_valid.email.error", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.Id)
 	}
 
 	return nil
