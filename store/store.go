@@ -53,8 +53,7 @@ type MoveStore interface {
 	Save(move *model.Move) StoreChannel
 	Get(id string) StoreChannel
 	GetByGame(gameId string) StoreChannel
-	GetByUser(userId string) StoreChannel
+	GetByPlayer(playerId string) StoreChannel
 	GetTotalMovesCount() StoreChannel
-	GetTotalRecentMovesCount() StoreChannel
 	PermanentDelete(id string) StoreChannel
 }
