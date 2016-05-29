@@ -1,29 +1,29 @@
 package model
 
 import (
-	"strings"
 	"encoding/json"
 	"io"
 	"regexp"
+	"strings"
 )
 
 const (
-	DEFAULT_LOCALE = "en"
+	DEFAULT_LOCALE      = "en"
 	MIN_PASSWORD_LENGTH = 5
 	MIN_USERNAME_LENGTH = 4
 	MAX_USERNAME_LENGTH = 24
 )
 
 type Player struct {
-	Id 			string 	`json:"id"`
-	CreateAt 	int64 	`json:"create_at"`
-	UpdateAt 	int64 	`json:"update_at"`
-	DeleteAt 	int64 	`json:"delete_at"`
-	Username 	string 	`json:"username"`
-	Password	string	`json:"password,omitempty"`
-	Email		string	`json:"email"`
-	AllowStats	bool	`json:"allow_stats"`
-	Locale		string	`json:"locale"`
+	Id         string `json:"id"`
+	CreateAt   int64  `json:"create_at"`
+	UpdateAt   int64  `json:"update_at"`
+	DeleteAt   int64  `json:"delete_at"`
+	Username   string `json:"username"`
+	Password   string `json:"password,omitempty"`
+	Email      string `json:"email"`
+	AllowStats bool   `json:"allow_stats"`
+	Locale     string `json:"locale"`
 }
 
 func (p *Player) IsValid() *Error {
@@ -93,7 +93,7 @@ func (p *Player) ToJson() string {
 
 func UserFromJson(data io.Reader) *User {
 	decoder := json.NewDecoder(data)
-	var user User 
+	var user User
 	err := decoder.Decode(&user)
 	if err == nil {
 		return user
@@ -133,6 +133,7 @@ func IsValidUsername(s string) bool {
 	}
 
 	return true
+}
 
 func (p *Player) Etag() string {
 	return Etag(p.Id, p.UpdateAt)

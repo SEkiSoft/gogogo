@@ -19,9 +19,9 @@ func (g *model.Game) NextMove(player bool) model.Move {
 	//4. Kill difficult opponent groups
 
 	//Find groups
-	b := g.Board;
-	for i:=0; i < g.NumLines; i++ {
-		for j:=0; j < g.NumLines; j++ {
+	b := g.Board
+	for i := 0; i < g.NumLines; i++ {
+		for j := 0; j < g.NumLines; j++ {
 			b[i][j] = -1
 		}
 	}
@@ -31,10 +31,10 @@ func (g *model.Game) NextMove(player bool) model.Move {
 	//White - 2
 	//Empty - 0
 	var cur uint = 0
-	for i:=0; i < g.NumLines; i++ {
-		for j:=0; j < g.NumLines; j++ {
-			if(b[i][j] == -1) {
-				findGroup(b, i, j, g.Board[i][j], cur);
+	for i := 0; i < g.NumLines; i++ {
+		for j := 0; j < g.NumLines; j++ {
+			if b[i][j] == -1 {
+				findGroup(b, i, j, g.Board[i][j], cur)
 				cur++
 			}
 		}
@@ -45,7 +45,7 @@ func (g *model.Game) NextMove(player bool) model.Move {
 	//Find number of liberties
 	//TODO
 	//Store location of each liberty
-	loc := map[int][]Point //Map a group to an array of points
+	//loc := map[int]Point //Map a group to an array of points
 	//Store each liberty as a point
 	//TODO
 	//Find which group belongs to which player
@@ -76,20 +76,20 @@ Run analysis in batches (every day?)
 
 //DFS time
 func findGroup(g *[][]uint, x int, y int, player int, cur int) {
-	if(board[i][j] == player) {
+	if board[i][j] == player {
 		g[i][j] = cur
 
-		if(j-1 >= 0 && board[i][j-1] == player) {
+		if j-1 >= 0 && board[i][j-1] == player {
 			findGroup(g, i, j-1, player, cur)
 		}
-		if(j+1 < len(board) && board[i][j+1] == player) {
+		if j+1 < len(board) && board[i][j+1] == player {
 			findGroup(g, i, j+1, player, cur)
 		}
-		if(i-1 >= 0 && board[i-1][j] == player) {
+		if i-1 >= 0 && board[i-1][j] == player {
 			findGroup(g, i-1, j, player, cur)
 		}
-		if(i+1 < len(board) && board[i+1][j] == player) {
+		if i+1 < len(board) && board[i+1][j] == player {
 			findGroup(g, i+1, j, player, cur)
 		}
 	}
-} 
+}

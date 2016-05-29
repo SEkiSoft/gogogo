@@ -1,14 +1,14 @@
 package api
 
 import (
+	"database/sql"
+	"encoding/json"
+	_ "github.com/mxk/go-sqlite/sqlite3"
+	"gogogo/model"
 	"html/template"
-	"net/http"
 	"io"
 	"log"
-	"encoding/json"
-	"database/sql"
-	"gogogo/model"
-	_ "github.com/mxk/go-sqlite/sqlite3"
+	"net/http"
 )
 
 func ServerStart() {
@@ -20,7 +20,7 @@ func ServerStart() {
 //Handler to load game
 func gameHandler(w http.ResponseWriter, r *http.Request) {
 	//Find gameID in database
-	id := r.URL.Path[len("/game/"):len("/game/")+idLen]
+	id := r.URL.Path[len("/game/") : len("/game/")+idLen]
 	b := loadGame(id)
 	//Send game via JSON
 }
@@ -29,10 +29,10 @@ func gameHandler(w http.ResponseWriter, r *http.Request) {
 func moveHandler(w http.ResponseWriter, r *http.Request) {
 	//Handle moves as needed
 	idx := len("/move/") + idLen
-	id := r.URL.Path[len("/move/"):len("/move/")+idLen]
-	player := r.URL.Path[idx:idx+2]
-	x := r.URL.Path[idx+2:idx+4]
-	y := r.URL.Path[idx+4:idx+6]
+	id := r.URL.Path[len("/move/") : len("/move/")+idLen]
+	player := r.URL.Path[idx : idx+2]
+	x := r.URL.Path[idx+2 : idx+4]
+	y := r.URL.Path[idx+4 : idx+6]
 	//Process move
 	//Write move to DB
 	//Rely on client to refresh view
@@ -40,7 +40,7 @@ func moveHandler(w http.ResponseWriter, r *http.Request) {
 
 //Handler to create new game
 func newGameHandler(w http.ResponseWriter, r *http.Request) {
-	s := r.URL.Path[len("/game/"):len("/game/")+2]
+	s := r.URL.Path[len("/game/") : len("/game/")+2]
 	size, err := strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		log.Fatal(err)
@@ -56,24 +56,26 @@ func newGameHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	while(rows != nil) {
+
+	for rows != nil {
 		id = randId()
 		ros, err := db.Query("SELECT * FROM games WHERE id = ?;", id)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
+
 	initGame(db, id, size)
 
 	w.Header().Set("Content-Type", "application/javascript")
 	idJson := make(map[string]string)
-	idJson["id"] = id;
+	idJson["id"] = id
 	json.NewEncoder(w).Encode(Payload{idJson})
 }
 
 //Initialize game to DB
 func initGame(db *sql.DB, id string, size int) {
-	board := int[][]
+	board := make([][]uint)
 	turn := 0
 
 	//Open DB connection
