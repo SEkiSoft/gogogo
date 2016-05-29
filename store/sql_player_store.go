@@ -6,9 +6,9 @@ package store
 import (
 	"database/sql"
 	"fmt"
+	"github.com/davidlu1997/gogogo/model"
 	"strconv"
 	"strings"
-	"github.com/davidlu1997/gogogo/model"
 )
 
 type SqlPlayerStore struct {

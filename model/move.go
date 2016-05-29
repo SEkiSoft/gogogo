@@ -25,7 +25,7 @@ func (m *Move) PreSave() string {
 	m.CreateAt = GetMillis()
 
 	if m.Id == nil {
-		m.Id = NewId();
+		m.Id = NewId()
 	}
 }
 

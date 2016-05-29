@@ -11,7 +11,7 @@ import (
 
 type StoreResult struct {
 	Data interface{}
-	Err *model.Error
+	Err  *model.Error
 }
 
 type StoreChannel chan StoreResult
