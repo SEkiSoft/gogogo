@@ -43,15 +43,11 @@ type PlayerStore interface {
 	Update(player *model.Player) StoreChannel
 	UpdateUpdateAt(playerId string) StoreChannel
 	UpdatePassword(playerId, newPassword string) StoreChannel
-	UpdateEmail(playerId, newEmail string) StoreChannel
-	UpdateLocale(playerId, newLocale string) StoreChannel
-	UpdateUsername(playerId, newUsername string) StoreChannel
 	Get(id string) StoreChannel
 	GetAll() StoreChannel
 	GetByEmail(email string) StoreChannel
 	GetByUsername(username string) StoreChannel
-	GetTotalUsersCount() StoreChannel
-	GetTotalActiveUsersCount() StoreChannel
+	GetTotalPlayersCount() StoreChannel
 	PermanentDelete(playerId string) StoreChannel
 }
 
