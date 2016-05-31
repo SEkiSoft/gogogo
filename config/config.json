@@ -1,0 +1,14 @@
+{
+	"SqlConfiguration": {
+		"DriverName": "mysql",
+		"Source": "guser:gtest@tcp(dockerhost:3305)/gogogo_test?charset=utf8mb4,utf8",
+		"MaxIdleConns": 50,
+		"MaxOpenConns": 50,
+		"Trace": false
+	},
+	"GameConfiguration": {
+		"ListenPort": 3030,
+		"HttpPort": 80,
+		"HttpsPort": 443
+	}
+}
