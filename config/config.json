@@ -6,8 +6,8 @@
 		"MaxOpenConns": 50,
 		"Trace": false
 	},
-	"GameConfiguration": {
-		"ListenPort": 3030,
+	"ServerConfiguration": {
+		"ListenPort": ":3030",
 		"HttpPort": 80,
 		"HttpsPort": 443
 	}

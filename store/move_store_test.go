@@ -25,5 +25,5 @@ func TestMoveStoreGetByPlayer(t *testing.T) {
 }
 
 func TestMoveStoreDelete(t *testing.T) {
-	
+
 }

@@ -16,15 +16,15 @@ type SqlConfiguration struct {
 	Trace        bool
 }
 
-type GameConfiguration struct {
-	ListenPort int
+type ServerConfiguration struct {
+	ListenPort string
 	HttpPort   int
 	HttpsPort  int
 }
 
 type Config struct {
-	GameConfiguration GameConfiguration
-	SqlConfiguration  SqlConfiguration
+	ServerConfiguration ServerConfiguration
+	SqlConfiguration    SqlConfiguration
 }
 
 func (c *Config) ToJson() string {

@@ -33,5 +33,5 @@ func TestPlayerStoreGetByUsername(t *testing.T) {
 }
 
 func TestPlayerStoreDelete(t *testing.T) {
-	
+
 }

@@ -17,5 +17,5 @@ func TestSqlStoreClose(t *testing.T) {
 }
 
 func TestSqlStoreDropAll(t *testing.T) {
-	
+
 }
