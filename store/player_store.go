@@ -10,12 +10,12 @@ import (
 	"strings"
 )
 
-type SqlPlayerStore struct {
+type PlayerStore struct {
 	*SqlStore
 }
 
-func NewSqlPlayerStore(sqlStore *SqlStore) PlayerStore {
-	ps := &SqlPlayerStore{sqlStore}
+func NewPlayerStore(sqlStore *SqlStore) PlayerStore {
+	ps := &PlayerStore{sqlStore}
 
 	for _, db := range sqlStore.GetAllConns() {
 		table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
@@ -30,11 +30,11 @@ func NewSqlPlayerStore(sqlStore *SqlStore) PlayerStore {
 	return ps
 }
 
-func (ps SqlPlayerStore) CreateIndexesIfNotExists() {
+func (ps PlayerStore) CreateIndexesIfNotExists() {
 	ps.CreateIndexesIfNotExists("idx_player_email", "Players", "Email")
 }
 
-func (ps SqlPlayerStore) Save(player *model.Player) StoreChannel {
+func (ps PlayerStore) Save(player *model.Player) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -49,11 +49,11 @@ func (ps SqlPlayerStore) Save(player *model.Player) StoreChannel {
 
 		if err := ps.GetMaster().Insert(player); err != nil {
 			if IsUniqueConstraintError(err.Error(), []string{"Email", "players_email_key", "idx_players_email_unique"}) {
-				result.Err = model.NewLocError("SqlPlayerStore.Save", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
 			} else if IsUniqueConstraintError(err.Error(), []string{"Playername", "players_username_key", "idx_players_username_unique"}) {
-				result.Err = model.NewLocError("SqlPlayerStore.Save", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
 			} else {
-				result.Err = model.NewLocError("SqlPlayerStore.Save", "Player saving error", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Player saving error", nil, "player_id="+player.Id+", "+err.Error())
 			}
 		} else {
 			result.Data = player
@@ -66,7 +66,7 @@ func (ps SqlPlayerStore) Save(player *model.Player) StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) Update(player *model.Player) StoreChannel {
+func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -81,9 +81,9 @@ func (ps SqlPlayerStore) Update(player *model.Player) StoreChannel {
 		}
 
 		if oldPlayerResult, err := ps.GetMaster().Get(model.Player{}, player.Id); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.Update", "", nil, "player_id="+player.Id+", "+err.Error())
+			result.Err = model.NewLocError("PlayerStore.Update", "", nil, "player_id="+player.Id+", "+err.Error())
 		} else if oldPlayerResult == nil {
-			result.Err = model.NewLocError("SqlPlayerStore.Update", "Cannot find player to update", nil, "player_id="+player.Id)
+			result.Err = model.NewLocError("PlayerStore.Update", "Cannot find player to update", nil, "player_id="+player.Id)
 		} else {
 			oldPlayer := oldPlayerResult.(*model.Player)
 			player.CreateAt = oldPlayer.CreateAt
@@ -91,14 +91,14 @@ func (ps SqlPlayerStore) Update(player *model.Player) StoreChannel {
 
 			if count, err := ps.GetMaster().Update(player); err != nil {
 				if IsUniqueConstraintError(err.Error(), []string{"Email", "players_email_key", "idx_players_email_unique"}) {
-					result.Err = model.NewLocError("SqlPlayerStore.Update", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
 				} else if IsUniqueConstraintError(err.Error(), []string{"Username", "players_username_key", "idx_players_username_unique"}) {
-					result.Err = model.NewLocError("SqlPlayerStore.Update", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
 				} else {
-					result.Err = model.NewLocError("SqlPlayerStore.Update", "Player updating error", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Player updating error", nil, "player_id="+player.Id+", "+err.Error())
 				}
 			} else if count != 1 {
-				result.Err = model.NewLocError("SqlPlayerStore.Update", "Player not unique", nil, fmt.Sprintf("player_id=%v, count=%v", player.Id, count))
+				result.Err = model.NewLocError("PlayerStore.Update", "Player not unique", nil, fmt.Sprintf("player_id=%v, count=%v", player.Id, count))
 			} else {
 				result.Data = [2]*model.Player{player, oldPlayer}
 			}
@@ -111,14 +111,14 @@ func (ps SqlPlayerStore) Update(player *model.Player) StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) UpdatePassword(playerId string, newPassword string) StoreChannel {
+func (ps PlayerStore) UpdatePassword(playerId string, newPassword string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
 		if _, err := ps.GetMaster().Exec("UPDATE Players SET Password = :Password WHERE Id = :PlayerId", map[string]interface{}{"Password": newPassword, "PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.UpdatePassword", "Player update password error", nil, "player_id="+playerId)
+			result.Err = model.NewLocError("PlayerStore.UpdatePassword", "Player update password error", nil, "player_id="+playerId)
 		} else {
 			result.Data = playerId
 		}
@@ -130,16 +130,16 @@ func (ps SqlPlayerStore) UpdatePassword(playerId string, newPassword string) Sto
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) Get(id string) StoreChannel {
+func (ps PlayerStore) Get(id string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
 		if obj, err := ps.GetMaster().Get(model.Player{}, id); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.Get", "Get player by id error", nil, "player_id="+id+", "+err.Error())
+			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+id+", "+err.Error())
 		} else if obj == nil {
-			result.Err = model.NewLocError("SqlPlayerStore.Get", "Missing player error", nil, "player_id="+id)
+			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+id)
 		} else {
 			result.Data = obj.(*model.Player)
 		}
@@ -152,7 +152,7 @@ func (ps SqlPlayerStore) Get(id string) StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) GetAll() StoreChannel {
+func (ps PlayerStore) GetAll() StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -160,7 +160,7 @@ func (ps SqlPlayerStore) GetAll() StoreChannel {
 
 		var data []*model.Player
 		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players"); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.GetAll", "Get all players error", nil, err.Error())
+			result.Err = model.NewLocError("PlayerStore.GetAll", "Get all players error", nil, err.Error())
 		}
 
 		result.Data = data
@@ -173,7 +173,7 @@ func (ps SqlPlayerStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) GetByEmail(email string) StoreChannel {
+func (ps PlayerStore) GetByEmail(email string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -184,7 +184,7 @@ func (ps SqlPlayerStore) GetByEmail(email string) StoreChannel {
 		player := model.Player{}
 
 		if err := ps.GetMaster().SelectOne(&player, "SELECT * FROM Players WHERE Email = :Email", map[string]interface{}{"Email": email}); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.GetByEmail", "Missing player error", nil, "email="+email+", "+err.Error())
+			result.Err = model.NewLocError("PlayerStore.GetByEmail", "Missing player error", nil, "email="+email+", "+err.Error())
 		}
 
 		result.Data = &player
@@ -196,7 +196,7 @@ func (ps SqlPlayerStore) GetByEmail(email string) StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) GetByUsername(username string) StoreChannel {
+func (ps PlayerStore) GetByUsername(username string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -207,7 +207,7 @@ func (ps SqlPlayerStore) GetByUsername(username string) StoreChannel {
 		player := model.Player{}
 
 		if err := ps.GetMaster().SelectOne(&player, "SELECT * FROM Players WHERE Username = :Username", map[string]interface{}{"Username": username}); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.GetByUsername", "Missing player error", nil, "username="+username+", "+err.Error())
+			result.Err = model.NewLocError("PlayerStore.GetByUsername", "Missing player error", nil, "username="+username+", "+err.Error())
 		}
 
 		result.Data = &player
@@ -219,14 +219,14 @@ func (ps SqlPlayerStore) GetByUsername(username string) StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) GetTotalPlayersCount() StoreChannel {
+func (ps PlayerStore) GetTotalPlayersCount() StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
 		if count, err := ps.GetMaster().SelectInt("SELECT COUNT(Id) FROM Players"); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.GetTotalPlayersCount", "Get total players count error", nil, err.Error())
+			result.Err = model.NewLocError("PlayerStore.GetTotalPlayersCount", "Get total players count error", nil, err.Error())
 		} else {
 			result.Data = count
 		}
@@ -238,14 +238,14 @@ func (ps SqlPlayerStore) GetTotalPlayersCount() StoreChannel {
 	return storeChannel
 }
 
-func (ps SqlPlayerStore) PermanentDelete(playerId string) StoreChannel {
+func (ps PlayerStore) PermanentDelete(playerId string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
 		if _, err := ps.GetMaster().Exec("DELETE FROM Players WHERE Id = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("SqlPlayerStore.PermanentDelete", "Permanent delete player error", nil, "player_id="+playerId+", "+err.Error())
+			result.Err = model.NewLocError("PlayerStore.PermanentDelete", "Permanent delete player error", nil, "player_id="+playerId+", "+err.Error())
 		}
 
 		storeChannel <- result
