@@ -219,7 +219,7 @@ func (gs GameStore) GetTotalFinishedGamesCount() StoreChannel {
 	return storeChannel
 }
 
-func (gs GameStore) PermanentDelete(gameId string) StoreChannel {
+func (gs GameStore) Delete(gameId string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {

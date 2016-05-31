@@ -40,7 +40,7 @@ type GameStore interface {
 	GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChannel
 	GetTotalGamesCount() StoreChannel
 	GetTotalFinishedGamesCount() StoreChannel
-	PermanentDelete(gameId String) StoreChannel
+	Delete(gameId String) StoreChannel
 }
 
 type PlayerStore interface {
@@ -52,7 +52,7 @@ type PlayerStore interface {
 	GetByEmail(email string) StoreChannel
 	GetByUsername(username string) StoreChannel
 	GetTotalPlayersCount() StoreChannel
-	PermanentDelete(playerId string) StoreChannel
+	Delete(playerId string) StoreChannel
 }
 
 type MoveStore interface {
@@ -61,5 +61,5 @@ type MoveStore interface {
 	GetByGame(gameId string) StoreChannel
 	GetByPlayer(playerId string) StoreChannel
 	GetTotalMovesCount() StoreChannel
-	PermanentDelete(id string) StoreChannel
+	Delete(id string) StoreChannel
 }

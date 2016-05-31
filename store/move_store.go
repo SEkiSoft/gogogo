@@ -132,7 +132,7 @@ func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 	return storeChannel
 }
 
-func (ms MoveStore) PermanentDelete(id string) StoreChannel {
+func (ms MoveStore) Delete(id string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {

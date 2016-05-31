@@ -238,7 +238,7 @@ func (ps PlayerStore) GetTotalPlayersCount() StoreChannel {
 	return storeChannel
 }
 
-func (ps PlayerStore) PermanentDelete(playerId string) StoreChannel {
+func (ps PlayerStore) Delete(playerId string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
