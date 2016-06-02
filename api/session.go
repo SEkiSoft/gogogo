@@ -4,10 +4,8 @@
 package api
 
 import (
-	"fmt"
 	"net"
 	"net/http"
-	"strings"
 
 	l4g "github.com/alecthomas/log4go"
 	"github.com/davidlu1997/gogogo/model"
@@ -63,7 +61,11 @@ func GetIpAddress(r *http.Request) string {
 	return address
 }
 
-func RenderWebError(err *model.AppError, w http.ResponseWriter, r *http.Request) {
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	//TODO
+}
+
+func RenderWebError(err *model.Error, w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/404.html", http.StatusTemporaryRedirect)
 }
 

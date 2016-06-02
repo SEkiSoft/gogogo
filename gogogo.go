@@ -4,25 +4,30 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/davidlu1997/gogogo/api"
 	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/store"
 	"github.com/davidlu1997/gogogo/utils"
+
+	l4g "github.com/alecthomas/log4go"
 )
 
-func doLoadConfig(filename string) (err string) {
+func doLoadConfig() (err string) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = r.(string)
 		}
 	}()
-	utils.LoadConfig(filename)
+	utils.LoadConfig()
 	return ""
 }
 
 func main() {
-	if err := doLoadConfig(flagConfigFile); err != "" {
-		l4g.Exit("Unable to load configuration file: %s", errstr)
+	if err := doLoadConfig(); err != "" {
+		l4g.Exit("Unable to load configuration file: %s", err)
 		return
 	}
 
@@ -34,8 +39,8 @@ func main() {
 	api.StartServer()
 
 	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscallSIGTERM)
-	<-class
+	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	<-c
 
 	api.StopServer()
 }

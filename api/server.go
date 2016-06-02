@@ -19,10 +19,6 @@ type Server struct {
 	Router *mux.Router
 }
 
-type Wrapper struct {
-	router *mux.Router
-}
-
 var Srv *Server
 
 func NewServer() {
@@ -38,7 +34,7 @@ func StartServer() {
 	l4g.Info("Starting server...")
 	l4g.Info("Listening on %s.", utils.Cfg.ServerConfiguration.ListenPort)
 
-	var handler http.Handler = &Wrapper{Srv.Router}
+	var handler http.Handler = Srv.Router
 
 	go func() {
 		err := manners.ListenAndServe(utils.Cfg.ServerConfiguration.ListenPort, handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler))
