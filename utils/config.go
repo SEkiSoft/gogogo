@@ -5,11 +5,7 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
-	"strconv"
 
 	"github.com/davidlu1997/gogogo/model"
 )

@@ -5,57 +5,51 @@ package store
 
 import (
 	dbsql "database/sql"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/go-gorp/gorp"
 	_ "github.com/go-sql-driver/mysql"
-	"io"
 	sqltrace "log"
 	"os"
 	"strings"
 )
 
 const (
-	DRIVER_NAME    = "mysql"
-	DATA_SOURCE    = "guser:gtest@tcp(dockerhost:3305)/gogogo_test?charset=utf8mb4,utf8"
-	MAX_IDLE_CONNS = 50
-	MAX_OPEN_CONNS = 50
-	TRACE          = false
+	DRIVER_NAME          = "mysql"
+	DATA_SOURCE          = "guser:gtest@tcp(dockerhost:3305)/gogogo_test?charset=utf8mb4,utf8"
+	MAX_IDLE_CONNS       = 50
+	MAX_OPEN_CONNS       = 50
+	TRACE                = false
+	INDEX_TYPE_FULL_TEXT = "full_text"
+	INDEX_TYPE_DEFAULT   = "default"
 )
 
 type SqlStore struct {
 	master *gorp.DbMap
-	game   GameStore
-	player PlayerStore
-	move   MoveStore
+	game   SqlGameStore
+	player SqlPlayerStore
+	move   SqlMoveStore
 }
 
 func initConnection() *SqlStore {
 	sqlStore := &SqlStore{}
 
-	splStore.master = setupConnection("master", DRIVER_NAME, DATA_SOURCE, MAX_IDLE_CONNS, MAX_OPEN_CONNS, TRACE)
+	sqlStore.master = setupConnection("master", DRIVER_NAME, DATA_SOURCE, MAX_IDLE_CONNS, MAX_OPEN_CONNS, TRACE)
 
-	sqlStore.SchemaVersion = sqlStre.GetCurrentSchemeVersion()
 	return sqlStore
 }
 
 func NewSqlStore() Store {
 	sqlStore := initConnection()
 
-	sqlStore.game = NewSqlGameStore(sqlStore)
-	sqlStore.player = NewSqlUserStore(sqlStore)
-	sqlStore.move = NewSqlMoveStore(sqlStore)
+	sqlStore.game = NewGameStore(sqlStore)
+	sqlStore.player = NewPlayerStore(sqlStore)
+	sqlStore.move = NewMoveStore(sqlStore)
 
 	err := sqlStore.master.CreateTablesIfNotExists()
 	if err != nil {
-		panic(fmt.Sprintf("CRITICAL ERROR creating tables error: %s"), err.Error())
+		panic(fmt.Sprintf("CRITICAL ERROR creating tables error: %s", err.Error()))
 		os.Exit(1)
 	}
-
-	sqlStore.game.CreateIndexesIfNotExists()
-	sqlStore.player.CreateIndexesIfNotExists()
-	sqlStore.move.CreateIndexesIfNotExists()
 
 	return sqlStore
 }
@@ -66,13 +60,12 @@ func setupConnection(connectionType string, driver string, dataSource string, ma
 		panic(fmt.Sprintf("CRITICAL ERROR: cannot open DB connection error: %s", err.Error()))
 	}
 
-	l4g.Info("Pinging database %s", connectionType)
 	err = db.Ping()
 	if err != nil {
 		panic(fmt.Sprintf("CRITICAL ERROR: cannot ping DB error: %s", err.Error()))
 	}
 
-	db.SetMaxidleConns(maxIdle)
+	db.SetMaxIdleConns(maxIdle)
 	db.SetMaxOpenConns(maxOpen)
 
 	dbmap := &gorp.DbMap{Db: db, TypeConverter: g3Converter{}, Dialect: gorp.MySQLDialect{Engine: "InnoDB", Encoding: "UTF8MB4"}}
@@ -84,7 +77,7 @@ func setupConnection(connectionType string, driver string, dataSource string, ma
 	return dbmap
 }
 
-func (ss SqlStore) DoesTableExist(tableName String) bool {
+func (ss SqlStore) DoesTableExist(tableName string) bool {
 	count, err := ss.GetMaster().SelectInt(`SELECT COUNT(0) AS table_exists FROM information_schema.TABLES WHERE TABLE_SCHEME = DATABASE() AND TABLE_NAME = ?`, tableName)
 
 	if err != nil {
@@ -243,31 +236,24 @@ func (ss SqlStore) GetMaster() *gorp.DbMap {
 	return ss.master
 }
 
-func (ss SqlStore) GetAllConns() []*gorp.DbMap {
-	all := make([]*gorp.DbMap, len(ss.replicas)+1)
-	copy(all, ss.replicas)
-	all[len(ss.replicas)] = ss.master
-	return all
-}
-
 func (ss SqlStore) Close() {
-	l4g.Info(utils.T("store.sql.closing.info"))
 	ss.master.Db.Close()
-	for _, replica := range ss.replicas {
-		replica.Db.Close()
-	}
 }
 
-func (ss SqlStore) Game() GameStore {
+func (ss SqlStore) Game() SqlGameStore {
 	return ss.game
 }
 
-func (ss SqlStore) Player() PlayerStore {
+func (ss SqlStore) Player() SqlPlayerStore {
 	return ss.player
 }
 
-func (ss SqlStore) Move() MoveStore {
+func (ss SqlStore) Move() SqlMoveStore {
 	return ss.move
+}
+
+func (ss SqlStore) DropAllTables() {
+	ss.master.TruncateTables()
 }
 
 type g3Converter struct{}

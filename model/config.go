@@ -28,7 +28,7 @@ type Config struct {
 }
 
 func (c *Config) ToJson() string {
-	b, err := json.Marshal(o)
+	b, err := json.Marshal(c)
 	if err != nil {
 		return ""
 	} else {
@@ -38,10 +38,10 @@ func (c *Config) ToJson() string {
 
 func ConfigFromJson(data io.Reader) *Config {
 	decoder := json.NewDecoder(data)
-	var o Config
-	err := decoder.Decode(&o)
+	var c Config
+	err := decoder.Decode(&c)
 	if err == nil {
-		return &o
+		return &c
 	} else {
 		return nil
 	}

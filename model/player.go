@@ -5,6 +5,7 @@ package model
 
 import (
 	"encoding/json"
+	"golang.org/x/crypto/bcrypt"
 	"io"
 	"regexp"
 	"strings"
@@ -94,19 +95,19 @@ func (p *Player) ToJson() string {
 	}
 }
 
-func UserFromJson(data io.Reader) *User {
+func PlayerFromJson(data io.Reader) *Player {
 	decoder := json.NewDecoder(data)
-	var user User
-	err := decoder.Decode(&user)
+	var p Player
+	err := decoder.Decode(&p)
 	if err == nil {
-		return user
+		return &p
 	} else {
 		return nil
 	}
 }
 
 func ComparePassword(hash string, password string) bool {
-	if len(password) == 0 || len(has) == 0 {
+	if len(password) == 0 || len(hash) == 0 {
 		return false
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))

@@ -4,21 +4,23 @@
 package model
 
 import (
+	"bytes"
 	"encoding/base32"
-	"encoding/json"
 	"fmt"
+	"github.com/pborman/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
+var encoding = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
+
 const (
-	ENCODING  = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
 	ID_LENGTH = 24
 )
 
-func NewID() string {
+func NewId() string {
 	var b bytes.Buffer
-	encoder := base32.NewEncoder(ENCODING, &b)
+	encoder := base32.NewEncoder(encoding, &b)
 	encoder.Write(uuid.NewRandom())
 	encoder.Close()
 	b.Truncate(ID_LENGTH)

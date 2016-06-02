@@ -4,7 +4,6 @@
 package store
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/davidlu1997/gogogo/model"
 )
@@ -13,22 +12,21 @@ type GameStore struct {
 	*SqlStore
 }
 
-func NewGameStore(sqlStore *SqlStore) GameStore {
+func NewGameStore(sqlStore *SqlStore) SqlGameStore {
 	gs := &GameStore{sqlStore}
 
-	for _, db := range sqlStore.GetAllConns() {
-		table := db.AddTableWithName(model.Game{}, "Games").SetKeys(false, "Id")
-		table.ColMap("Id").SetMaxSize(24)
-		table.ColMap("IdBlack").SetMaxSize(24)
-		table.ColMap("IdWhite").SetMaxSize(24)
-		table.ColMap("Board").SetMaxSize(400)
-		table.ColMap("NumLines").SetMaxSize(2)
-		table.ColMap("Turn").SetMaxSize(1)
-		table.ColMap("CreateAt").SetMaxSize(20)
-		table.ColMap("UpdateAt").SetMaxSize(20)
-		table.ColMap("DeleteAt").SetMaxSize(20)
-		table.ColMap("Finished").SetMaxSize(1)
-	}
+	db := sqlStore.GetMaster()
+	table := db.AddTableWithName(model.Game{}, "Games").SetKeys(false, "Id")
+	table.ColMap("Id").SetMaxSize(24)
+	table.ColMap("IdBlack").SetMaxSize(24)
+	table.ColMap("IdWhite").SetMaxSize(24)
+	table.ColMap("Board").SetMaxSize(400)
+	table.ColMap("NumLines").SetMaxSize(2)
+	table.ColMap("Turn").SetMaxSize(1)
+	table.ColMap("CreateAt").SetMaxSize(20)
+	table.ColMap("UpdateAt").SetMaxSize(20)
+	table.ColMap("DeleteAt").SetMaxSize(20)
+	table.ColMap("Finished").SetMaxSize(1)
 
 	return gs
 }
@@ -46,10 +44,10 @@ func (gs GameStore) Save(game *model.Game) StoreChannel {
 			return
 		}
 
-		if err := gs.GetMaster.Insert(game); err != nil {
+		if err := gs.GetMaster().Insert(game); err != nil {
 			result.Err = model.NewLocError("GameStore.Save", "Game saving error", nil, "game_id="+game.Id+", "+err.Error())
 		} else {
-			result.Data = player
+			result.Data = game
 		}
 
 		storeChannel <- result
@@ -75,7 +73,7 @@ func (gs GameStore) Update(game *model.Game) StoreChannel {
 
 		if oldGameResult, err := gs.GetMaster().Get(model.Game{}, game.Id); err != nil {
 			result.Err = model.NewLocError("GameStore.Update", "", nil, "game_id="+game.Id+", "+err.Error())
-		} else if oldPlayerResult == nil {
+		} else if oldGameResult == nil {
 			result.Err = model.NewLocError("GameStore.Update", "Cannot find game to update", nil, "game_id="+game.Id+", "+err.Error())
 		} else {
 			oldGame := oldGameResult.(*model.Game)

@@ -4,8 +4,6 @@
 package store
 
 import (
-	"database/sql"
-	"fmt"
 	"github.com/davidlu1997/gogogo/model"
 )
 
@@ -13,18 +11,17 @@ type MoveStore struct {
 	*SqlStore
 }
 
-func NewMoveStore(sqlStore *SqlStore) MoveStore {
-	ms := &MoveStore(sqlStore)
+func NewMoveStore(sqlStore *SqlStore) SqlMoveStore {
+	ms := &MoveStore{sqlStore}
 
-	for _, db := range sqlStore.GetAllConns() {
-		table := db.AddTableWithName(model.Move{}, "Moves").Setkeys(false, "Id")
-		table.ColMap("Id").SetMaxSize(24)
-		table.ColMap("PlayerId").SetMaxSize(24)
-		table.ColMap("GameId").SetMaxSize(24)
-		table.ColMap("X").SetMaxSize(2)
-		table.ColMap("Y").SetMaxSize(2)
-		table.ColMap("CreateAt").SetMaxSize(20)
-	}
+	db := sqlStore.GetMaster()
+	table := db.AddTableWithName(model.Move{}, "Moves").SetKeys(false, "Id")
+	table.ColMap("Id").SetMaxSize(24)
+	table.ColMap("PlayerId").SetMaxSize(24)
+	table.ColMap("GameId").SetMaxSize(24)
+	table.ColMap("X").SetMaxSize(2)
+	table.ColMap("Y").SetMaxSize(2)
+	table.ColMap("CreateAt").SetMaxSize(20)
 
 	return ms
 }
@@ -37,7 +34,7 @@ func (ms MoveStore) Save(move *model.Move) StoreChannel {
 
 		move.PreSave()
 
-		if err := ms.GetMaster().Insert(player); err != nil {
+		if err := ms.GetMaster().Insert(move); err != nil {
 			result.Err = model.NewLocError("MoveStore.Save", "Move saving error", nil, "move_id="+move.Id+", "+err.Error())
 		} else {
 			result.Data = move
@@ -79,7 +76,7 @@ func (ms MoveStore) GetByGame(gameId string) StoreChannel {
 
 		var data []*model.Move
 
-		if err := ms.GetMaster().SelectOne(&move, "SELECT * FROM Moves WHERE GameId = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
+		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves WHERE GameId = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetByGame", "Missing game error", nil, "game_id="+gameId+", "+err.Error())
 		}
 
@@ -104,7 +101,7 @@ func (ms MoveStore) GetByPlayer(playerId string) StoreChannel {
 			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerId+", "+err.Error())
 		}
 
-		result.Data = &move
+		result.Data = &data
 
 		storeChannel <- result
 		close(storeChannel)

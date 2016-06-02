@@ -4,7 +4,6 @@
 package store
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/davidlu1997/gogogo/model"
 	"strings"
@@ -14,24 +13,19 @@ type PlayerStore struct {
 	*SqlStore
 }
 
-func NewPlayerStore(sqlStore *SqlStore) PlayerStore {
+func NewPlayerStore(sqlStore *SqlStore) SqlPlayerStore {
 	ps := &PlayerStore{sqlStore}
 
-	for _, db := range sqlStore.GetAllConns() {
-		table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
-		table.ColMap("Id").SetMaxSize(24)
-		table.ColMap("Username").SetMaxSize(64).SetUnique(true)
-		table.ColMap("Password").SetMaxSize(128)
-		table.ColMap("Email").SetMaxSize(128).SetUnique(true)
-		table.ColMap("AllowStats").SetMaxSize(1)
-		table.ColMap("Locale").SetMaxSize(5)
-	}
+	db := sqlStore.GetMaster()
+	table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
+	table.ColMap("Id").SetMaxSize(24)
+	table.ColMap("Username").SetMaxSize(64).SetUnique(true)
+	table.ColMap("Password").SetMaxSize(128)
+	table.ColMap("Email").SetMaxSize(128).SetUnique(true)
+	table.ColMap("AllowStats").SetMaxSize(1)
+	table.ColMap("Locale").SetMaxSize(5)
 
 	return ps
-}
-
-func (ps PlayerStore) CreateIndexesIfNotExists() {
-	ps.CreateIndexesIfNotExists("idx_player_email", "Players", "Email")
 }
 
 func (ps PlayerStore) Save(player *model.Player) StoreChannel {

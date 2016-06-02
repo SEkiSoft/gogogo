@@ -7,14 +7,10 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/url"
 	"strings"
 
 	l4g "github.com/alecthomas/log4go"
 	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/store"
-	"github.com/davidlu1997/gogogo/utils"
-	"github.com/gorilla/mux"
 )
 
 var allowedMethods []string = []string{

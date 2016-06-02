@@ -4,13 +4,7 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
-
-	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/store"
-	"github.com/davidlu1997/gogogo/utils"
-	"github.com/gorilla/mux"
 )
 
 func InitPlayer() {

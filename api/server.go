@@ -31,7 +31,7 @@ func NewServer() {
 	Srv = &Server{}
 	Srv.Store = store.NewSqlStore()
 	Srv.Router = mux.NewRouter()
-	Srv.Router.NotFoundHandler = http.HandlerFucn(Handle404)
+	Srv.Router.NotFoundHandler = http.HandlerFunc(Handle404)
 }
 
 func StartServer() {
@@ -41,7 +41,7 @@ func StartServer() {
 	var handler http.Handler = &Wrapper{Srv.Router}
 
 	go func() {
-		err := manners.ListenAndServer(utils.Cfg.ServerConfiguration.ListenPort, handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler))
+		err := manners.ListenAndServe(utils.Cfg.ServerConfiguration.ListenPort, handlers.RecoveryHandler(handlers.PrintRecoveryStack(true))(handler))
 		if err != nil {
 			l4g.Critical("Server start critical failure!")
 		}

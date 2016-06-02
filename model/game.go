@@ -4,7 +4,6 @@
 package model
 
 import (
-	"encoding/base32"
 	"encoding/json"
 	"io"
 )
@@ -47,11 +46,11 @@ func GameFromJson(data io.Reader) *Game {
 	}
 }
 
-func (g *Game) IsValid() bool {
-	if NumLines < MIN_NUMLINES || NumLines > MAX_NUMLINES {
-		return false
+func (g *Game) IsValid() *Error {
+	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
+		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
 	} else {
-		return true
+		return nil
 	}
 }
 

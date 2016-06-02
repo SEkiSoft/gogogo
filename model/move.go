@@ -3,6 +3,11 @@
 
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 type Move struct {
 	PlayerId string `json:"player_id"`
 	GameId   string `json:"game_id"`
@@ -21,10 +26,10 @@ func (m *Move) ToJson() string {
 	}
 }
 
-func (m *Move) PreSave() string {
+func (m *Move) PreSave() {
 	m.CreateAt = GetMillis()
 
-	if m.Id == nil {
+	if m.Id == "" {
 		m.Id = NewId()
 	}
 }

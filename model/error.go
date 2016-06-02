@@ -6,6 +6,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"strconv"
 )
 
 type Error struct {
@@ -18,7 +19,7 @@ type Error struct {
 }
 
 func (er *Error) ToString() string {
-	return er.Where + ": " + er.Message + ", " + er.StatusCode
+	return er.Where + ": " + er.Message + ", " + strconv.Itoa(er.StatusCode)
 }
 
 func (er *Error) ToJson() string {
@@ -30,7 +31,7 @@ func (er *Error) ToJson() string {
 	}
 }
 
-func ErrorFromJson(data io.reader) *Error {
+func ErrorFromJson(data io.Reader) *Error {
 	decoder := json.NewDecoder(data)
 	var er Error
 	err := decoder.Decode(&er)

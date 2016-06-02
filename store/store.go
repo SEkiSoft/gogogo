@@ -24,14 +24,14 @@ func Must(sc StoreChannel) interface{} {
 }
 
 type Store interface {
-	Game() GameStore
-	Player() PlayerStore
-	Move() MoveStore
+	Game() SqlGameStore
+	Player() SqlPlayerStore
+	Move() SqlMoveStore
 	Close()
 	DropAllTables()
 }
 
-type GameStore interface {
+type SqlGameStore interface {
 	Save(game *model.Game) StoreChannel
 	Update(game *model.Game) StoreChannel
 	Get(id string) StoreChannel
@@ -40,10 +40,10 @@ type GameStore interface {
 	GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChannel
 	GetTotalGamesCount() StoreChannel
 	GetTotalFinishedGamesCount() StoreChannel
-	Delete(gameId String) StoreChannel
+	Delete(gameId string) StoreChannel
 }
 
-type PlayerStore interface {
+type SqlPlayerStore interface {
 	Save(player *model.Player) StoreChannel
 	Update(player *model.Player) StoreChannel
 	UpdatePassword(playerId, newPassword string) StoreChannel
@@ -55,7 +55,7 @@ type PlayerStore interface {
 	Delete(playerId string) StoreChannel
 }
 
-type MoveStore interface {
+type SqlMoveStore interface {
 	Save(move *model.Move) StoreChannel
 	Get(id string) StoreChannel
 	GetByGame(gameId string) StoreChannel

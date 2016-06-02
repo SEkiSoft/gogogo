@@ -7,4 +7,4 @@ var versions = []string{
 	"0.0.0",
 }
 
-var CurrentVersion string = version[0]
+var CurrentVersion string = versions[0]
