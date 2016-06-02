@@ -1,0 +1,54 @@
+{
+	"ImportPath": "github.com/davidlu1997/gogogo",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v63",
+	"Deps": [
+		{
+			"ImportPath": "github.com/alecthomas/log4go",
+			"Rev": "e5dc62318d9bd58682f1dceb53a4b24e8253682f"
+		},
+		{
+			"ImportPath": "github.com/braintree/manners",
+			"Comment": "0.4.0-15-g82a8879",
+			"Rev": "82a8879fc5fd0381fa8b2d8033b19bf255252088"
+		},
+		{
+			"ImportPath": "github.com/go-gorp/gorp",
+			"Comment": "v1.7-184-g6a3c8a8",
+			"Rev": "6a3c8a87d0457cf700e57046c41e19b7cf3c44fa"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.2-196-g3654d25",
+			"Rev": "3654d25ec346ee8ce71a68431025458d52a38ac0"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Comment": "v1.1-4-gaed02d1",
+			"Rev": "aed02d124ae4a0e94fea4541c8effd05bf0c8296"
+		},
+		{
+			"ImportPath": "github.com/gorilla/handlers",
+			"Comment": "v1.1-6-g66e6c6f",
+			"Rev": "66e6c6f01d8da976ee113437745ca029c2b585a6"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.1-9-gbd09be0",
+			"Rev": "bd09be08ed4377796d312df0a45314e11b8f5dc1"
+		},
+		{
+			"ImportPath": "github.com/pborman/uuid",
+			"Comment": "v1.0-11-gc55201b",
+			"Rev": "c55201b036063326c5b1b89ccfe45a184973d073"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "5bcd134fee4dd1475da17714aac19c0aa0142e2f"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "5bcd134fee4dd1475da17714aac19c0aa0142e2f"
+		}
+	]
+}
