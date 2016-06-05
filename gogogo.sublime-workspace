@@ -3,10 +3,142 @@
 	{
 		"selected_items":
 		[
+			[
+				"Player",
+				"Player"
+			],
+			[
+				"Lis",
+				"ListenPort"
+			],
+			[
+				"Nee",
+				"NeedGame"
+			],
+			[
+				"Base",
+				"BaseRoute"
+			],
+			[
+				"Cfg",
+				"CfgFileLocation"
+			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "model/game.go",
+			"settings":
+			{
+				"buffer_size": 1240,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "model/error.go",
+			"settings":
+			{
+				"buffer_size": 1138,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/api.go",
+			"settings":
+			{
+				"buffer_size": 768,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store/move_store.go",
+			"settings":
+			{
+				"buffer_size": 3574,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store/player_store.go",
+			"settings":
+			{
+				"buffer_size": 7305,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store/store.go",
+			"settings":
+			{
+				"buffer_size": 1475,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store/game_store.go",
+			"settings":
+			{
+				"buffer_size": 6227,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store/sql_store.go",
+			"settings":
+			{
+				"buffer_size": 7685,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/player.go",
+			"settings":
+			{
+				"buffer_size": 1422,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/server.go",
+			"settings":
+			{
+				"buffer_size": 1094,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/session.go",
+			"settings":
+			{
+				"buffer_size": 1622,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "model/client.go",
+			"settings":
+			{
+				"buffer_size": 561,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "gogogo.go",
+			"settings":
+			{
+				"buffer_size": 754,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "config/config.json",
+			"settings":
+			{
+				"buffer_size": 288,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -40,10 +172,36 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo"
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/ai",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/api",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/config",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/utils"
 	],
 	"file_history":
 	[
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/version.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/gogogo.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/api/session.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/api/game.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/api/server.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/api/player.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/sql_store_test.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/player_store_test.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/move_store_test.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/game_store_test.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/player.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/move.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/utils.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/game.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/error.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/model/config.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/utils/config.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/ai/ai.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/player_store.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/game_store.go",
+		"/C/Users/david/Documents/Projects/go/src/github.com/davidlu1997/gogogo/store/move_store.go",
 		"/C/Users/david/Documents/Projects/go/src/github.com/mattermost/platform/vendor/github.com/go-gorp/gorp/db.go",
 		"/C/Users/david/Documents/Projects/go/src/github.com/mattermost/platform/utils/config.go",
 		"/C/Users/david/Documents/Projects/go/src/github.com/mattermost/platform/config/config.json",
@@ -54,7 +212,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -69,6 +227,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"c *Context",
+			"Move",
+			"SqlGameStore",
+			"SqlMoveStore",
+			"SqlPlayerStore",
 			"trustedUpdateData",
 			"encrypt"
 		],
@@ -78,6 +241,11 @@
 		"regex": false,
 		"replace_history":
 		[
+			"s *Session",
+			"Player",
+			"GameStore",
+			"MoveStore",
+			"PlayerStore"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -88,8 +256,414 @@
 	"groups":
 	[
 		{
+			"selected": 10,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "model/game.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1240,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								966,
+								966
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "model/error.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1138,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "api/api.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 768,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								49,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "store/move_store.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3574,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								30,
+								30
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "store/player_store.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7305,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								637,
+								292
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "store/store.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1475,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								407,
+								407
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "store/game_store.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6227,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								271,
+								245
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "store/sql_store.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7685,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7169,
+								7169
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "api/player.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								84,
+								84
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "api/server.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1094,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								121,
+								87
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "api/session.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1622,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1037,
+								1037
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "model/client.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 561,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								30,
+								30
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "gogogo.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 754,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								719,
+								719
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "config/config.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 288,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								204,
+								204
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -99,7 +673,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 31.0
 	},
 	"layout":
 	{
@@ -132,7 +706,7 @@
 	"project": "gogogo.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 62.0
 	},
 	"save_all_on_build": true,
 	"select_file":
