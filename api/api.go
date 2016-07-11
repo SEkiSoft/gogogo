@@ -15,8 +15,8 @@ type Routes struct {
 	NeedPlayer *mux.Router
 	Games      *mux.Router
 	NeedGame   *mux.Router
-	Moves      *mux.Router
-	Ai         *mux.Router
+	// Ai         *mux.Router
+	Admin *mux.Router
 }
 
 var BaseRoutes *Routes
@@ -28,15 +28,16 @@ func InitApi() {
 	BaseRoutes.Players = Srv.Router.PathPrefix("/players").Subrouter()
 	BaseRoutes.NeedPlayer = BaseRoutes.Players.PathPrefix("/{player_id:[A-Za-z0-9]+}").Subrouter()
 
-	BaseRoutes.Games = Srv.Router.PathPrefix("/games").Subrouter()
+	BaseRoutes.Games = BaseRoutes.NeedPlayer.PathPrefix("/games").Subrouter()
 	BaseRoutes.NeedGame = BaseRoutes.Games.PathPrefix("/{game_id:[A-Za-z0-9]+}").Subrouter()
 
-	BaseRoutes.Moves = Srv.Router.PathPrefix("/moves").Subrouter()
+	// BaseRoutes.Ai = Srv.Router.PathPrefix("/ai").Subrouter()
 
-	BaseRoutes.Ai = Srv.Router.PathPrefix("/ai").Subrouter()
+	BaseRoutes.Admin = Srv.Router.PathPrefix("/admin/{admin_id:[A-za-z0-9+}").Subrouter()
 
 	InitPlayer()
 	InitGame()
+	InitAdmin()
 
 	Srv.Router.Handle("/", http.HandlerFunc(Handle404))
 }

@@ -19,6 +19,7 @@ func InitPlayer() {
 	BaseRoutes.NeedPlayer.Handle("/newemail", ApiPlayerRequired(updateEmail)).Methods("POST")
 	BaseRoutes.NeedPlayer.Handle("/get", ApiPlayerRequired(getPlayer)).Methods("GET")
 	BaseRoutes.NeedPlayer.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
+	BaseRoutes.NeedPlayer.Handle("/find", ApiPlayerRequired(findPlayer)).Methods("POST")
 }
 
 func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -80,6 +81,10 @@ func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
+
+}
+
+func findPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 
 }
 

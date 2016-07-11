@@ -30,18 +30,23 @@ type handler struct {
 	handleFunc     func(*Session, http.ResponseWriter, *http.Request)
 	requiredPlayer bool
 	requiredGame   bool
+	requiredAdmin  bool
 }
 
 func ApiHandler(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, false}
+	return &handler{h, false, false, false}
 }
 
 func ApiPlayerRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, true, false}
+	return &handler{h, true, false, false}
 }
 
 func ApiGameRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, true}
+	return &handler{h, false, true, false}
+}
+
+func ApiAdminRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
+	return &handler{h, false, false, true}
 }
 
 func GetProtocol(r *http.Request) string {
