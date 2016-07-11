@@ -142,3 +142,7 @@ func IsValidUsername(s string) bool {
 func (p *Player) Etag() string {
 	return Etag(p.Id, p.UpdateAt)
 }
+
+func (p *Player) Sanitize() {
+	p.Password = ""
+}

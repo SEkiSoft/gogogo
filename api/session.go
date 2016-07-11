@@ -81,3 +81,13 @@ func Handle404(w http.ResponseWriter, r *http.Request) {
 
 	RenderWebError(err, w, r)
 }
+
+func (s *Session) SetInvalidParam(location string, name string) {
+	s.Err = NewInvalidParamError(location, name)
+}
+
+func NewInvalidParamError(location string, name string) *model.Error {
+	err := model.NewLocError(location, "Invalid parameters error", map[string]interface{}{"Name": name}, "")
+	err.StatusCode = http.StatusBadRequest
+	return err
+}
