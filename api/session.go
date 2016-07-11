@@ -27,16 +27,21 @@ type Session struct {
 }
 
 type handler struct {
-	handleFunc    func(*Session, http.ResponseWriter, *http.Request)
-	requiredlayer bool
+	handleFunc     func(*Session, http.ResponseWriter, *http.Request)
+	requiredPlayer bool
+	requiredGame   bool
 }
 
 func ApiHandler(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false}
+	return &handler{h, false, false}
 }
 
 func ApiPlayerRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, true}
+	return &handler{h, true, false}
+}
+
+func ApiGameRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
+	return &handler{h, false, true}
 }
 
 func GetProtocol(r *http.Request) string {
