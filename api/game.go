@@ -17,11 +17,24 @@ func InitGame() {
 }
 
 func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
+	game := model.GameFromJson(r.Body)
 
+	if game == nil {
+		s.SetInvalidParam("createGame", "game");
+		return
+	}
+
+	game.PreSave();
+
+	if result := <-Srv.Store.Game().Save(game); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		w.Write([]byte(result.Data.(*model.Game).ToJson()))
+	}
 }
 
 func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
-
+	
 }
 
 func getGameStats(s *Session, w http.ResponseWriter, r *http.Request) {
