@@ -34,11 +34,29 @@ func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
-	
+	params := mux.Vars(r)
+	id := params["user_id"]
+
+	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		w.Write([]byte(result.Data.(*model.Game).ToJson()))
+	}
 }
 
 func getGameStats(s *Session, w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["user_id"]
 
+	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		g := result.Data.(*model.Game)
+
+		if stats := g.GetStats(); stats != nil {
+			w.Write([]byte(stats.ToJson()))
+		}
+	}
 }
 
 func updateGame(s *Session, w http.ResponseWriter, r *http.Request) {

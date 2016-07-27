@@ -68,3 +68,9 @@ func (g *Game) PreSave() {
 func (g *Game) PreUpdate() {
 	g.UpdateAt = GetMillis()
 }
+
+func (g *Game) GetStats() *GameStats {
+	var gs GameStats
+
+	return gs
+}
