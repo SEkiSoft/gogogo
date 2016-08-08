@@ -20,11 +20,11 @@ func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	game := model.GameFromJson(r.Body)
 
 	if game == nil {
-		s.SetInvalidParam("createGame", "game");
+		s.SetInvalidParam("createGame", "game")
 		return
 	}
 
-	game.PreSave();
+	game.PreSave()
 
 	if result := <-Srv.Store.Game().Save(game); result.Err != nil {
 		s.Err = result.Err
@@ -37,10 +37,18 @@ func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["user_id"]
 
-	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
-		s.Err = result.Err
+	if result, err := GetGame(id); err != nil {
+		s.Err = err
 	} else {
-		w.Write([]byte(result.Data.(*model.Game).ToJson()))
+		w.Write([]byte(result.ToJson()))
+	}
+}
+
+func GetGame(id string) (*model.Game, *model.Error) {
+	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
+		return result.Error
+	} else {
+		return result.Data.(*model.Game)
 	}
 }
 
@@ -60,9 +68,46 @@ func getGameStats(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func updateGame(s *Session, w http.ResponseWriter, r *http.Request) {
+	game := model.GameFromJson(r.Body)
 
+	if game == nil {
+		s.SetInvalidParam("updateGame", "game")
+		return
+	}
+
+	game.PreUpdate()
+
+	if result := <-Srv.Store.Game().Update(game); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		w.Write([]byte(result.Data.(*model.Game).ToJson()))
+	}
 }
 
 func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
+	move := model.MoveFromJson(r.Body)
 
+	if move == nil {
+		s.SetInvalidParam("makeMove", "move")
+		return
+	}
+
+	var game *model.Game
+	var err *model.Error
+
+	if game, err = GetGame(id); err != nil {
+		s.Err = err
+		return
+	}
+
+	if moveErr := move.IsValid(game); moveErr != nil {
+		s.Err = moveErr
+		return
+	}
+
+	if result := <-Srv.Store.Move().Save(move); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		w.Write([]byte(result.Data.(*model.Move).ToJson()))
+	}
 }

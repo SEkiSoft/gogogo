@@ -34,6 +34,10 @@ func (m *Move) PreSave() {
 	}
 }
 
+func (m *Move) IsValid(game *Game) *Error {
+
+}
+
 func MoveFromJson(data io.Reader) *Move {
 	decoder := json.NewDecoder(data)
 	var m Move
