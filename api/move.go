@@ -15,13 +15,24 @@ func InitMove() {
 }
 
 func getMove(s *Session, w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["user_id"]
 
+	if result, err := GetMove(id); err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(result.ToJson()))
+	}
+}
+
+func GetMove(id string) (*model.Move, *model.Error) {
+	if result := <-Srv.Store.Move().Get(id); result.Err != nil {
+		return nil, result.Error
+	} else {
+		return result.Data.(*model.Move), nil
+	}
 }
 
 func getGameMoves(s *Session, w http.ResponseWriter, r *http.Request) {
-
-}
-
-func getPlayerMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 
 }

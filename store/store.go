@@ -59,7 +59,6 @@ type SqlMoveStore interface {
 	Save(move *model.Move) StoreChannel
 	Get(id string) StoreChannel
 	GetByGame(gameId string) StoreChannel
-	GetByPlayer(playerId string) StoreChannel
 	GetTotalMovesCount() StoreChannel
 	Delete(id string) StoreChannel
 }
