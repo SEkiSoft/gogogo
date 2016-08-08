@@ -35,7 +35,8 @@ func (m *Move) PreSave() {
 }
 
 func (m *Move) IsValid(game *Game) *Error {
-
+	// TODO
+	return nil
 }
 
 func MoveFromJson(data io.Reader) *Move {
