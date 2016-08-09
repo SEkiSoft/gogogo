@@ -49,3 +49,23 @@ func MoveFromJson(data io.Reader) *Move {
 		return nil
 	}
 }
+
+func MovesToJson(m []*Move) string {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
+
+func MovesFromJson(data io.Reader) []*Move {
+	decoder := json.NewDecoder(data)
+	var o []*Move
+	err := decoder.Decode(&o)
+	if err == nil {
+		return o
+	} else {
+		return nil
+	}
+}
