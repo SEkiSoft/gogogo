@@ -5,6 +5,9 @@ package api
 
 import (
 	"net/http"
+
+	"github.com/davidlu1997/gogogo/model"
+	"github.com/gorilla/mux"
 )
 
 func InitMove() {
@@ -16,7 +19,7 @@ func InitMove() {
 
 func getMove(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id := params["user_id"]
+	id := params["id"]
 
 	if result, err := GetMove(id); err != nil {
 		s.Err = err
@@ -45,13 +48,13 @@ func GetAllMoves() (*model.Move, *model.Error) {
 	if result := <-Srv.Store.Move().GetAll(); result.Err != nil {
 		return nil, result.Error
 	} else {
-		return result.Data.(*model.Move), nil
+		return result.Data.([]*model.Move), nil
 	}
 }
 
 func getGameMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	gameId := params["game_id"]	
+	gameId := params["id"]	
 
 	if result, err := GetGameMoves(gameId); err != nil {
 		s.Err = err
@@ -64,6 +67,10 @@ func GetGameMoves(gameId string) (*model.Move, *model.Error) {
 	if result := <-Srv.Store.Move().GetByGame(gameId); result.Err != nil {
 		return nil, result.Error
 	} else {
-		return result.Data.(*model.Move), nil
+		return result.Data.([]*model.Move), nil
 	}
+}
+
+func getPlayerMoves(s *Session, w http.ResponseWriter, r *http.Request) {
+
 }
