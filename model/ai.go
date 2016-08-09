@@ -6,7 +6,6 @@ package model
 import (
 	"encoding/json"
 	"io"
-	"strconv"
 )
 
 type Ai struct {
@@ -21,13 +20,13 @@ func (ai *Ai) ToJson() string {
 	}
 }
 
-func AiFromJson(data io.Reader) *Ai {
+func AiFromJson(data io.Reader) (*Ai, *Error) {
 	decoder := json.NewDecoder(data)
 	var ai Ai
 	err := decoder.Decode(&ai)
 	if err == nil {
-		return &ai
+		return &ai, nil
 	} else {
-		return NewLocError("AiFromJson", "JSON decoding error", nil, err.Error())
+		return nil, NewLocError("AiFromJson", "JSON decoding error", nil, err.Error())
 	}
 }

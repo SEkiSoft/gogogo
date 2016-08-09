@@ -5,7 +5,6 @@ package model
 
 import (
 	"encoding/json"
-	"io"
 )
 
 type GameStats struct {

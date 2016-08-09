@@ -5,6 +5,9 @@ package api
 
 import (
 	"net/http"
+
+	"github.com/davidlu1997/gogogo/model"
+	"github.com/gorilla/mux"
 )
 
 func InitGame() {
@@ -46,9 +49,9 @@ func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 
 func GetGame(id string) (*model.Game, *model.Error) {
 	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
-		return result.Error
+		return nil, result.Err
 	} else {
-		return result.Data.(*model.Game)
+		return result.Data.(*model.Game), nil
 	}
 }
 
@@ -95,7 +98,7 @@ func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
 	var game *model.Game
 	var err *model.Error
 
-	if game, err = GetGame(id); err != nil {
+	if game, err = GetGame(move.GameId); err != nil {
 		s.Err = err
 		return
 	}

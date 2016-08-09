@@ -15,6 +15,7 @@ type Routes struct {
 	NeedPlayer *mux.Router
 	Games      *mux.Router
 	NeedGame   *mux.Router
+	Moves      *mux.Router
 	Ai         *mux.Router
 	AiNeedGame *mux.Router
 	Admin      *mux.Router

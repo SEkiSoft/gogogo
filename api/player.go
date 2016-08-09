@@ -94,5 +94,9 @@ func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
 }
 
 func GetPlayer(id string) (*model.Player, *model.Error) {
-
+	if result := <-Srv.Store.Player().Get(id); result.Err != nil {
+		return nil, result.Err
+	} else {
+		return result.Data.(*model.Player), nil
+	}
 }

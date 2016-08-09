@@ -72,5 +72,5 @@ func (g *Game) PreUpdate() {
 func (g *Game) GetStats() *GameStats {
 	var gs GameStats
 
-	return gs
+	return &gs
 }

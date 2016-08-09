@@ -18,10 +18,6 @@ func getMove(s *Session, w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
-
-}
-
 func getGameMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 
 }

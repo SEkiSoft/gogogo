@@ -6,10 +6,15 @@ package model
 import (
 	"bytes"
 	"encoding/base32"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/mail"
+	"strings"
+	"time"
+
 	"github.com/pborman/uuid"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 var encoding = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h769")
