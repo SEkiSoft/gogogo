@@ -1,0 +1,4 @@
+language: go
+go:
+    - tip
+go_import_path: github.com/davidlu1997/gogogo
