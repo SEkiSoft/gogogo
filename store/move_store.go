@@ -108,6 +108,27 @@ func (ms MoveStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
+func (ms MoveStore) GetByPlayer(playerId string) StoreChannel {
+	storeChannel := make(StoreChannel)
+
+	go func() {
+		result := StoreResult{}
+
+		var data []*model.Move
+
+		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerId+", "+err.Error())
+		}
+
+		result.Data = &data
+
+		storeChannel <- result
+		close(storeChannel)
+	}()
+
+	return storeChannel
+}
+
 func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 	storeChannel := make(StoreChannel)
 

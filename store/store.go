@@ -60,6 +60,7 @@ type SqlMoveStore interface {
 	Get(id string) StoreChannel
 	GetByGame(gameId string) StoreChannel
 	GetAll() StoreChannel
+	GetByPlayer(playerId string) StoreChannel
 	GetTotalMovesCount() StoreChannel
 	Delete(id string) StoreChannel
 }
