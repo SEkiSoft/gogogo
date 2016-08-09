@@ -90,7 +90,7 @@ func (ms MoveStore) GetByGame(gameId string) StoreChannel {
 }
 
 func (ms MoveStore) GetAll() StoreChannel {
-	storeChannel := make(storeChannel)
+	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
