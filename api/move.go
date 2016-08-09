@@ -66,7 +66,7 @@ func getPlayerMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetPlayerMoves(playerId string)  ([]*model.Move, *Error) {
+func GetPlayerMoves(playerId string)  ([]*model.Move, *model.Error) {
 	if result := <-Srv.Store.Move().GetByPlayer(playerId); result.Err != nil {
 		return nil, result.Err
 	} else {
