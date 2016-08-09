@@ -33,6 +33,22 @@ func GetMove(id string) (*model.Move, *model.Error) {
 	}
 }
 
+func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
+	if result, err := GetAllMoves(); result.Err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(result.ToJson()))
+	}
+}
+
+func GetAllMoves() (*model.Move, *model.Error) {
+	if result := <-Srv.Store.Move().GetAll(); result.Err != nil {
+		return nil, result.Error
+	} else {
+		return result.Data.(*model.Move), nil
+	}
+}
+
 func getGameMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	gameId := params["game_id"]	
