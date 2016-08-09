@@ -1,18 +1,18 @@
 BUILD_WEBAPP_DIR = ./webapp
 
-check-style:
-	@echo Checking style
-
-	gofmt -w .
-
-	cd $(BUILD_WEBAPP_DIR) && $(MAKE) check-style
-
 build:
 	@echo Building
 
 	go build
 
 	cd $(BUILD_WEBAPP_DIR) && $(MAKE) run
+
+check-style:
+	@echo Checking style
+
+	gofmt -w .
+
+	cd $(BUILD_WEBAPP_DIR) && $(MAKE) check-style
 
 run-server:
 	@echo Running Server
