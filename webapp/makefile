@@ -12,6 +12,5 @@ check-style:
 
 clean:
 	@echo Cleaning Client
-	
 	rm -rf node_modules
 	rm public/*
