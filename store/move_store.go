@@ -89,6 +89,25 @@ func (ms MoveStore) GetByGame(gameId string) StoreChannel {
 	return storeChannel
 }
 
+func (ms MoveStore) GetAll() StoreChannel {
+	storeChannel := make(storeChannel)
+
+	go func() {
+		result := StoreResult{}
+		var data []*model.Move
+
+		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves"); err != nil {
+			result.Err = model.NewLocError("MoveStore.GetAll", "Couldn't retrieve moves", nil, err.Error())
+		}
+		result.Data = data
+
+		storeChannel <- result
+		close(storeChannel)
+	}()
+
+	return storeChannel
+}
+
 func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 	storeChannel := make(StoreChannel)
 
