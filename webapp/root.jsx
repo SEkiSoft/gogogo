@@ -5,13 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, browserHistory} from 'react-router/es6';
 
-import rRoot from 'routes/route_root.jsx';
-
 function renderRootComponent() {
     ReactDOM.render((
         <Router
             history={browserHistory}
-            routes={rRoot}
+            routes={null}
         />
     ),
     document.getElementById('root'));
