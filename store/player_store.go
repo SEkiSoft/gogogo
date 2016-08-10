@@ -124,7 +124,7 @@ func (ps PlayerStore) UpdatePassword(playerId string, newPassword string) StoreC
 	return storeChannel
 }
 
-func (ps PlayerStore) Get(playerId string) StoreChannel {
+func (ps PlayerStore) Get(id string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -167,7 +167,7 @@ func (ps PlayerStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
-func (ps PlayerStore) GetPlayerGames(playerId string) StoreChannel {
+func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {

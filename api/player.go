@@ -13,12 +13,11 @@ import (
 
 func InitPlayer() {
 	BaseRoutes.Players.Handle("/create", ApiHandler(createPlayer)).Methods("POST")
-
 	BaseRoutes.NeedPlayer.Handle("/update", ApiPlayerRequired(updatePlayer)).Methods("POST")
 	BaseRoutes.NeedPlayer.Handle("/get", ApiPlayerRequired(getPlayer)).Methods("GET")
 	BaseRoutes.NeedPlayer.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
-	BaseRoutes.NeedPlayer.Handle("/find", ApiPlayerRequired(findPlayer)).Methods("POST")
-	//Need to add endpoints for getByEmail and getByUsername 
+	BaseRoutes.Player.Handle("/get_email/{email:[A-Za-z0-9+.@]}", ApiPlayer(getPlayerByEmail)).Methods("GET")
+	BaseRoutes.Player.Handle("/get_username/{username:[A-Za-z0-9+.@]}", ApiPlayer(getPlayerByUsername)).Methods("GET")
 }
 
 func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -70,7 +69,7 @@ func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	if result, err := GetPlayer(playerId); err != nil {
 		s.Err = err
 	} else {
-		w.Write([]byte(result.ToJson(result)))
+		w.Write([]byte(result.ToJson()))
 	}	
 }
 
@@ -93,26 +92,26 @@ func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	}	
 }
 
-func GetPlayerGames(playerId string) ([]*model.Game, *model.Error) {
-	if result := <-Srv.Store.Player().GetPlayerGames(playerId); result.Err != nil {
+func GetPlayerGames(id string) ([]*model.Game, *model.Error) {
+	if result := <-Srv.Store.Player().GetPlayerGames(id); result.Err != nil {
 		return nil, result.Err
 	} else {
 		return result.Data.([]*model.Game), nil
 	}
 }
 
-func getEmail(s *Session, w http.ResponseWriter, r *http.Request) {
+func getPlayerByEmail(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	email := params["email"]	
 
 	if result, err := GetPlayer(email); err != nil {
 		s.Err = err
 	} else {
-		w.Write([]byte(result.ToJson(result)))
+		w.Write([]byte(result.ToJson()))
 	}	
 }
 
-func GetEmail(email string) (*model.Player, *model.Error) {
+func GetPlayerByEmail(email string) (*model.Player, *model.Error) {
 	if result := <-Srv.Store.Player().GetByEmail(email); result.Err != nil {
 		return nil, result.Err
 	} else {
@@ -120,18 +119,18 @@ func GetEmail(email string) (*model.Player, *model.Error) {
 	}
 }
 
-func getUsername(s *Session, w http.ResponseWriter, r *http.Request) {
+func getPlayerByUsername(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	email := params["username"]	
+	username := params["username"]	
 
 	if result, err := GetPlayer(username); err != nil {
 		s.Err = err
 	} else {
-		w.Write([]byte(result.ToJson(result)))
+		w.Write([]byte(result.ToJson()))
 	}	
 }
 
-func GetUsername(username string) (*model.Player, *model.Error) {
+func GetPlayerByUsername(username string) (*model.Player, *model.Error) {
 	if result := <-Srv.Store.Player().GetByEmail(username); result.Err != nil {
 		return nil, result.Err
 	} else {
