@@ -130,10 +130,10 @@ func (ps PlayerStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := ps.GetMaster().Get(model.Player{}, playerId); err != nil {
-			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+playerId+", "+err.Error())
+		if obj, err := ps.GetMaster().Get(model.Player{}, id); err != nil {
+			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+id+", "+err.Error())
 		} else if obj == nil {
-			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+playerId)
+			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+id)
 		} else {
 			result.Data = obj.(*model.Player)
 		}
