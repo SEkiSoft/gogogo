@@ -2,7 +2,6 @@ language: go
 go:
     - tip
 script:
-    - make
-    - cd webapp/
-    - npm run lint
+    - make check-style
+    - make build
 go_import_path: github.com/davidlu1997/gogogo
