@@ -16,8 +16,8 @@ func InitPlayer() {
 	BaseRoutes.NeedPlayer.Handle("/update", ApiPlayerRequired(updatePlayer)).Methods("POST")
 	BaseRoutes.NeedPlayer.Handle("/get", ApiPlayerRequired(getPlayer)).Methods("GET")
 	BaseRoutes.NeedPlayer.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
-	BaseRoutes.Player.Handle("/get_email/{email:[A-Za-z0-9+.@]}", ApiPlayer(getPlayerByEmail)).Methods("GET")
-	BaseRoutes.Player.Handle("/get_username/{username:[A-Za-z0-9+.@]}", ApiPlayer(getPlayerByUsername)).Methods("GET")
+	BaseRoutes.NeedPlayer.Handle("/get_email/{email:[A-Za-z0-9+.@]}", ApiPlayerRequired(getPlayerByEmail)).Methods("GET")
+	BaseRoutes.NeedPlayer.Handle("/get_username/{username:[A-Za-z0-9+.@]}", ApiPlayerReuqired(getPlayerByUsername)).Methods("GET")
 }
 
 func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
