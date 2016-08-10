@@ -183,6 +183,8 @@ func (ps PlayerStore) GetPlayerGames(playerId string) StoreChannel {
 		storeChannel <- result
 		close(storeChannel)
 	}()
+
+	return storeChannel
 } 
 
 func (ps PlayerStore) GetByEmail(email string) StoreChannel {
