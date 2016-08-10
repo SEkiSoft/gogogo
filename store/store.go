@@ -46,13 +46,14 @@ type SqlGameStore interface {
 type SqlPlayerStore interface {
 	Save(player *model.Player) StoreChannel
 	Update(player *model.Player) StoreChannel
-	UpdatePassword(playerId, newPassword string) StoreChannel
+	UpdatePassword(id, newPassword string) StoreChannel
 	Get(id string) StoreChannel
 	GetAll() StoreChannel
+	GetPlayerGames(id string) StoreChannel
 	GetByEmail(email string) StoreChannel
 	GetByUsername(username string) StoreChannel
 	GetTotalPlayersCount() StoreChannel
-	Delete(playerId string) StoreChannel
+	Delete(id string) StoreChannel
 }
 
 type SqlMoveStore interface {

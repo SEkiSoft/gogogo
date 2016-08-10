@@ -167,6 +167,26 @@ func (ps PlayerStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
+func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
+	storeChannel := make(StoreChannel)
+
+	go func() {
+		result := StoreResult{}
+
+		var data []*model.Game
+		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players WHERE Id = :Id", map[string]interface{}{"Id": id}); err != nil {
+			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
+		}
+
+		result.Data = data
+
+		storeChannel <- result
+		close(storeChannel)
+	}()
+
+	return storeChannel
+} 
+
 func (ps PlayerStore) GetByEmail(email string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
