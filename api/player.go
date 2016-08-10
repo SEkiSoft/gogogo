@@ -89,7 +89,7 @@ func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	if result, err := GetPlayerGames(playerId); err != nil {
 		s.Err = err
 	} else {
-		w.Write([]byte(model.MovesToJson(result)))
+		w.Write([]byte(model.GamesToJson(result)))
 	}	
 }
 

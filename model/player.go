@@ -146,3 +146,12 @@ func (p *Player) Etag() string {
 func (p *Player) Sanitize() {
 	p.Password = ""
 }
+
+func GamesToJson(m []*Game) string {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
