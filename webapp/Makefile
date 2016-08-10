@@ -8,7 +8,7 @@ install: package.json
 	npm install
 
 check-style:
-	eslint --ext ".jsx" --ignore-pattern node_modules --quiet .
+	./node_modules/.bin/semistandard
 
 clean:
 	@echo Cleaning Client
