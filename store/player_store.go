@@ -174,7 +174,7 @@ func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players WHERE Id = :Id", map[string]interface{}{"Id": id}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
 		}
 
