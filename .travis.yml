@@ -1,4 +1,8 @@
 language: go
 go:
     - tip
+script:
+    - make
+    - cd webapp/
+    - npm run lint
 go_import_path: github.com/davidlu1997/gogogo
