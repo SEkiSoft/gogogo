@@ -2,5 +2,5 @@
 // See License.txt
 
 export default {
-    path: '/'
+  path: '/'
 };

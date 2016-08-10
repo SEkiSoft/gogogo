@@ -1,4 +1,7 @@
 language: go
 go:
     - tip
+script:
+    - make build
+    - make check-style
 go_import_path: github.com/davidlu1997/gogogo
