@@ -19,7 +19,8 @@
   "devDependencies": {},
   "scripts": {
     "dev": "webpack -d --watch",
-    "build": "webpack -p"
+    "build": "webpack -p",
+	"lint": "semistandard"
   },
   "author": "",
   "license": "MIT",
