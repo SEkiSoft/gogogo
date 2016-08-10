@@ -47,8 +47,9 @@ type SqlPlayerStore interface {
 	Save(player *model.Player) StoreChannel
 	Update(player *model.Player) StoreChannel
 	UpdatePassword(playerId, newPassword string) StoreChannel
-	Get(id string) StoreChannel
+	Get(playerId string) StoreChannel
 	GetAll() StoreChannel
+	GetPlayerGames(playerId string) StoreChannel
 	GetByEmail(email string) StoreChannel
 	GetByUsername(username string) StoreChannel
 	GetTotalPlayersCount() StoreChannel

@@ -124,16 +124,16 @@ func (ps PlayerStore) UpdatePassword(playerId string, newPassword string) StoreC
 	return storeChannel
 }
 
-func (ps PlayerStore) Get(id string) StoreChannel {
+func (ps PlayerStore) Get(playerId string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := ps.GetMaster().Get(model.Player{}, id); err != nil {
-			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+id+", "+err.Error())
+		if obj, err := ps.GetMaster().Get(model.Player{}, playerId); err != nil {
+			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+playerId+", "+err.Error())
 		} else if obj == nil {
-			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+id)
+			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+playerId)
 		} else {
 			result.Data = obj.(*model.Player)
 		}
@@ -166,6 +166,24 @@ func (ps PlayerStore) GetAll() StoreChannel {
 
 	return storeChannel
 }
+
+func (ps PlayerStore) GetPlayerGames(playerId string) StoreChannel {
+	storeChannel := make(StoreChannel)
+
+	go func() {
+		result := StoreResult{}
+
+		var data []*model.Game
+		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
+		}
+
+		result.Data = data
+
+		storeChannel <- result
+		close(storeChannel)
+	}()
+} 
 
 func (ps PlayerStore) GetByEmail(email string) StoreChannel {
 	storeChannel := make(StoreChannel)
