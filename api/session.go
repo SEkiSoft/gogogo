@@ -24,6 +24,7 @@ type Session struct {
 	Path      string
 	Err       *model.Error
 	PlayerId  string
+	GameId    string
 	RootUrl   string
 }
 
@@ -98,13 +99,13 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if s.Err == nil && h.requiredPlayer {
-		s.CheckPlayerToken()
+		s.CheckPlayerRequired()
 	}
 	if s.Err == nil && h.requiredGame {
-		s.CheckGameToken()
+		s.CheckGameRequired()
 	}
 	if s.Err == nil && h.requiredAdmin {
-		s.CheckAdminToken()
+		s.CheckAdminRequired()
 	}
 	if s.Err == nil {
 		h.handleFunc(s, w, r)
@@ -136,16 +137,33 @@ func (s *Session) SetInvalidParam(location string, name string) {
 	s.Err = NewInvalidParamError(location, name)
 }
 
-func (s *Session) CheckPlayerToken() {
-	// TODO
+func (s *Session) CheckPlayerRequired() {
+	if len(s.PlayerId) == 0 {
+		s.Err = model.NewLocError("CheckPlayerRequired", "Player invalid", nil, "")
+		s.Err.StatusCode = http.StatusUnauthorized
+	}
 }
 
-func (s *Session) CheckGameToken() {
-	// TODO
+func (s *Session) CheckGameRequired() {
+	if len(s.GameId) == 0 {
+		s.Err = model.NewLocError("CheckGameRequired", "Game invalid", nil, "")
+		s.Err.StatusCode = http.StatusUnauthorized
+	}
 }
 
-func (s *Session) CheckAdminToken() {
-	// TODO
+func (s *Session) CheckAdminRequired() {
+	if len(s.PlayerId) == 0 {
+		s.Err = model.NewLocError("CheckAdminRequired", "Player invalid", nil, "")
+		s.Err.StatusCode = http.StatusUnauthorized
+	} else if !s.IsAdmin() {
+		s.Err = model.NewLocError("CheckAdminRequired", "Admin invalid", nil, "")
+		s.Err.StatusCode = http.StatusUnauthorized
+	}
+}
+
+func (s *Session) IsAdmin() bool {
+	// TODO check for Admin
+	return true
 }
 
 func NewInvalidParamError(location string, name string) *model.Error {
