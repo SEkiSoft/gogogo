@@ -6,6 +6,7 @@ package api
 import (
 	"net"
 	"net/http"
+	"strings"
 
 	l4g "github.com/alecthomas/log4go"
 	"github.com/davidlu1997/gogogo/model"
@@ -31,22 +32,23 @@ type handler struct {
 	requiredPlayer bool
 	requiredGame   bool
 	requiredAdmin  bool
+	isApi          bool
 }
 
 func ApiHandler(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, false, false}
+	return &handler{h, false, false, false, true}
 }
 
 func ApiPlayerRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, true, false, false}
+	return &handler{h, true, false, false, true}
 }
 
 func ApiGameRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, true, false}
+	return &handler{h, false, true, false, true}
 }
 
 func ApiAdminRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, false, true}
+	return &handler{h, false, false, true, true}
 }
 
 func GetProtocol(r *http.Request) string {
@@ -72,7 +74,50 @@ func GetIpAddress(r *http.Request) string {
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//TODO
+
+	s := &Session{}
+	s.RequestId = model.NewId()
+	s.IpAddress = GetIpAddress(r)
+	s.RootUrl = GetProtocol(r) + "://" + r.Host
+	s.Err = nil
+
+	if h.isApi {
+		w.Header().Set(model.HEADER_REQUEST_ID, s.RequestId)
+		w.Header().Set("Content-Type", "application/json")
+	}
+
+	// TODO Get token from header, cookie, and query string
+	// Authenicate user based on token
+	// Using PlayerRequired, GameRequired, AdminRequired, etc.
+
+	if h.isApi {
+		s.Path = r.URL.Path
+	} else {
+		splitURL := strings.Split(r.URL.Path, "/")
+		s.Path = "/" + strings.Join(splitURL[2:], "/")
+	}
+
+	if s.Err == nil && h.requiredPlayer {
+		s.CheckPlayerToken()
+	}
+	if s.Err == nil && h.requiredGame {
+		s.CheckGameToken()
+	}
+	if s.Err == nil && h.requiredAdmin {
+		s.CheckAdminToken()
+	}
+	if s.Err == nil {
+		h.handleFunc(s, w, r)
+	}
+
+	if s.Err != nil {
+		if h.isApi {
+			w.WriteHeader(s.Err.StatusCode)
+			w.Write([]byte(s.Err.ToJson()))
+		} else {
+			RenderWebError(s.Err, w, r)
+		}
+	}
 }
 
 func RenderWebError(err *model.Error, w http.ResponseWriter, r *http.Request) {
@@ -89,6 +134,18 @@ func Handle404(w http.ResponseWriter, r *http.Request) {
 
 func (s *Session) SetInvalidParam(location string, name string) {
 	s.Err = NewInvalidParamError(location, name)
+}
+
+func (s *Session) CheckPlayerToken() {
+	// TODO
+}
+
+func (s *Session) CheckGameToken() {
+	// TODO
+}
+
+func (s *Session) CheckAdminToken() {
+	// TODO
 }
 
 func NewInvalidParamError(location string, name string) *model.Error {
