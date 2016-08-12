@@ -1,4 +1,4 @@
-Name the PR as the Github Issue Number. Also name branches as the Issue Number.
+Name the PR as the GitHub Issue Number. Also, name branches the Issue Number.
 
 Changelog:
 
