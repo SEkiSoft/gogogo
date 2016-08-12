@@ -52,7 +52,7 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	props := model.MapFromJson(strings.NewReader(data))
 	player.Email = props["email"]
 
-	updatedPlayer, err := CreatePlayer(player)
+	updatedPlayer, err := UpdatePlayer(player)
 	if err != nil {
 		s.Err = err
 		return
