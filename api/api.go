@@ -4,8 +4,6 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gorilla/mux"
 )
 
@@ -25,23 +23,21 @@ var BaseRoutes *Routes
 
 func InitApi() {
 	BaseRoutes = &Routes{}
-	BaseRoutes.Root = Srv.Router
+	BaseRoutes.Root = Srv.Router.PathPrefix("/api").Subrouter()
 
-	BaseRoutes.Players = Srv.Router.PathPrefix("/players").Subrouter()
+	BaseRoutes.Players = BaseRoutes.Root.PathPrefix("/players").Subrouter()
 	BaseRoutes.NeedPlayer = BaseRoutes.Players.PathPrefix("/{player_id:[A-Za-z0-9]+}").Subrouter()
 
 	BaseRoutes.Games = BaseRoutes.NeedPlayer.PathPrefix("/games").Subrouter()
 	BaseRoutes.NeedGame = BaseRoutes.Games.PathPrefix("/{game_id:[A-Za-z0-9]+}").Subrouter()
 
-	BaseRoutes.Ai = Srv.Router.PathPrefix("/ai").Subrouter()
+	BaseRoutes.Ai = BaseRoutes.Root.PathPrefix("/ai").Subrouter()
 	BaseRoutes.AiNeedGame = BaseRoutes.Ai.PathPrefix("/{game_id:[A-Za-z0-9]+}").Subrouter()
 
-	BaseRoutes.Admin = Srv.Router.PathPrefix("/admin/{admin_id:[A-za-z0-9+}").Subrouter()
+	BaseRoutes.Admin = BaseRoutes.Root.PathPrefix("/admin/{admin_id:[A-za-z0-9+}").Subrouter()
 
 	InitPlayer()
 	InitGame()
 	InitAdmin()
 	InitAi()
-
-	Srv.Router.Handle("/", http.HandlerFunc(Handle404))
 }
