@@ -1,7 +1,15 @@
 BUILD_WEBAPP_DIR = ./webapp
 
+build-server:
+	@echo Building server
+	go build
+
+build-client:
+	@echo Building client
+	cd $(BUILD_WEBAPP_DIR) && $(MAKE) run
+
 build:
-	@echo Building
+	@echo Building server and client
 	go build
 	cd $(BUILD_WEBAPP_DIR) && $(MAKE) run
 
