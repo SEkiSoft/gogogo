@@ -9,7 +9,6 @@ Ex:
 2. [Implemented...]
 etc.
 
-
 Issue Link:
 
 [Provide a link to the issue on Github that the PR addresses]
