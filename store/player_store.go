@@ -185,7 +185,7 @@ func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 	}()
 
 	return storeChannel
-} 
+}
 
 func (ps PlayerStore) GetByEmail(email string) StoreChannel {
 	storeChannel := make(StoreChannel)
