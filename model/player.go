@@ -14,6 +14,7 @@ import (
 const (
 	DEFAULT_LOCALE      = "en"
 	MIN_PASSWORD_LENGTH = 5
+	MAX_PASSWORD_LENGTH = 64
 	MIN_USERNAME_LENGTH = 4
 	MAX_USERNAME_LENGTH = 24
 )
@@ -35,11 +36,11 @@ func (p *Player) IsValid() *Error {
 		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
 	}
 
-	if p.CreateAt == 0 {
+	if p.CreateAt >= 0 {
 		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.Id)
 	}
 
-	if p.UpdateAt == 0 {
+	if p.UpdateAt >= 0 {
 		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.Id)
 	}
 
@@ -74,7 +75,7 @@ func (p *Player) PreSave() {
 		p.Locale = DEFAULT_LOCALE
 	}
 
-	if len(p.Password) > 0 {
+	if len(p.Password) >= MIN_PASSWORD_LENGTH && len(p.Password) <= MAX_PASSWORD_LENGTH {
 		p.Password = HashPassword(p.Password)
 	}
 }
