@@ -47,13 +47,22 @@ func GameFromJson(data io.Reader) *Game {
 	return nil
 }
 
-func GamesToJson(m []*Game) string {
-	json, err := json.Marshal(m)
+func GamesToJson(g []*Game) string {
+	json, err := json.Marshal(g)
 	if err == nil {
 		return string(json)
 	}
 
 	return "[]"
+}
+
+func GameToJson(g *Game) string {
+	b, err := json.Marshal(g)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
 }
 
 func (g *Game) IsValid() *Error {

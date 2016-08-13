@@ -109,6 +109,24 @@ func PlayerFromJson(data io.Reader) *Player {
 	return nil
 }
 
+func PlayersToJson(p []*Player) string {
+	json, err := json.Marshal(p)
+	if err == nil {
+		return string(json)
+	}
+
+	return "[]"
+}
+
+func PlayerToJson(p []*Player) string {
+	b, err := json.Marshal(p)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
+
 func ComparePassword(hash string, password string) bool {
 	if len(password) == 0 || len(hash) == 0 {
 		return false

@@ -5,6 +5,8 @@ package api
 
 import (
 	"net/http"
+
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 func InitAdmin() {
@@ -16,21 +18,79 @@ func InitAdmin() {
 }
 
 func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
+	// params := mux.Vars(r)
+	// TODO: check the admin ID
 
+	if result, err := GetAllGames(); err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(model.GamesToJson(result)))
+	}
+}
+
+func GetAllGames() ([]*model.Game, *model.Error) {
+	if result := <-Srv.Store.Game().GetAll(); result.Err != nil {
+		return nil, result.Err
+	} else {
+		return result.Data.([]*model.Game), nil
+	}
 }
 
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
+	// params := mux.Vars(r)
+	// TODO: check the admin ID
 
+	if result, err := GetAllPlayers(); err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(model.PlayersToJson(result)))
+	}
+}
+
+func GetAllPlayers() ([]*model.Player, *model.Error) {
+	if result := <-Srv.Store.Player().GetAll(); result.Err != nil {
+		return nil, result.Err
+	} else {
+		return result.Data.([]*model.Player), nil
+	}
 }
 
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
+	// params := mux.Vars(r)
+	// TODO: check the admin ID
 
+	if result, err := GetAllMoves(); err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(model.MovesToJson(result)))
+	}
+}
+
+func GetAllMoves() ([]*model.Move, *model.Error) {
+	if result := <-Srv.Store.Move().GetAll(); result.Err != nil {
+		return nil, result.Err
+	} else {
+		return result.Data.([]*model.Move), nil
+	}
 }
 
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
+	// params := mux.Vars(r)
+	// TODO: check the admin ID
 
+	if result := <-Srv.Store.Game().GetAll(); result.Err != nil {
+		s.Err = result.Err
+	} else {
+		g := result.Data.([]*model.Game)
+		stats := make([]*model.GameStats, len(g))
+
+		for index, element := range g {
+			stats[index] = element.GetStats()
+		}
+		w.Write([]byte(model.GameStatssToJson(stats)))
+	}
 }
 
 func getAi(s *Session, w http.ResponseWriter, r *http.Request) {
-
+	// TODO: Complete this method when AI becomes accessible
 }
