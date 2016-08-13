@@ -5,10 +5,11 @@ package model
 
 import (
 	"encoding/json"
-	"golang.org/x/crypto/bcrypt"
 	"io"
 	"regexp"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -16,6 +17,7 @@ const (
 	MIN_PASSWORD_LENGTH = 5
 	MIN_USERNAME_LENGTH = 4
 	MAX_USERNAME_LENGTH = 24
+	ADMIN_USERNAME      = "admin"
 )
 
 type Player struct {

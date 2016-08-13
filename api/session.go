@@ -162,8 +162,12 @@ func (s *Session) CheckAdminRequired() {
 }
 
 func (s *Session) IsAdmin() bool {
-	// TODO check for Admin
-	return true
+	if player, err := GetPlayer(s.PlayerId); err == nil {
+		if player.Username == model.ADMIN_USERNAME {
+			return true
+		}
+	}
+	return false
 }
 
 func NewInvalidParamError(location string, name string) *model.Error {
