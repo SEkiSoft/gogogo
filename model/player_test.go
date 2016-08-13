@@ -88,12 +88,12 @@ func TestPreSave(t *testing.T) {
 	o.Etag()
 }
 
-func TestPreUpdate(t *testing.T) {
+func TestPlayerPreUpdate(t *testing.T) {
 	o := Player{}
 	o.PreUpdate()
 }
 
-func TestComparePassword(t *testing.T) {
+func TestPlayerComparePassword(t *testing.T) {
 	o := Player{}
 	password := "password"
 	hash := bcryt.GenerateFromPassword(password, bcrypt.DefaultCost)
@@ -107,7 +107,7 @@ func TestComparePassword(t *testing.T) {
 	}
 }
 
-func TestIsValidUsername(t *testing.T) {
+func TestPlayerIsValidUsername(t *testing.T) {
 	o := Player{}
 
 	username = ""
