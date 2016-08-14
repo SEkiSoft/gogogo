@@ -6,7 +6,6 @@ class App extends Component {
   
   constructor(props) {
     super(props);
-    this.setPiece = this.setPiece.bind(this);
     this.state = {
       gameData: [['', 'b', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
                  ['', 'b', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
@@ -30,8 +29,7 @@ class App extends Component {
     };
   }
 
-
-  setPiece(userColour, colIndex, rowIndex) {
+  setPiece = (userColour, colIndex, rowIndex) => {
     const gameState = this.state.gameData;
     gameState[rowIndex][colIndex] = userColour;
     this.setState({

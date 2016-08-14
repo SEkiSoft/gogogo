@@ -14,10 +14,6 @@ import whitePiece from './images/white-piece.png';
 import './CrossSection.css';
 
 class CrossSection extends Component {
-	constructor(props) {
-		super(props);
-		this.setPiece = this.setPiece.bind(this);
-	}
 
 	getBoardImage() {
 		const { rowIndex, colIndex } = this.props;
@@ -48,7 +44,7 @@ class CrossSection extends Component {
 		return crossSection;
 	}
 
-	setPiece() {
+	setPiece = () => {
 		const { setPiece, pieceColour, userColour, colIndex, rowIndex } = this.props;
 		if (!pieceColour) {
 			return setPiece(userColour, colIndex, rowIndex);
@@ -64,8 +60,11 @@ class CrossSection extends Component {
 
 		return (
 			<div className='crossSection'>
-				<img className='boardSection' src={crossSectionImage} onClick={this.setPiece} />
-					<img src={pieceImage} className={showPiece} />
+				<img className='boardSection'
+						 src={crossSectionImage}
+						 onClick={this.setPiece}
+						 role='presentation' />
+					<img src={pieceImage} className={showPiece} role='presentation' />
 			</div>
 		);
 	}
