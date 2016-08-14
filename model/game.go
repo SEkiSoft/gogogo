@@ -74,3 +74,12 @@ func (g *Game) GetStats() *GameStats {
 
 	return &gs
 }
+
+func GamesToJson(m []*Game) string {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
