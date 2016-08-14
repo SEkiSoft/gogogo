@@ -5,10 +5,11 @@ package model
 
 import (
 	"encoding/json"
-	"golang.org/x/crypto/bcrypt"
 	"io"
 	"regexp"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -28,6 +29,7 @@ type Player struct {
 	Email      string `json:"email"`
 	AllowStats bool   `json:"allow_stats"`
 	Locale     string `json:"locale"`
+	IsAdmin    bool   `json:"is_admin,omitempty"`
 }
 
 func (p *Player) IsValid() *Error {
