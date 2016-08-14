@@ -22,14 +22,8 @@ Before you can build this, make sure you have the following dependencies install
 4. Run `make build` in that directory.
 
 ### Common Build Errors:
-1. `$GOPATH` should be in the form of `<path to root folder of repo>`
-2. Errors that are of the form 
-	```api/api.go:7:2: cannot find package "github.com/gorilla/mux" in any of:
-		/home/ryan/Documents/Go/src/github.com/davidlu1997/gogogo/vendor/github.com/gorilla/mux (vendor tree)
-		/usr/lib/go-1.6/src/github.com/gorilla/mux (from $GOROOT)
-		/home/ryan/Documents/Go/src/github.com/gorilla/mux (from $GOPATH)
-	``` 
-	can be resolved by running `git submodule update --init`
+* If there are multiple errors, ensure your `GOPATH` is set correctly, according to [Go documentation](https://golang.org/doc/code.html).
+* This repository uses git submodules. If you did not clone the repository using `git clone --recursive`, make sure you initialize the submodules by running `git submodule update --init`.
 
 ## Running
 *To be completed.*
