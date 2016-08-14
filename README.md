@@ -12,16 +12,14 @@ Before you can build this, make sure you have the following dependencies install
 ### Linux and Mac OS
 1. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
 2. `git clone --recursive` this repository to `$GOPATH/src/davidlu1997/gogogo`.
-3. Before running `make build`, run `go get github.com\alecthomas\log4go`
-4. Run `make build` in that directory.
+3. Run `make build` in that directory.
 
 ### Windows
 1. Ensure you have the following additional dependencies installed:
 	* GNU Make
 2. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
 3. `git clone --recursive` this repository to `%GOPATH%\src\github.com\davidlu1997\gogogo`.
-4. Before running `make build`, run `go get github.com\alecthomas\log4go`
-5. Run `make build` in that directory.
+4. Run `make build` in that directory.
 
 ### Common Build Errors:
 1. `$GOPATH` should be in the form of `<path to root folder of repo>`
