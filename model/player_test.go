@@ -3,11 +3,12 @@
 package model
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"testing"
 )
 
-func TestPlayerIsValid() {
+func TestPlayerIsValid(t *testing.T) {
 	o := Player{
 		Id:         NewId(),
 		CreateAt:   GetMillis(),
@@ -66,7 +67,7 @@ func TestPlayerIsValid() {
 
 	o.Username = "bbbbb"
 
-	o.Email = strings.repeat("@", 129)
+	o.Email = strings.Repeat("@", 129)
 	if err := o.IsValid(); err == nil {
 		t.Fatal("should be invalid")
 	}
@@ -80,58 +81,174 @@ func TestPlayerIsValid() {
 	if err := o.IsValid(); err == nil {
 		t.Fatal("should be invalid")
 	}
+
+	o.Email = "a@a.com"
+
+	o.Password = ""
+	if err := o.IsValid(); err == nil {
+		t.Fatal("should be invalid")
+	}
+
+	o.Password = strings.Repeat("a", MAX_PASSWORD_LENGTH+1)
+	if err := o.IsValid(); err == nil {
+		t.Fatal("should be invalid")
+	}
 }
 
 func TestPreSave(t *testing.T) {
-	o := Player{}
+	o := Player{
+		Username: "AAAAA",
+		Email:    "AAAAA@A.com"}
 	o.PreSave()
-	o.Etag()
+
+	if len(o.Id) == 0 {
+		t.Fatal("should not be empty")
+	}
+
+	if len(o.Username) == 0 {
+		t.Fatal("should not be empty")
+	}
+
+	if len(o.Locale) == 0 {
+		t.Fatal("should not be empty")
+	}
+
+	if o.Username != strings.ToLower(o.Username) {
+		t.Fatal("should be lowercase")
+	}
+
+	if o.Email != strings.ToLower(o.Email) {
+		t.Fatal("should be lowercase")
+	}
+
+	o.Locale = "AAAAA"
+	o.PreSave()
+
+	if o.Locale != strings.ToLower(o.Locale) {
+		t.Fatal("should be lowercase")
+	}
+
+	if o.CreateAt == 0 {
+		t.Fatal("should not be empty")
+	}
+
+	if o.UpdateAt == 0 {
+		t.Fatal("should not be empty")
+	}
+
+	if o.CreateAt != o.UpdateAt {
+		t.Fatal("should be same")
+	}
 }
 
 func TestPlayerPreUpdate(t *testing.T) {
-	o := Player{}
+	o := Player{
+		Username: "AAAAA",
+		Email:    "AAAAA@A.com",
+		Locale:   "EN"}
 	o.PreUpdate()
+
+	if o.Username != strings.ToLower(o.Username) {
+		t.Fatal("should be lowercase")
+	}
+
+	if o.Email != strings.ToLower(o.Email) {
+		t.Fatal("should be lowercase")
+	}
+
+	if o.Locale != strings.ToLower(o.Locale) {
+		t.Fatal("should be lowercase")
+	}
+
+	if o.UpdateAt == 0 {
+		t.Fatal("should not be empty")
+	}
+}
+
+func TestPlayerToJson(t *testing.T) {
+	player := Player{
+		Id:         NewId(),
+		CreateAt:   GetMillis(),
+		UpdateAt:   GetMillis(),
+		DeleteAt:   GetMillis(),
+		Username:   "aaaaa",
+		Password:   "aaaaa",
+		Email:      "a@a.com",
+		AllowStats: true,
+		Locale:     "en"}
+	json := player.ToJson()
+	rplayer := PlayerFromJson(strings.NewReader(json))
+
+	if rplayer.Id != player.Id {
+		t.Fatal("Ids do not match")
+	}
+}
+
+func TestPlayerFromJson(t *testing.T) {
+	player := Player{
+		Id:         NewId(),
+		CreateAt:   GetMillis(),
+		UpdateAt:   GetMillis(),
+		DeleteAt:   GetMillis(),
+		Username:   "aaaaa",
+		Password:   "aaaaa",
+		Email:      "a@a.com",
+		AllowStats: true,
+		Locale:     "en"}
+	json := player.ToJson()
+	rplayer := PlayerFromJson(strings.NewReader(json))
+	rjson := rplayer.ToJson()
+
+	if json != rjson {
+		t.Fatal("JSONs do not match")
+	}
 }
 
 func TestPlayerComparePassword(t *testing.T) {
-	o := Player{}
 	password := "password"
-	hash := bcryt.GenerateFromPassword(password, bcrypt.DefaultCost)
-	if !o.ComparePassword(hash, password) {
+	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if !ComparePassword(string(hash), password) {
 		t.Fatal("should be true")
 	}
 
-	password := "badpassword"
-	if o.ComparePassword(hash, password) {
+	password = "badpassword"
+	if ComparePassword(string(hash), password) {
 		t.Fatal("should be false")
 	}
 }
 
 func TestPlayerIsValidUsername(t *testing.T) {
-	o := Player{}
-
-	username = ""
-	if o.IsValidUsername(username) {
+	username := ""
+	if IsValidUsername(username) {
 		t.Fatal("should be invalid")
 	}
 
-	username = strings.repeat("a", MAX_USERNAME_LENGTH+1)
-	if o.IsValidUsername(username) {
+	username = strings.Repeat("a", MAX_USERNAME_LENGTH+1)
+	if IsValidUsername(username) {
 		t.Fatal("should be invalid")
 	}
 
 	username = "@!#$%&^"
-	if o.IsValidUsername(username) {
+	if IsValidUsername(username) {
 		t.Fatal("should be invalid")
 	}
 
 	username = "admin"
-	if o.IsValidUsername(username) {
+	if IsValidUsername(username) {
 		t.Fatal("should be invalid")
 	}
 
-	username = strings.repeat("a", MIN_USERNAME_LENGTH)
-	if !o.IsValidUsername(username) {
+	username = strings.Repeat("a", MIN_USERNAME_LENGTH)
+	if !IsValidUsername(username) {
 		t.Fatal("should be valid")
+	}
+}
+
+func TestPlayerSanitize(t *testing.T) {
+	player := Player{Password: "aaaaa"}
+	player.Sanitize()
+
+	if player.Password != "" {
+		t.Fatal("should be empty")
 	}
 }

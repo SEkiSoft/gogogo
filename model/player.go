@@ -36,11 +36,11 @@ func (p *Player) IsValid() *Error {
 		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
 	}
 
-	if p.CreateAt >= 0 {
+	if p.CreateAt <= 0 {
 		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.Id)
 	}
 
-	if p.UpdateAt >= 0 {
+	if p.UpdateAt <= 0 {
 		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.Id)
 	}
 
@@ -50,6 +50,10 @@ func (p *Player) IsValid() *Error {
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
 		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.Id)
+	}
+
+	if len(p.Password) < MIN_PASSWORD_LENGTH || len(p.Password) > MAX_PASSWORD_LENGTH {
+		return NewLocError("Player.IsValid", "Password is invalid", nil, "player_id="+p.Id)
 	}
 
 	return nil
@@ -73,10 +77,6 @@ func (p *Player) PreSave() {
 
 	if p.Locale == "" {
 		p.Locale = DEFAULT_LOCALE
-	}
-
-	if len(p.Password) >= MIN_PASSWORD_LENGTH && len(p.Password) <= MAX_PASSWORD_LENGTH {
-		p.Password = HashPassword(p.Password)
 	}
 }
 
@@ -146,13 +146,4 @@ func (p *Player) Etag() string {
 
 func (p *Player) Sanitize() {
 	p.Password = ""
-}
-
-func GamesToJson(m []*Game) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
-	} else {
-		return string(b)
-	}
 }
