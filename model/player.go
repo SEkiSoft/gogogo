@@ -17,7 +17,6 @@ const (
 	MIN_PASSWORD_LENGTH = 5
 	MIN_USERNAME_LENGTH = 4
 	MAX_USERNAME_LENGTH = 24
-	ADMIN_USERNAME      = "admin"
 )
 
 type Player struct {
@@ -30,6 +29,7 @@ type Player struct {
 	Email      string `json:"email"`
 	AllowStats bool   `json:"allow_stats"`
 	Locale     string `json:"locale"`
+	IsAdmin    bool   `json:"is_admin,omitempty"`
 }
 
 func (p *Player) IsValid() *Error {

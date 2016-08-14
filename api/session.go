@@ -107,7 +107,7 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(token) > 0 {
-
+		// TODO session store
 	}
 
 	if s.Err == nil && h.requiredPlayer {
@@ -175,9 +175,7 @@ func (s *Session) CheckAdminRequired() {
 
 func (s *Session) IsAdmin() bool {
 	if player, err := GetPlayer(s.PlayerId); err == nil {
-		if player.Username == model.ADMIN_USERNAME {
-			return true
-		}
+		return player.IsAdmin
 	}
 	return false
 }
