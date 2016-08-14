@@ -38,7 +38,7 @@ func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
 
 func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id := params["user_id"]
+	id := params["game_id"]
 
 	if result, err := GetGame(id); err != nil {
 		s.Err = err
