@@ -46,6 +46,15 @@ func GameFromJson(data io.Reader) *Game {
 	}
 }
 
+func GamesToJson(m []*Game) string {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
+
 func (g *Game) IsValid() *Error {
 	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
 		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
@@ -73,13 +82,4 @@ func (g *Game) GetStats() *GameStats {
 	var gs GameStats
 
 	return &gs
-}
-
-func GamesToJson(m []*Game) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
-	} else {
-		return string(b)
-	}
 }
