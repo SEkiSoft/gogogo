@@ -10,7 +10,7 @@ Before you can build this, make sure you have the following dependencies install
 
 ### Linux and Mac OS
 1. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
-2. `git clone` this repository to `$GOPATH/src/davidlu1997/gogogo`.
+2. `git clone --recursive` this repository to `$GOPATH/src/davidlu1997/gogogo`.
 3. Run `make build` in that directory.
 
 ### Windows
