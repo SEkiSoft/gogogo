@@ -18,8 +18,12 @@ Before you can build this, make sure you have the following dependencies install
 1. Ensure you have the following additional dependencies installed:
 	* GNU Make
 2. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
-3. `git clone --recursive` this repository to `%GOPATH%\src\davidlu1997\gogogo`.
+3. `git clone --recursive` this repository to `%GOPATH%\src\github.com\davidlu1997\gogogo`.
 4. Run `make build` in that directory.
+
+### Common Build Errors:
+* If there are multiple errors, ensure your `GOPATH` is set correctly, according to [Go documentation](https://golang.org/doc/code.html).
+* This repository uses git submodules. If you did not clone the repository using `git clone --recursive`, make sure you initialize the submodules by running `git submodule update --init`.
 
 ## Running
 *To be completed.*
