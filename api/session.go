@@ -90,12 +90,24 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// TODO Get token from header, cookie, and query string
 	// Authenicate user based on token
 	// Using PlayerRequired, GameRequired, AdminRequired, etc.
+	token := ""
+
+	auth := r.Header.Get(model.HEADER_AUTH)
+	if len(auth) > 6 && strings.ToUpper(auth[0:6]) == model.HEADER_BEARER {
+		token = auth[7:]
+	} else {
+		return
+	}
 
 	if h.isApi {
 		s.Path = r.URL.Path
 	} else {
 		splitURL := strings.Split(r.URL.Path, "/")
 		s.Path = "/" + strings.Join(splitURL[2:], "/")
+	}
+
+	if len(token) > 0 {
+
 	}
 
 	if s.Err == nil && h.requiredPlayer {
