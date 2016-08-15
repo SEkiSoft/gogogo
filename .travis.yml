@@ -5,7 +5,7 @@ before_script:
     - git submodule update --init
 script:
     - make build-server
-go_import_path: github.com/davidlu1997/gogogo
+go_import_path: github.com/SEkiSoft/gogogo
 branches:
     only:
         - master

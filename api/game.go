@@ -6,7 +6,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 	"github.com/gorilla/mux"
 )
 

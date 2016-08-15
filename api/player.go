@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 	"github.com/gorilla/mux"
 )
 

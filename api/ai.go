@@ -5,7 +5,7 @@ package api
 
 import (
 	"net/http"
-	//"github.com/davidlu1997/gogogo/ai"
+	//"github.com/SEkiSoft/gogogo/ai"
 )
 
 func InitAi() {

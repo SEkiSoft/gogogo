@@ -4,7 +4,7 @@
 package store
 
 import (
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 type MoveStore struct {

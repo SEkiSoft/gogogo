@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 var Cfg *model.Config = &model.Config{}
