@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/davidlu1997/gogogo/api"
-	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/utils"
+	"github.com/SEkiSoft/gogogo/api"
+	"github.com/SEkiSoft/gogogo/model"
+	"github.com/SEkiSoft/gogogo/utils"
 
 	l4g "github.com/alecthomas/log4go"
 )

@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/davidlu1997/gogogo",
+	"ImportPath": "github.com/SEkiSoft/gogogo",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v63",
 	"Deps": [

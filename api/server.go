@@ -8,8 +8,8 @@ import (
 
 	l4g "github.com/alecthomas/log4go"
 	"github.com/braintree/manners"
-	"github.com/davidlu1997/gogogo/store"
-	"github.com/davidlu1997/gogogo/utils"
+	"github.com/SEkiSoft/gogogo/store"
+	"github.com/SEkiSoft/gogogo/utils"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )

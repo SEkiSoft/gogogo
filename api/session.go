@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	l4g "github.com/alecthomas/log4go"
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 var allowedMethods []string = []string{

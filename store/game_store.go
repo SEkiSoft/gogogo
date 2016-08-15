@@ -5,7 +5,7 @@ package store
 
 import (
 	"fmt"
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 type GameStore struct {
