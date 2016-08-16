@@ -6,6 +6,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"strconv"
 )
 
 const (
@@ -58,6 +59,8 @@ func GamesToJson(m []*Game) string {
 func (g *Game) IsValid() *Error {
 	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
 		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
+	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
+		return NewLocError("Game.IsValid", "Board does not match line number", nil, "")
 	} else {
 		return nil
 	}
@@ -82,4 +85,13 @@ func (g *Game) GetStats() *GameStats {
 	var gs GameStats
 
 	return &gs
+}
+
+func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {
+	if x < g.NumLines && y < g.NumLines {
+		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)
+		return int(piece), nil
+	} else {
+		return -1, NewLocError("Game.GetBoardPiece", "row/col out of range", nil, "")
+	}
 }
