@@ -4,8 +4,8 @@
 
 [*Summary of changes that have been made in a list format*]
 
-1. [Fill in]
-2. []
+- [Fill in]
+- []
 
 [For commit messages, a general summary of changes made suffices. For the last commit message, use [this syntax](https://help.github.com/articles/closing-issues-via-commit-messages/) to also close out the Issue when the PR is merged.]
 
