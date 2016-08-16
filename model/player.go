@@ -93,9 +93,9 @@ func (p *Player) ToJson() string {
 	b, err := json.Marshal(p)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func PlayerFromJson(data io.Reader) *Player {
@@ -104,9 +104,9 @@ func PlayerFromJson(data io.Reader) *Player {
 	err := decoder.Decode(&p)
 	if err == nil {
 		return &p
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func ComparePassword(hash string, password string) bool {
@@ -114,6 +114,7 @@ func ComparePassword(hash string, password string) bool {
 		return false
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+
 	return err == nil
 }
 

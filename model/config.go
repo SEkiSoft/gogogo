@@ -31,9 +31,9 @@ func (c *Config) ToJson() string {
 	b, err := json.Marshal(c)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func ConfigFromJson(data io.Reader) *Config {
@@ -42,7 +42,7 @@ func ConfigFromJson(data io.Reader) *Config {
 	err := decoder.Decode(&c)
 	if err == nil {
 		return &c
-	} else {
-		return nil
 	}
+
+	return nil
 }

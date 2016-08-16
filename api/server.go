@@ -6,10 +6,10 @@ package api
 import (
 	"net/http"
 
-	l4g "github.com/alecthomas/log4go"
-	"github.com/braintree/manners"
 	"github.com/SEkiSoft/gogogo/store"
 	"github.com/SEkiSoft/gogogo/utils"
+	l4g "github.com/alecthomas/log4go"
+	"github.com/braintree/manners"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
