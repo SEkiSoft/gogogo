@@ -1,14 +1,20 @@
-Name the PR as the GitHub Issue Number. Also, name branches the Issue Number.
+Name both the PR and branch name as the Issue Number. 
 
-Changelog:
+*Ex:* 
+PR Title: `Issue 48`
+Branch Name: `issue_48`
 
-[Summary of changes that have been made in a list] 
+**Changelog:**
 
-Ex: 
+*Summary of changes that have been made in a list format* 
+
+*Ex:* 
 1. [Changed...]
 2. [Implemented...]
-etc.
 
-Issue Link:
+For commit messages, a general summary of changes made suffices. For the last commit message, use [this syntax](https://help.github.com/articles/closing-issues-via-commit-messages/) to also close out the Issue when the PR is merged.
 
-[Provide a link to the issue on Github that the PR addresses]
+*Ex:* `Fixes #45`
+
+Please add labels to the PR as well as assign people to review. In addition, post in the Slack channel *#pr-review* so that we know a PR needs review.
+
