@@ -3,9 +3,10 @@
 package model
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"testing"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func TestPlayerIsValid(t *testing.T) {
@@ -18,7 +19,8 @@ func TestPlayerIsValid(t *testing.T) {
 		Password:   "aaaaa",
 		Email:      "a@a.com",
 		AllowStats: true,
-		Locale:     ""}
+		Locale:     "",
+	}
 
 	if err := o.IsValid(); err != nil {
 		t.Fatal(err)
@@ -95,7 +97,7 @@ func TestPlayerIsValid(t *testing.T) {
 	}
 }
 
-func TestPreSave(t *testing.T) {
+func TestPlayerPreSave(t *testing.T) {
 	o := Player{
 		Username: "AAAAA",
 		Email:    "AAAAA@A.com"}
@@ -145,7 +147,9 @@ func TestPlayerPreUpdate(t *testing.T) {
 	o := Player{
 		Username: "AAAAA",
 		Email:    "AAAAA@A.com",
-		Locale:   "EN"}
+		Locale:   "EN",
+	}
+
 	o.PreUpdate()
 
 	if o.Username != strings.ToLower(o.Username) {
@@ -175,11 +179,13 @@ func TestPlayerToJson(t *testing.T) {
 		Password:   "aaaaa",
 		Email:      "a@a.com",
 		AllowStats: true,
-		Locale:     "en"}
-	json := player.ToJson()
-	rplayer := PlayerFromJson(strings.NewReader(json))
+		Locale:     "en",
+	}
 
-	if rplayer.Id != player.Id {
+	json := player.ToJson()
+	rPlayer := PlayerFromJson(strings.NewReader(json))
+
+	if rPlayer.Id != player.Id {
 		t.Fatal("Ids do not match")
 	}
 }
@@ -194,12 +200,14 @@ func TestPlayerFromJson(t *testing.T) {
 		Password:   "aaaaa",
 		Email:      "a@a.com",
 		AllowStats: true,
-		Locale:     "en"}
-	json := player.ToJson()
-	rplayer := PlayerFromJson(strings.NewReader(json))
-	rjson := rplayer.ToJson()
+		Locale:     "en",
+	}
 
-	if json != rjson {
+	json := player.ToJson()
+	rPlayer := PlayerFromJson(strings.NewReader(json))
+	rJson := rPlayer.ToJson()
+
+	if json != rJson {
 		t.Fatal("JSONs do not match")
 	}
 }
