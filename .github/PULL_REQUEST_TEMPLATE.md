@@ -1,8 +1,6 @@
 [Provide a short description for the PR title and put in `()` which issue this PR corresponds to. Branch names should be short but meaningful; **always lowercase and hyphen-seperated**.]
 
-**Changelog:**
-
-[*Summary of changes that have been made in a list format*]
+**Changelog:** [*Summary of changes that have been made in a list format*]
 
 - [Fill in]
 - []
