@@ -61,9 +61,8 @@ func (g *Game) IsValid() *Error {
 		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
 	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
 		return NewLocError("Game.IsValid", "Board does not match line number", nil, "")
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func (g *Game) PreSave() {
@@ -91,7 +90,6 @@ func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {
 	if x < g.NumLines && y < g.NumLines {
 		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)
 		return int(piece), nil
-	} else {
-		return -1, NewLocError("Game.GetBoardPiece", "row/col out of range", nil, "")
 	}
+	return -1, NewLocError("Game.GetBoardPiece", "row/col out of range", nil, "")
 }

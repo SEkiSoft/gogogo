@@ -35,15 +35,15 @@ func (m *Move) PreSave() {
 }
 
 func (m *Move) IsValid(game *Game) *Error {
-	current_piece, err := game.GetBoardPiece(m.X, m.Y)
+	currentPiece, err := game.GetBoardPiece(m.X, m.Y)
 
 	if err != nil {
 		return err
-	} else if current_piece != 0 {
+	} else if currentPiece != 0 {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
-	} else {
-		return nil
 	}
+	return nil
+
 }
 
 func MoveFromJson(data io.Reader) *Move {
@@ -52,9 +52,8 @@ func MoveFromJson(data io.Reader) *Move {
 	err := decoder.Decode(&m)
 	if err == nil {
 		return &m
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func MovesToJson(m []*Move) string {
