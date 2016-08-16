@@ -5,8 +5,9 @@ package store
 
 import (
 	"fmt"
-	"github.com/SEkiSoft/gogogo/model"
 	"strings"
+
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 type PlayerStore struct {
@@ -18,7 +19,7 @@ func NewPlayerStore(sqlStore *SqlStore) SqlPlayerStore {
 
 	db := sqlStore.GetMaster()
 	table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(24)
+	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Username").SetMaxSize(64).SetUnique(true)
 	table.ColMap("Password").SetMaxSize(128)
 	table.ColMap("Email").SetMaxSize(128).SetUnique(true)
@@ -174,7 +175,7 @@ func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players WHERE Id = :Id", map[string]interface{}{"Id": id}); err != nil {
+		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Games WHERE IdBlack = :Id OR IdWhite = :Id", map[string]interface{}{"Id": id}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
 		}
 

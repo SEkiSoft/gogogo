@@ -5,6 +5,7 @@ package store
 
 import (
 	"fmt"
+
 	"github.com/SEkiSoft/gogogo/model"
 )
 
@@ -17,9 +18,9 @@ func NewGameStore(sqlStore *SqlStore) SqlGameStore {
 
 	db := sqlStore.GetMaster()
 	table := db.AddTableWithName(model.Game{}, "Games").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(24)
-	table.ColMap("IdBlack").SetMaxSize(24)
-	table.ColMap("IdWhite").SetMaxSize(24)
+	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("IdBlack").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("IdWhite").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Board").SetMaxSize(400)
 	table.ColMap("NumLines").SetMaxSize(2)
 	table.ColMap("Turn").SetMaxSize(1)

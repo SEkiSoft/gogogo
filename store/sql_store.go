@@ -6,11 +6,12 @@ package store
 import (
 	dbsql "database/sql"
 	"fmt"
-	"github.com/go-gorp/gorp"
-	_ "github.com/go-sql-driver/mysql"
 	sqltrace "log"
 	"os"
 	"strings"
+
+	"github.com/go-gorp/gorp"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -28,6 +29,7 @@ type SqlStore struct {
 	game   SqlGameStore
 	player SqlPlayerStore
 	move   SqlMoveStore
+	token  SqlTokenStore
 }
 
 func initConnection() *SqlStore {
@@ -44,6 +46,7 @@ func NewSqlStore() Store {
 	sqlStore.game = NewGameStore(sqlStore)
 	sqlStore.player = NewPlayerStore(sqlStore)
 	sqlStore.move = NewMoveStore(sqlStore)
+	sqlStore.token = NewTokenStore(sqlStore)
 
 	err := sqlStore.master.CreateTablesIfNotExists()
 	if err != nil {
@@ -250,6 +253,10 @@ func (ss SqlStore) Player() SqlPlayerStore {
 
 func (ss SqlStore) Move() SqlMoveStore {
 	return ss.move
+}
+
+func (ss SqlStore) Session() SqlTokenStore {
+	return ss.token
 }
 
 func (ss SqlStore) DropAllTables() {

@@ -28,12 +28,12 @@ type Game struct {
 }
 
 func (g *Game) ToJson() string {
-	s, err := json.Marshal(g)
+	json, err := json.Marshal(g)
 	if err != nil {
 		return ""
 	}
 
-	return string(s)
+	return string(json)
 }
 
 func GameFromJson(data io.Reader) *Game {
@@ -48,12 +48,12 @@ func GameFromJson(data io.Reader) *Game {
 }
 
 func GamesToJson(m []*Game) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
+	json, err := json.Marshal(m)
+	if err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return "[]"
 }
 
 func (g *Game) IsValid() *Error {
@@ -83,6 +83,8 @@ func (g *Game) PreUpdate() {
 
 func (g *Game) GetStats() *GameStats {
 	var gs GameStats
+
+	// TODO GetGameStats
 
 	return &gs
 }

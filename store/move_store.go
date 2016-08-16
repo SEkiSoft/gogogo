@@ -16,9 +16,9 @@ func NewMoveStore(sqlStore *SqlStore) SqlMoveStore {
 
 	db := sqlStore.GetMaster()
 	table := db.AddTableWithName(model.Move{}, "Moves").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(24)
-	table.ColMap("PlayerId").SetMaxSize(24)
-	table.ColMap("GameId").SetMaxSize(24)
+	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("PlayerId").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("GameId").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("X").SetMaxSize(2)
 	table.ColMap("Y").SetMaxSize(2)
 	table.ColMap("CreateAt").SetMaxSize(20)
