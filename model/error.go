@@ -26,9 +26,9 @@ func (er *Error) ToJson() string {
 	b, err := json.Marshal(er)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func ErrorFromJson(data io.Reader) *Error {
@@ -37,9 +37,9 @@ func ErrorFromJson(data io.Reader) *Error {
 	err := decoder.Decode(&er)
 	if err == nil {
 		return &er
-	} else {
-		return NewLocError("ErrorFromJson", "JSON decoding error", nil, err.Error())
 	}
+
+	return NewLocError("ErrorFromJson", "JSON decoding error", nil, err.Error())
 }
 
 func NewLocError(where string, id string, params map[string]interface{}, details string) *Error {

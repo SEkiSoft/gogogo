@@ -31,9 +31,9 @@ func (g *Game) ToJson() string {
 	s, err := json.Marshal(g)
 	if err != nil {
 		return ""
-	} else {
-		return string(s)
 	}
+
+	return string(s)
 }
 
 func GameFromJson(data io.Reader) *Game {
@@ -42,18 +42,18 @@ func GameFromJson(data io.Reader) *Game {
 	err := decoder.Decode(&g)
 	if err == nil {
 		return &g
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func GamesToJson(m []*Game) string {
 	b, err := json.Marshal(m)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func (g *Game) IsValid() *Error {
@@ -62,6 +62,7 @@ func (g *Game) IsValid() *Error {
 	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
 		return NewLocError("Game.IsValid", "Board does not match line number", nil, "")
 	}
+
 	return nil
 }
 

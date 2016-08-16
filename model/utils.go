@@ -29,6 +29,7 @@ func NewId() string {
 	encoder.Write(uuid.NewRandom())
 	encoder.Close()
 	b.Truncate(ID_LENGTH)
+
 	return b.String()
 }
 
@@ -37,6 +38,7 @@ func HashPassword(password string) string {
 	if err != nil {
 		panic(err)
 	}
+
 	return string(hash)
 }
 
@@ -45,6 +47,7 @@ func Etag(parts ...interface{}) string {
 	for _, part := range parts {
 		etag += fmt.Sprintf(".%v", part)
 	}
+
 	return etag
 }
 
@@ -55,9 +58,9 @@ func GetMillis() int64 {
 func MapToJson(objmap map[string]string) string {
 	if b, err := json.Marshal(objmap); err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func MapFromJson(data io.Reader) map[string]string {
@@ -66,17 +69,17 @@ func MapFromJson(data io.Reader) map[string]string {
 	var objmap map[string]string
 	if err := decoder.Decode(&objmap); err != nil {
 		return make(map[string]string)
-	} else {
-		return objmap
 	}
+
+	return objmap
 }
 
 func ArrayToJson(objmap []string) string {
 	if b, err := json.Marshal(objmap); err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func ArrayFromJson(data io.Reader) []string {
@@ -85,17 +88,17 @@ func ArrayFromJson(data io.Reader) []string {
 	var objmap []string
 	if err := decoder.Decode(&objmap); err != nil {
 		return make([]string, 0)
-	} else {
-		return objmap
 	}
+
+	return objmap
 }
 
 func StringInterfaceToJson(objmap map[string]interface{}) string {
 	if b, err := json.Marshal(objmap); err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
@@ -104,18 +107,18 @@ func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
 	var objmap map[string]interface{}
 	if err := decoder.Decode(&objmap); err != nil {
 		return make(map[string]interface{})
-	} else {
-		return objmap
 	}
+
+	return objmap
 }
 
 func StringToJson(s string) string {
 	b, err := json.Marshal(s)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func StringFromJson(data io.Reader) string {
@@ -124,9 +127,9 @@ func StringFromJson(data io.Reader) string {
 	var s string
 	if err := decoder.Decode(&s); err != nil {
 		return ""
-	} else {
-		return s
 	}
+
+	return s
 }
 
 func IsLower(s string) bool {
