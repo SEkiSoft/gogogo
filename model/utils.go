@@ -56,49 +56,48 @@ func GetMillis() int64 {
 }
 
 func MapToJson(objmap map[string]string) string {
-	if b, err := json.Marshal(objmap); err != nil {
-		return ""
+	if json, err := json.Marshal(objmap); err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return ""
 }
 
 func MapFromJson(data io.Reader) map[string]string {
 	decoder := json.NewDecoder(data)
 
 	var objmap map[string]string
-	if err := decoder.Decode(&objmap); err != nil {
-		return make(map[string]string)
+	if err := decoder.Decode(&objmap); err == nil {
+		return objmap
 	}
 
-	return objmap
+	return make(map[string]string)
 }
 
 func ArrayToJson(objmap []string) string {
-	if b, err := json.Marshal(objmap); err != nil {
-		return ""
+	if json, err := json.Marshal(objmap); err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return ""
 }
 
 func ArrayFromJson(data io.Reader) []string {
 	decoder := json.NewDecoder(data)
 
 	var objmap []string
-	if err := decoder.Decode(&objmap); err != nil {
-		return make([]string, 0)
+	if err := decoder.Decode(&objmap); err == nil {
+		return objmap
 	}
-
-	return objmap
+	return make([]string, 0)
 }
 
 func StringInterfaceToJson(objmap map[string]interface{}) string {
-	if b, err := json.Marshal(objmap); err != nil {
-		return ""
+	if json, err := json.Marshal(objmap); err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return ""
 }
 
 func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
@@ -113,23 +112,23 @@ func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
 }
 
 func StringToJson(s string) string {
-	b, err := json.Marshal(s)
-	if err != nil {
-		return ""
+	json, err := json.Marshal(s)
+	if err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return ""
 }
 
 func StringFromJson(data io.Reader) string {
 	decoder := json.NewDecoder(data)
 
 	var s string
-	if err := decoder.Decode(&s); err != nil {
-		return ""
+	if err := decoder.Decode(&s); err == nil {
+		return s
 	}
 
-	return s
+	return ""
 }
 
 func IsLower(s string) bool {

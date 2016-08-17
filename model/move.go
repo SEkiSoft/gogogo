@@ -18,12 +18,12 @@ type Move struct {
 }
 
 func (m *Move) ToJson() string {
-	s, err := json.Marshal(m)
+	json, err := json.Marshal(m)
 	if err != nil {
 		return ""
 	}
 
-	return string(s)
+	return string(json)
 }
 
 func (m *Move) PreSave() {
@@ -57,12 +57,12 @@ func MoveFromJson(data io.Reader) *Move {
 }
 
 func MovesToJson(m []*Move) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
+	json, err := json.Marshal(m)
+	if err == nil {
+		return string(json)
 	}
 
-	return string(b)
+	return "[]"
 }
 
 func MovesFromJson(data io.Reader) []*Move {

@@ -26,6 +26,7 @@ type Session struct {
 	PlayerId  string
 	GameId    string
 	RootUrl   string
+	Token     *model.Token
 }
 
 type handler struct {

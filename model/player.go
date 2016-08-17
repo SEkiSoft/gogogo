@@ -34,7 +34,7 @@ type Player struct {
 }
 
 func (p *Player) IsValid() *Error {
-	if len(p.Id) != 24 {
+	if len(p.Id) != ID_LENGTH {
 		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
 	}
 
@@ -90,12 +90,12 @@ func (p *Player) PreUpdate() {
 }
 
 func (p *Player) ToJson() string {
-	b, err := json.Marshal(p)
+	json, err := json.Marshal(p)
 	if err != nil {
 		return ""
 	}
 
-	return string(b)
+	return string(json)
 }
 
 func PlayerFromJson(data io.Reader) *Player {
