@@ -35,13 +35,62 @@ func (m *Move) PreSave() {
 }
 
 func (m *Move) IsValid(game *Game) *Error {
-	currentPiece, err := game.GetBoardPiece(m.X, m.Y)
+	currentPiece, err := game.GetPieceColor(m.X, m.Y)
 
 	if err != nil {
 		return err
 	} else if currentPiece != 0 {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
 	}
+}
+
+func (p *Coordinate) getNeighbors(game *Game) (neighbors *[]Coordinate) {
+	var neighbors []int
+
+	if p.X > 0 {
+		neighbors.append(Coordinate{X: p.X - 1, Y: p.Y})
+	}
+
+	if p.X < game.NumLines-1 {
+		neighbors.append(Coordinate{X: p.X + 1, Y: p.Y})
+	}
+
+	if p.Y > 0 {
+		neighbors.append(Coordinate{X: p.X, Y: p.Y - 1})
+	}
+
+	if p.Y < game.NumLines-1 {
+		neighbors.append(Coordinate{X: p.X, Y: p.Y + 1})
+	}
+
+	return
+}
+
+func (p *Coordinate) getLiberties(game *Game) (liberties *[]Coordinate) {
+	var liberties []int
+
+	myColor = game.getColor(p)
+	fillColor = GetOppositeColor(myColor)
+	game.SetPieceColor(fillColor, p.X, p.Y)
+
+	neighbors = p.getNeighbors(game)
+
+	for neighbor := range neighbors {
+		if game.getColor(neighbor) == myColor {
+			liberties.append(neighbor.getLiberties(game)...)
+		} else if game.getColor(neighbor) == EMPTY_COLOR {
+			liberties.append(neighbor)
+		}
+	}
+
+	return liberties
+}
+
+func (p *Coordinate) isAtari(game *Game) bool {
+	//this should make a copy
+	game_copy := *game
+
+	return len(p.getLiberties(game_copy)) == 1
 }
 
 func MoveFromJson(data io.Reader) *Move {

@@ -12,6 +12,7 @@ import (
 const (
 	MAX_NUMLINES = 19
 	MIN_NUMLINES = 13
+	EMPTY_COLOR  = 0
 )
 
 type Game struct {
@@ -25,6 +26,11 @@ type Game struct {
 	UpdateAt int64  `json:"update_at"`
 	DeleteAt int64  `json:"delete_at"`
 	Finished bool   `json:"finished"`
+}
+
+type Coordinate struct {
+	X uint
+	Y uint
 }
 
 func (g *Game) ToJson() string {
@@ -85,10 +91,27 @@ func (g *Game) GetStats() *GameStats {
 	return &gs
 }
 
-func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {
+func (g *Game) GetPieceColor(x, y uint) (int, *Error) {
 	if x < g.NumLines && y < g.NumLines {
 		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)
 		return int(piece), nil
 	}
-	return -1, NewLocError("Game.GetBoardPiece", "row/col out of range", nil, "")
+	return -1, NewLocError("Game.GetPieceColor", "row/col out of range", nil, "")
+}
+
+func (g *Game) GetColor(p *Coordinate) int {
+	color, _ := g.GetPieceColor(p.X, p.Y)
+	return color
+}
+
+func GetOppositeColor(color int) {
+	return 3 - color
+}
+
+func (g *Game) SetPieceColor(color int, x, y uint) *Error {
+	if x < g.NumLines && y < g.NumLines {
+		g.Board[y*g.NumLines+x] = color
+		return nil
+	}
+	return NewLocError("Game.SetPieceColor", "row/col out of range", nil, "")
 }
