@@ -15,9 +15,9 @@ func (ai *Ai) ToJson() string {
 	b, err := json.Marshal(ai)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func AiFromJson(data io.Reader) (*Ai, *Error) {
@@ -26,7 +26,7 @@ func AiFromJson(data io.Reader) (*Ai, *Error) {
 	err := decoder.Decode(&ai)
 	if err == nil {
 		return &ai, nil
-	} else {
-		return nil, NewLocError("AiFromJson", "JSON decoding error", nil, err.Error())
 	}
+
+	return nil, NewLocError("AiFromJson", "JSON decoding error", nil, err.Error())
 }

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
-	l4g "github.com/alecthomas/log4go"
 	"github.com/SEkiSoft/gogogo/model"
+	l4g "github.com/alecthomas/log4go"
 )
 
 var allowedMethods []string = []string{

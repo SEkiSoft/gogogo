@@ -21,9 +21,9 @@ func (m *Move) ToJson() string {
 	s, err := json.Marshal(m)
 	if err != nil {
 		return ""
-	} else {
-		return string(s)
 	}
+
+	return string(s)
 }
 
 func (m *Move) PreSave() {
@@ -42,8 +42,6 @@ func (m *Move) IsValid(game *Game) *Error {
 	} else if currentPiece != 0 {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
 	}
-	return nil
-
 }
 
 func MoveFromJson(data io.Reader) *Move {
@@ -60,9 +58,9 @@ func MovesToJson(m []*Move) string {
 	b, err := json.Marshal(m)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func MovesFromJson(data io.Reader) []*Move {
@@ -71,7 +69,7 @@ func MovesFromJson(data io.Reader) []*Move {
 	err := decoder.Decode(&o)
 	if err == nil {
 		return o
-	} else {
-		return nil
 	}
+
+	return nil
 }
