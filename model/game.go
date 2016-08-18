@@ -16,16 +16,17 @@ const (
 )
 
 type Game struct {
-	Id       string `json:"id"`
-	IdBlack  string `json:"id_black"`
-	IdWhite  string `json:"id_white"`
-	Board    string `json:"board"`
-	NumLines uint   `json:"numlines"`
-	Turn     uint   `json:"turn"`
-	CreateAt int64  `json:"create_at"`
-	UpdateAt int64  `json:"update_at"`
-	DeleteAt int64  `json:"delete_at"`
-	Finished bool   `json:"finished"`
+	Id       string     `json:"id"`
+	IdBlack  string     `json:"id_black"`
+	IdWhite  string     `json:"id_white"`
+	Board    string     `json:"board"`
+	KoPoint  Coordinate //TODO: Set Ko Point upon initialization
+	NumLines uint       `json:"numlines"`
+	Turn     uint       `json:"turn"`
+	CreateAt int64      `json:"create_at"`
+	UpdateAt int64      `json:"update_at"`
+	DeleteAt int64      `json:"delete_at"`
+	Finished bool       `json:"finished"`
 }
 
 type Coordinate struct {

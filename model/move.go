@@ -35,12 +35,19 @@ func (m *Move) PreSave() {
 }
 
 func (m *Move) IsValid(game *Game) *Error {
-	currentPiece, err := game.GetPieceColor(m.X, m.Y)
+	p = Coordinate{m.X, m.Y}
+	currentPiece, err := game.GetColor(p)
 
 	if err != nil {
 		return err
-	} else if currentPiece != 0 {
+	}
+
+	if currentPiece != EMPTY_COLOR {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
+	}
+
+	if p == game.KoPoint {
+		return NewLocError(Move.IsValid, "Spot is Ko Point", nil, "")
 	}
 }
 
