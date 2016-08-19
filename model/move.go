@@ -36,19 +36,40 @@ func (m *Move) PreSave() {
 
 func (m *Move) IsValid(game *Game) *Error {
 	p = Coordinate{m.X, m.Y}
-	currentPiece, err := game.GetColor(p)
+	pColor, err := game.GetColor(p)
 
 	if err != nil {
 		return err
 	}
 
-	if currentPiece != EMPTY_COLOR {
+	if pColor != EMPTY_COLOR {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
 	}
 
 	if p == game.KoPoint {
 		return NewLocError(Move.IsValid, "Spot is Ko Point", nil, "")
 	}
+
+	suicide := true
+	for neighbor := range p.getNeighbors(game) {
+		if neighborC := game.getColor(neighbor); neighborC == EMPTY_COLOR {
+			suicide = false
+		} else if neighborC == pColor {
+			if !neighbor.inAtari(game) {
+				suicide = false
+			}
+		} else if neighborC == GetOppositeColor(pColor) {
+			if neighbor.inAtari(game) {
+				suicide = false
+			}
+		}
+	}
+
+	if suicide {
+		return NewLocError(Move.IsValid, "Suicide Move", nil, "")
+	}
+
+	return nil
 }
 
 func (p *Coordinate) getNeighbors(game *Game) (neighbors *[]Coordinate) {
@@ -93,7 +114,7 @@ func (p *Coordinate) getLiberties(game *Game) (liberties *[]Coordinate) {
 	return liberties
 }
 
-func (p *Coordinate) isAtari(game *Game) bool {
+func (p *Coordinate) inAtari(game *Game) bool {
 	//this should make a copy
 	game_copy := *game
 
