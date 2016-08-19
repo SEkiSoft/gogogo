@@ -6,7 +6,6 @@ GoGoGo is an online multiplayer implementation of the ancient board game Go, wri
 ## Building
 Before you can build this, make sure you have the following dependencies installed:
 * [Go compiler (the latest version)](https://golang.org/doc/install)
-* [Node.js with npm](https://nodejs.org/en/download/)
 * [Git (at least version 1.7)](https://git-scm.com/downloads)
 
 ### Linux and Mac OS
@@ -15,11 +14,9 @@ Before you can build this, make sure you have the following dependencies install
 3. Run `make build` in that directory.
 
 ### Windows
-1. Ensure you have the following additional dependencies installed:
-	* GNU Make
-2. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
-3. `git clone --recursive` this repository to `%GOPATH%\src\github.com\SEkiSoft\gogogo`.
-4. Run `make build` in that directory.
+1. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
+2. `git clone --recursive` this repository to `%GOPATH%\src\github.com\SEkiSoft\gogogo`.
+3. Run `go build` in that directory.
 
 ### Common Build Errors:
 * If there are multiple errors, ensure your `GOPATH` is set correctly, according to [Go documentation](https://golang.org/doc/code.html).
