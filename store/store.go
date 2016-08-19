@@ -65,3 +65,12 @@ type SqlMoveStore interface {
 	GetTotalMovesCount() StoreChannel
 	Delete(id string) StoreChannel
 }
+
+type SqlTokenStore interface {
+	Save(token *model.Token) StoreChannel
+	Get(id string) StoreChannel
+	GetTokens(playerId string) StoreChannel
+	Delete(id string) StoreChannel
+	DeleteAll(playerId string) StoreChannel
+	GetAll() StoreChannel
+}
