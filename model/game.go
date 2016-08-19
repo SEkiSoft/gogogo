@@ -69,6 +69,7 @@ func (g *Game) IsValid() *Error {
 	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
 		return NewLocError("Game.IsValid", "Board does not match line number", nil, "")
 	}
+	return nil
 }
 
 func (g *Game) PreSave() {
@@ -107,13 +108,15 @@ func (g *Game) GetColor(p *Coordinate) int {
 	return color
 }
 
-func GetOppositeColor(color int) {
-	return 3 - color
+func GetOppositeColor(color int) int {
+	return (3 - color)
 }
 
 func (g *Game) SetPieceColor(color int, x, y uint) *Error {
 	if x < g.NumLines && y < g.NumLines {
-		g.Board[y*g.NumLines+x] = color
+		runeBoard := []rune(g.Board)
+		runeBoard[y*g.NumLines+x] = rune(color)
+		g.Board = string(runeBoard)
 		return nil
 	}
 	return NewLocError("Game.SetPieceColor", "row/col out of range", nil, "")

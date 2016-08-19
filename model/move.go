@@ -35,24 +35,21 @@ func (m *Move) PreSave() {
 }
 
 func (m *Move) IsValid(game *Game) *Error {
-	p = Coordinate{m.X, m.Y}
-	pColor, err := game.GetColor(p)
-
-	if err != nil {
-		return err
-	}
+	p := Coordinate{m.X, m.Y}
+	pColor := game.GetColor(&p)
 
 	if pColor != EMPTY_COLOR {
 		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
 	}
 
 	if p == game.KoPoint {
-		return NewLocError(Move.IsValid, "Spot is Ko Point", nil, "")
+		return NewLocError("Move.IsValid", "Spot is Ko Point", nil, "")
 	}
 
 	suicide := true
-	for neighbor := range p.getNeighbors(game) {
-		if neighborC := game.getColor(neighbor); neighborC == EMPTY_COLOR {
+	neighbors := *p.getNeighbors(game)
+	for _, neighbor := range neighbors {
+		if neighborC := game.GetColor(&neighbor); neighborC == EMPTY_COLOR {
 			suicide = false
 		} else if neighborC == pColor {
 			if !neighbor.inAtari(game) {
@@ -66,59 +63,59 @@ func (m *Move) IsValid(game *Game) *Error {
 	}
 
 	if suicide {
-		return NewLocError(Move.IsValid, "Suicide Move", nil, "")
+		return NewLocError("Move.IsValid", "Suicide Move", nil, "")
 	}
 
 	return nil
 }
 
-func (p *Coordinate) getNeighbors(game *Game) (neighbors *[]Coordinate) {
-	var neighbors []int
+func (p *Coordinate) getNeighbors(game *Game) *[]Coordinate {
+	var neighbors []Coordinate
 
 	if p.X > 0 {
-		neighbors.append(Coordinate{X: p.X - 1, Y: p.Y})
+		neighbors = append(neighbors, Coordinate{X: p.X - 1, Y: p.Y})
 	}
 
 	if p.X < game.NumLines-1 {
-		neighbors.append(Coordinate{X: p.X + 1, Y: p.Y})
+		neighbors = append(neighbors, Coordinate{X: p.X + 1, Y: p.Y})
 	}
 
 	if p.Y > 0 {
-		neighbors.append(Coordinate{X: p.X, Y: p.Y - 1})
+		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y - 1})
 	}
 
 	if p.Y < game.NumLines-1 {
-		neighbors.append(Coordinate{X: p.X, Y: p.Y + 1})
+		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y + 1})
 	}
 
-	return
+	return &neighbors
 }
 
-func (p *Coordinate) getLiberties(game *Game) (liberties *[]Coordinate) {
-	var liberties []int
+func (p *Coordinate) getLiberties(game *Game) *[]Coordinate {
+	var liberties []Coordinate
 
-	myColor = game.getColor(p)
-	fillColor = GetOppositeColor(myColor)
+	myColor := game.GetColor(p)
+	fillColor := GetOppositeColor(myColor)
 	game.SetPieceColor(fillColor, p.X, p.Y)
 
-	neighbors = p.getNeighbors(game)
+	neighbors := *p.getNeighbors(game)
 
-	for neighbor := range neighbors {
-		if game.getColor(neighbor) == myColor {
-			liberties.append(neighbor.getLiberties(game)...)
-		} else if game.getColor(neighbor) == EMPTY_COLOR {
-			liberties.append(neighbor)
+	for _, neighbor := range neighbors {
+		if game.GetColor(&neighbor) == myColor {
+			liberties = append(liberties, *neighbor.getLiberties(game)...)
+		} else if game.GetColor(&neighbor) == EMPTY_COLOR {
+			liberties = append(liberties, neighbor)
 		}
 	}
 
-	return liberties
+	return &liberties
 }
 
 func (p *Coordinate) inAtari(game *Game) bool {
 	//this should make a copy
 	game_copy := *game
 
-	return len(p.getLiberties(game_copy)) == 1
+	return len(*p.getLiberties(&game_copy)) == 1
 }
 
 func MoveFromJson(data io.Reader) *Move {
