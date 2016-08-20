@@ -13,10 +13,11 @@ import (
 
 func InitPlayer() {
 	BaseRoutes.Players.Handle("/create", ApiHandler(createPlayer)).Methods("POST")
-	BaseRoutes.NeedPlayer.Handle("/update", ApiPlayerRequired(updatePlayer)).Methods("POST")
+	BaseRoutes.Players.Handle("/update", ApiPlayerRequired(updatePlayer)).Methods("POST")
+	BaseRoutes.Players.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
+	BaseRoutes.Players.Handle("/get/{username:[A-Za-z0-9]+}", ApiPlayerRequired(getPlayerByUsername)).Methods("GET")
+	BaseRoutes.Players.Handle("/get_me", ApiPlayerRequired(getMe)).Methods("GET")
 	BaseRoutes.NeedPlayer.Handle("/get", ApiPlayerRequired(getPlayer)).Methods("GET")
-	BaseRoutes.NeedPlayer.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
-	BaseRoutes.NeedPlayer.Handle("/get_by_username", ApiPlayerRequired(getPlayerByUsername)).Methods("GET")
 }
 
 func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -27,10 +28,6 @@ func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := r.URL.Query().Get("d")
-	props := model.MapFromJson(strings.NewReader(data))
-	player.Email = props["email"]
-
 	registeredPlayer, err := CreatePlayer(player)
 	if err != nil {
 		s.Err = err
@@ -40,10 +37,25 @@ func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(registeredPlayer.ToJson()))
 }
 
+func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
+	if result := <-Srv.Store.Player().Save(player); result.Err != nil {
+		return nil, result.Err
+	} else {
+		registeredPlayer := result.Data.(*model.Player)
+
+		return registeredPlayer, nil
+	}
+}
+
 func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	player := model.PlayerFromJson(r.Body)
 
 	if player == nil {
+		s.SetInvalidParam("updatePlayer", "player")
+		return
+	}
+
+	if s.Token.PlayerId != player.Id {
 		s.SetInvalidParam("updatePlayer", "player")
 		return
 	}
@@ -61,11 +73,29 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(updatedPlayer.ToJson()))
 }
 
+func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
+	if result := <-Srv.Store.Player().Update(player); result.Err != nil {
+		return nil, result.Err
+	} else {
+		updatedPlayer := result.Data.(*model.Player)
+
+		return updatedPlayer, nil
+	}
+}
+
 func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	playerId := params["player_id"]
 
 	if result, err := GetPlayer(playerId); err != nil {
+		s.Err = err
+	} else {
+		w.Write([]byte(result.ToJson()))
+	}
+}
+
+func getMe(s *Session, w http.ResponseWriter, r *http.Request) {
+	if result, err := GetPlayer(s.Token.PlayerId); err != nil {
 		s.Err = err
 	} else {
 		w.Write([]byte(result.ToJson()))
@@ -81,8 +111,7 @@ func GetPlayer(id string) (*model.Player, *model.Error) {
 }
 
 func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	playerId := params["player_id"]
+	playerId := s.Token.PlayerId
 
 	if result, err := GetPlayerGames(playerId); err != nil {
 		s.Err = err
@@ -115,25 +144,5 @@ func GetPlayerByUsername(username string) (*model.Player, *model.Error) {
 		return nil, result.Err
 	} else {
 		return result.Data.(*model.Player), nil
-	}
-}
-
-func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().Save(player); result.Err != nil {
-		return nil, result.Err
-	} else {
-		registeredPlayer := result.Data.(*model.Player)
-
-		return registeredPlayer, nil
-	}
-}
-
-func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().Update(player); result.Err != nil {
-		return nil, result.Err
-	} else {
-		updatedPlayer := result.Data.(*model.Player)
-
-		return updatedPlayer, nil
 	}
 }

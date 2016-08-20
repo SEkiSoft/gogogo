@@ -13,10 +13,9 @@ import (
 func InitGame() {
 	BaseRoutes.Games.Handle("/create", ApiHandler(createGame)).Methods("POST")
 
-	BaseRoutes.NeedGame.Handle("/update", ApiGameRequired(updateGame)).Methods("POST")
-	BaseRoutes.NeedGame.Handle("/move", ApiGameRequired(makeMove)).Methods("POST")
-	BaseRoutes.NeedGame.Handle("/stats", ApiGameRequired(getGameStats)).Methods("GET")
-	BaseRoutes.NeedGame.Handle("/get", ApiGameRequired(getGame)).Methods("GET")
+	BaseRoutes.NeedGame.Handle("/update", ApiPlayerRequired(updateGame)).Methods("POST")
+	BaseRoutes.NeedGame.Handle("/stats", ApiPlayerRequired(getGameStats)).Methods("GET")
+	BaseRoutes.NeedGame.Handle("/get", ApiPlayerRequired(getGame)).Methods("GET")
 }
 
 func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -78,39 +77,16 @@ func updateGame(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !game.HasPlayer(s.Token.PlayerId) {
+		s.SetInvalidParam("makeMove", "move")
+		return
+	}
+
 	game.PreUpdate()
 
 	if result := <-Srv.Store.Game().Update(game); result.Err != nil {
 		s.Err = result.Err
 	} else {
 		w.Write([]byte(result.Data.(*model.Game).ToJson()))
-	}
-}
-
-func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
-	move := model.MoveFromJson(r.Body)
-
-	if move == nil {
-		s.SetInvalidParam("makeMove", "move")
-		return
-	}
-
-	var game *model.Game
-	var err *model.Error
-
-	if game, err = GetGame(move.GameId); err != nil {
-		s.Err = err
-		return
-	}
-
-	if moveErr := move.IsValid(game); moveErr != nil {
-		s.Err = moveErr
-		return
-	}
-
-	if result := <-Srv.Store.Move().Save(move); result.Err != nil {
-		s.Err = result.Err
-	} else {
-		w.Write([]byte(result.Data.(*model.Move).ToJson()))
 	}
 }

@@ -18,8 +18,6 @@ type SqlConfiguration struct {
 
 type ServerConfiguration struct {
 	ListenPort string
-	HttpPort   int
-	HttpsPort  int
 }
 
 type Config struct {

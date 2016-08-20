@@ -89,6 +89,10 @@ func (g *Game) GetStats() *GameStats {
 	return &gs
 }
 
+func (g *Game) HasPlayer(playerId string) bool {
+	return g.IdBlack == playerId || g.IdWhite == playerId
+}
+
 func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {
 	if x < g.NumLines && y < g.NumLines {
 		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)

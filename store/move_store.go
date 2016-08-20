@@ -53,7 +53,7 @@ func (ms MoveStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := ms.GetMaster().Get(model.Move{}, id); err != nil {
+		if obj, err := ms.GetReplica().Get(model.Move{}, id); err != nil {
 			result.Err = model.NewLocError("MoveStore.Get", "Get move by id error", nil, "move_id="+id+", "+err.Error())
 		} else if obj == nil {
 			result.Err = model.NewLocError("MoveStore.Get", "Missing move error", nil, "move_id="+id)
@@ -76,7 +76,7 @@ func (ms MoveStore) GetByGame(gameId string) StoreChannel {
 
 		var data []*model.Move
 
-		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves WHERE GameId = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
+		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE GameId = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetByGame", "Missing game error", nil, "game_id="+gameId+", "+err.Error())
 		}
 
@@ -96,7 +96,7 @@ func (ms MoveStore) GetAll() StoreChannel {
 		result := StoreResult{}
 		var data []*model.Move
 
-		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves"); err != nil {
+		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves"); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetAll", "Couldn't retrieve moves", nil, err.Error())
 		}
 		result.Data = data
@@ -116,7 +116,7 @@ func (ms MoveStore) GetByPlayer(playerId string) StoreChannel {
 
 		var data []*model.Move
 
-		if err := ms.GetMaster().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerId+", "+err.Error())
 		}
 
@@ -135,7 +135,7 @@ func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := ms.GetMaster().SelectInt("SELECT COUNT(Id) FROM Moves"); err != nil {
+		if count, err := ms.GetReplica().SelectInt("SELECT COUNT(Id) FROM Moves"); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetTotalMovesCount", "Get total moves count error", nil, err.Error())
 		} else {
 			result.Data = count

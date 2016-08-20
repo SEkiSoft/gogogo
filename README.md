@@ -23,4 +23,22 @@ Before you can build this, make sure you have the following dependencies install
 * This repository uses git submodules. If you did not clone the repository using `git clone --recursive`, make sure you initialize the submodules by running `git submodule update --init`.
 
 ## Running
-*To be completed.*
+
+### Linux and Mac OS
+1. Install `mysql`
+2. Create an user with username `gouser` and password `gotest`
+3. Create a database called `gogogo`
+4. Ensure the database is listening on `localhost:3306` via TCP
+5. `make run`
+6. The server is now running on `localhost:3030`
+
+### Windows
+1. Install [MySQL Server](http://dev.mysql.com/downloads/windows/installer/5.7.html)
+    i. MySQL Workbench is highly recommended for development.
+2. Create an user with username `gouser` and password `gotest`
+3. Create a database called `gogogo`
+4. Ensure the database is listening on `localhost:3306` via TCP
+5. `go run gogogo.go`
+6. The server is now running on `localhost:3030`
+
+All settings can be changed in `config/config.json`

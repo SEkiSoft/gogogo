@@ -102,7 +102,7 @@ func (gs GameStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := gs.GetMaster().Get(model.Game{}, id); err != nil {
+		if obj, err := gs.GetReplica().Get(model.Game{}, id); err != nil {
 			result.Err = model.NewLocError("GameStore.Get", "Get game by id error", nil, "game_id="+id+", "+err.Error())
 		} else if obj == nil {
 			result.Err = model.NewLocError("GameStore.Get", "Missing game error", nil, "player_id="+id)
@@ -124,7 +124,7 @@ func (gs GameStore) GetAll() StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games"); err != nil {
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games"); err != nil {
 			result.Err = model.NewLocError("GameStore.GetAll", "Get all games error", nil, err.Error())
 		}
 
@@ -146,7 +146,7 @@ func (gs GameStore) GetGamesByOnePlayerId(playerId string) StoreChannel {
 
 		var data []*model.Game
 
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games WHERE IdBlack = :PlayerId OR IdWhite = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games WHERE IdBlack = :PlayerId OR IdWhite = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
 			result.Err = model.NewLocError("GameStore.GetGamesByOnePlayerId", "Missing game error", nil, "player_id="+playerId+", "+err.Error())
 		}
 
@@ -167,7 +167,7 @@ func (gs GameStore) GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChan
 
 		var data []*model.Game
 
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games WHERE (IdBlack = :Player1Id AND IdWhite = :Player2Id) OR (IdBlack = :Player2Id AND IdWhite = :Player1Id)", map[string]interface{}{"Player1Id": player1Id, "Player2Id": player2Id}); err != nil {
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games WHERE (IdBlack = :Player1Id AND IdWhite = :Player2Id) OR (IdBlack = :Player2Id AND IdWhite = :Player1Id)", map[string]interface{}{"Player1Id": player1Id, "Player2Id": player2Id}); err != nil {
 			result.Err = model.NewLocError("GameStore.GetGamesByTwoPlayerId", "Missing game error", nil, "player1_id="+player1Id+", player2_id="+player2Id+", "+err.Error())
 		}
 
@@ -186,7 +186,7 @@ func (gs GameStore) GetTotalGamesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games"); err != nil {
+		if count, err := gs.GetReplica().SelectInt("SELECT COUNT(Id) FROM Games"); err != nil {
 			result.Err = model.NewLocError("GameStore.GetTotalPlayersCount", "Get total games count error", nil, err.Error())
 		} else {
 			result.Data = count
@@ -205,7 +205,7 @@ func (gs GameStore) GetTotalFinishedGamesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games WHERE Finished = 1"); err != nil {
+		if count, err := gs.GetReplica().SelectInt("SELECT COUNT(Id) FROM Games WHERE Finished = 1"); err != nil {
 			result.Err = model.NewLocError("GameStore.GetTotalFinishedGamesCount", "Get total finished games count error", nil, err.Error())
 		} else {
 			result.Data = count

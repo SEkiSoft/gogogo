@@ -131,7 +131,7 @@ func (ps PlayerStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := ps.GetMaster().Get(model.Player{}, id); err != nil {
+		if obj, err := ps.GetReplica().Get(model.Player{}, id); err != nil {
 			result.Err = model.NewLocError("PlayerStore.Get", "Get player by id error", nil, "player_id="+id+", "+err.Error())
 		} else if obj == nil {
 			result.Err = model.NewLocError("PlayerStore.Get", "Missing player error", nil, "player_id="+id)
@@ -154,7 +154,7 @@ func (ps PlayerStore) GetAll() StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Player
-		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Players"); err != nil {
+		if _, err := ps.GetReplica().Select(&data, "SELECT * FROM Players"); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetAll", "Get all players error", nil, err.Error())
 		}
 
@@ -175,7 +175,7 @@ func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := ps.GetMaster().Select(&data, "SELECT * FROM Games WHERE IdBlack = :Id OR IdWhite = :Id", map[string]interface{}{"Id": id}); err != nil {
+		if _, err := ps.GetReplica().Select(&data, "SELECT * FROM Games WHERE IdBlack = :Id OR IdWhite = :Id", map[string]interface{}{"Id": id}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
 		}
 
@@ -198,7 +198,7 @@ func (ps PlayerStore) GetByEmail(email string) StoreChannel {
 
 		player := model.Player{}
 
-		if err := ps.GetMaster().SelectOne(&player, "SELECT * FROM Players WHERE Email = :Email", map[string]interface{}{"Email": email}); err != nil {
+		if err := ps.GetReplica().SelectOne(&player, "SELECT * FROM Players WHERE Email = :Email", map[string]interface{}{"Email": email}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetByEmail", "Missing player error", nil, "email="+email+", "+err.Error())
 		}
 
@@ -221,7 +221,7 @@ func (ps PlayerStore) GetByUsername(username string) StoreChannel {
 
 		player := model.Player{}
 
-		if err := ps.GetMaster().SelectOne(&player, "SELECT * FROM Players WHERE Username = :Username", map[string]interface{}{"Username": username}); err != nil {
+		if err := ps.GetReplica().SelectOne(&player, "SELECT * FROM Players WHERE Username = :Username", map[string]interface{}{"Username": username}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetByUsername", "Missing player error", nil, "username="+username+", "+err.Error())
 		}
 
@@ -240,7 +240,7 @@ func (ps PlayerStore) GetTotalPlayersCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := ps.GetMaster().SelectInt("SELECT COUNT(Id) FROM Players"); err != nil {
+		if count, err := ps.GetReplica().SelectInt("SELECT COUNT(Id) FROM Players"); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetTotalPlayersCount", "Get total players count error", nil, err.Error())
 		} else {
 			result.Data = count

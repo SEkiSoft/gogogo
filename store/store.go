@@ -27,6 +27,7 @@ type Store interface {
 	Game() SqlGameStore
 	Player() SqlPlayerStore
 	Move() SqlMoveStore
+	Token() SqlTokenStore
 	Close()
 	DropAllTables()
 }

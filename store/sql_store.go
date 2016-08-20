@@ -10,32 +10,30 @@ import (
 	"os"
 	"strings"
 
+	"github.com/SEkiSoft/gogogo/utils"
 	"github.com/go-gorp/gorp"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
-	DRIVER_NAME          = "mysql"
-	DATA_SOURCE          = "guser:gtest@tcp(dockerhost:3305)/gogogo_test?charset=utf8mb4,utf8"
-	MAX_IDLE_CONNS       = 50
-	MAX_OPEN_CONNS       = 50
-	TRACE                = false
 	INDEX_TYPE_FULL_TEXT = "full_text"
 	INDEX_TYPE_DEFAULT   = "default"
 )
 
 type SqlStore struct {
-	master *gorp.DbMap
-	game   SqlGameStore
-	player SqlPlayerStore
-	move   SqlMoveStore
-	token  SqlTokenStore
+	master  *gorp.DbMap
+	replica *gorp.DbMap
+	game    SqlGameStore
+	player  SqlPlayerStore
+	move    SqlMoveStore
+	token   SqlTokenStore
 }
 
 func initConnection() *SqlStore {
 	sqlStore := &SqlStore{}
 
-	sqlStore.master = setupConnection("master", DRIVER_NAME, DATA_SOURCE, MAX_IDLE_CONNS, MAX_OPEN_CONNS, TRACE)
+	sqlStore.master = setupConnection("master", utils.Cfg.SqlConfiguration.DriverName, utils.Cfg.SqlConfiguration.Source, utils.Cfg.SqlConfiguration.MaxIdleConns, utils.Cfg.SqlConfiguration.MaxOpenConns, utils.Cfg.SqlConfiguration.Trace)
+	sqlStore.replica = setupConnection("replica", utils.Cfg.SqlConfiguration.DriverName, utils.Cfg.SqlConfiguration.Source, utils.Cfg.SqlConfiguration.MaxIdleConns, utils.Cfg.SqlConfiguration.MaxOpenConns, utils.Cfg.SqlConfiguration.Trace)
 
 	return sqlStore
 }
@@ -50,7 +48,7 @@ func NewSqlStore() Store {
 
 	err := sqlStore.master.CreateTablesIfNotExists()
 	if err != nil {
-		panic(fmt.Sprintf("CRITICAL ERROR creating tables error: %s", err.Error()))
+		panic(fmt.Sprintf("CRITICAL ERROR: creating tables error: %s", err.Error()))
 		os.Exit(1)
 	}
 
@@ -239,6 +237,10 @@ func (ss SqlStore) GetMaster() *gorp.DbMap {
 	return ss.master
 }
 
+func (ss SqlStore) GetReplica() *gorp.DbMap {
+	return ss.replica
+}
+
 func (ss SqlStore) Close() {
 	ss.master.Db.Close()
 }
@@ -255,7 +257,7 @@ func (ss SqlStore) Move() SqlMoveStore {
 	return ss.move
 }
 
-func (ss SqlStore) Session() SqlTokenStore {
+func (ss SqlStore) Token() SqlTokenStore {
 	return ss.token
 }
 
