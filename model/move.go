@@ -1,6 +1,7 @@
 // Copyright (c) 2016 SEkiSoft
 // See License.txt
-
+//TODO: everything should be game object
+//ProcessMoves
 package model
 
 import (
@@ -47,16 +48,16 @@ func (m *Move) IsValid(game *Game) *Error {
 	}
 
 	suicide := true
-	neighbors := *p.getNeighbors(game)
+	neighbors := *game.getNeighbors(&p)
 	for _, neighbor := range neighbors {
 		if neighborC := game.GetColor(&neighbor); neighborC == EMPTY_COLOR {
 			suicide = false
 		} else if neighborC == pColor {
-			if !neighbor.inAtari(game) {
+			if !game.inAtari(&neighbor) {
 				suicide = false
 			}
 		} else if neighborC == GetOppositeColor(pColor) {
-			if neighbor.inAtari(game) {
+			if game.inAtari(&neighbor) {
 				suicide = false
 			}
 		}
@@ -67,55 +68,6 @@ func (m *Move) IsValid(game *Game) *Error {
 	}
 
 	return nil
-}
-
-func (p *Coordinate) getNeighbors(game *Game) *[]Coordinate {
-	var neighbors []Coordinate
-
-	if p.X > 0 {
-		neighbors = append(neighbors, Coordinate{X: p.X - 1, Y: p.Y})
-	}
-
-	if p.X < game.NumLines-1 {
-		neighbors = append(neighbors, Coordinate{X: p.X + 1, Y: p.Y})
-	}
-
-	if p.Y > 0 {
-		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y - 1})
-	}
-
-	if p.Y < game.NumLines-1 {
-		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y + 1})
-	}
-
-	return &neighbors
-}
-
-func (p *Coordinate) getLiberties(game *Game) *[]Coordinate {
-	var liberties []Coordinate
-
-	myColor := game.GetColor(p)
-	fillColor := GetOppositeColor(myColor)
-	game.SetPieceColor(fillColor, p.X, p.Y)
-
-	neighbors := *p.getNeighbors(game)
-
-	for _, neighbor := range neighbors {
-		if game.GetColor(&neighbor) == myColor {
-			liberties = append(liberties, *neighbor.getLiberties(game)...)
-		} else if game.GetColor(&neighbor) == EMPTY_COLOR {
-			liberties = append(liberties, neighbor)
-		}
-	}
-
-	return &liberties
-}
-
-func (p *Coordinate) inAtari(game *Game) bool {
-	//this should make a copy
-	game_copy := *game
-
-	return len(*p.getLiberties(&game_copy)) == 1
 }
 
 func MoveFromJson(data io.Reader) *Move {

@@ -121,3 +121,52 @@ func (g *Game) SetPieceColor(color int, x, y uint) *Error {
 	}
 	return NewLocError("Game.SetPieceColor", "row/col out of range", nil, "")
 }
+
+func (game *Game) getNeighbors(p *Coordinate) *[]Coordinate {
+	var neighbors []Coordinate
+
+	if p.X > 0 {
+		neighbors = append(neighbors, Coordinate{X: p.X - 1, Y: p.Y})
+	}
+
+	if p.X < game.NumLines-1 {
+		neighbors = append(neighbors, Coordinate{X: p.X + 1, Y: p.Y})
+	}
+
+	if p.Y > 0 {
+		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y - 1})
+	}
+
+	if p.Y < game.NumLines-1 {
+		neighbors = append(neighbors, Coordinate{X: p.X, Y: p.Y + 1})
+	}
+
+	return &neighbors
+}
+
+func (game *Game) getLiberties(p *Coordinate) *[]Coordinate {
+	var liberties []Coordinate
+
+	myColor := game.GetColor(p)
+	fillColor := GetOppositeColor(myColor)
+	game.SetPieceColor(fillColor, p.X, p.Y)
+
+	neighbors := *game.getNeighbors(p)
+
+	for _, neighbor := range neighbors {
+		if game.GetColor(&neighbor) == myColor {
+			liberties = append(liberties, *game.getLiberties(&neighbor)...)
+		} else if game.GetColor(&neighbor) == EMPTY_COLOR {
+			liberties = append(liberties, neighbor)
+		}
+	}
+
+	return &liberties
+}
+
+func (game *Game) inAtari(p *Coordinate) bool {
+	//this should make a copy
+	game_copy := *game
+
+	return len(*((&game_copy).getLiberties(p))) == 1
+}
