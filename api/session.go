@@ -15,7 +15,6 @@ import (
 var allowedMethods []string = []string{
 	"POST",
 	"GET",
-	"PUT",
 }
 
 type Session struct {
@@ -23,8 +22,6 @@ type Session struct {
 	IpAddress string
 	Path      string
 	Err       *model.Error
-	PlayerId  string
-	GameId    string
 	RootUrl   string
 	Token     *model.Token
 }
@@ -32,33 +29,27 @@ type Session struct {
 type handler struct {
 	handleFunc     func(*Session, http.ResponseWriter, *http.Request)
 	requiredPlayer bool
-	requiredGame   bool
 	requiredAdmin  bool
-	isApi          bool
 }
 
 func ApiHandler(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, false, false, true}
+	return &handler{h, false, false}
 }
 
 func ApiPlayerRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, true, false, false, true}
-}
-
-func ApiGameRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, true, false, true}
+	return &handler{h, true, false}
 }
 
 func ApiAdminRequired(h func(*Session, http.ResponseWriter, *http.Request)) http.Handler {
-	return &handler{h, false, false, true, true}
+	return &handler{h, false, true}
 }
 
 func GetProtocol(r *http.Request) string {
 	if r.Header.Get(model.HEADER_FORWARDED_PROTO) == "https" {
 		return "https"
-	} else {
-		return "http"
 	}
+
+	return "http"
 }
 
 func GetIpAddress(r *http.Request) string {
@@ -82,41 +73,33 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.IpAddress = GetIpAddress(r)
 	s.RootUrl = GetProtocol(r) + "://" + r.Host
 	s.Err = nil
+	s.Token = nil
+	s.Path = r.URL.Path
 
-	if h.isApi {
-		w.Header().Set(model.HEADER_REQUEST_ID, s.RequestId)
-		w.Header().Set("Content-Type", "application/json")
-	}
+	w.Header().Set(model.HEADER_REQUEST_ID, s.RequestId)
+	w.Header().Set("Content-Type", "application/json")
 
-	// TODO Get token from header, cookie, and query string
-	// Authenicate user based on token
-	// Using PlayerRequired, GameRequired, AdminRequired, etc.
 	token := ""
 
 	auth := r.Header.Get(model.HEADER_AUTH)
-	if len(auth) > 6 && strings.ToUpper(auth[0:6]) == model.HEADER_BEARER {
-		token = auth[7:]
+	if len(auth) > 4 && strings.ToUpper(auth[0:4]) == model.HEADER_BEAR {
+		token = auth[5:]
 	} else {
 		return
 	}
 
-	if h.isApi {
-		s.Path = r.URL.Path
-	} else {
-		splitURL := strings.Split(r.URL.Path, "/")
-		s.Path = "/" + strings.Join(splitURL[2:], "/")
-	}
-
 	if len(token) > 0 {
-		// TODO session store
+		if result := <-Srv.Store.Token().Get(token); result.Err != nil {
+			s.Err = result.Err
+		} else {
+			s.Token = result.Data.(*model.Token)
+		}
 	}
 
 	if s.Err == nil && h.requiredPlayer {
 		s.CheckPlayerRequired()
 	}
-	if s.Err == nil && h.requiredGame {
-		s.CheckGameRequired()
-	}
+
 	if s.Err == nil && h.requiredAdmin {
 		s.CheckAdminRequired()
 	}
@@ -125,17 +108,9 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if s.Err != nil {
-		if h.isApi {
-			w.WriteHeader(s.Err.StatusCode)
-			w.Write([]byte(s.Err.ToJson()))
-		} else {
-			RenderWebError(s.Err, w, r)
-		}
+		w.WriteHeader(s.Err.StatusCode)
+		w.Write([]byte(s.Err.ToJson()))
 	}
-}
-
-func RenderWebError(err *model.Error, w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/404.html", http.StatusTemporaryRedirect)
 }
 
 func Handle404(w http.ResponseWriter, r *http.Request) {
@@ -143,7 +118,8 @@ func Handle404(w http.ResponseWriter, r *http.Request) {
 	err.StatusCode = http.StatusNotFound
 	l4g.Error("%v: code=404 ip=%v", r.URL.Path, GetIpAddress(r))
 
-	RenderWebError(err, w, r)
+	w.WriteHeader(err.StatusCode)
+	w.Write([]byte(err.ToJson()))
 }
 
 func (s *Session) SetInvalidParam(location string, name string) {
@@ -151,21 +127,14 @@ func (s *Session) SetInvalidParam(location string, name string) {
 }
 
 func (s *Session) CheckPlayerRequired() {
-	if len(s.PlayerId) == 0 {
+	if len(s.Token.PlayerId) == 0 {
 		s.Err = model.NewLocError("CheckPlayerRequired", "Player invalid", nil, "")
 		s.Err.StatusCode = http.StatusUnauthorized
 	}
 }
 
-func (s *Session) CheckGameRequired() {
-	if len(s.GameId) == 0 {
-		s.Err = model.NewLocError("CheckGameRequired", "Game invalid", nil, "")
-		s.Err.StatusCode = http.StatusUnauthorized
-	}
-}
-
 func (s *Session) CheckAdminRequired() {
-	if len(s.PlayerId) == 0 {
+	if len(s.Token.PlayerId) == 0 {
 		s.Err = model.NewLocError("CheckAdminRequired", "Player invalid", nil, "")
 		s.Err.StatusCode = http.StatusUnauthorized
 	} else if !s.IsAdmin() {
@@ -175,7 +144,7 @@ func (s *Session) CheckAdminRequired() {
 }
 
 func (s *Session) IsAdmin() bool {
-	if player, err := GetPlayer(s.PlayerId); err == nil {
+	if player, err := GetPlayer(s.Token.PlayerId); err == nil {
 		return player.IsAdmin
 	}
 	return false

@@ -27,7 +27,7 @@ func doLoadConfig() (err string) {
 
 func main() {
 	if err := doLoadConfig(); err != "" {
-		l4g.Exit("Unable to load configuration file: %s", err)
+		l4g.Exit("Unable to load configuration file:", err)
 		return
 	}
 

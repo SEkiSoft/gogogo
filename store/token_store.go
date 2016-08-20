@@ -15,7 +15,7 @@ func NewTokenStore(sqlStore *SqlStore) SqlTokenStore {
 	ts := &TokenStore{sqlStore}
 
 	db := sqlStore.GetMaster()
-	table := db.AddTableWithName(model.Player{}, "Tokens").SetKeys(false, "Id")
+	table := db.AddTableWithName(model.Token{}, "Tokens").SetKeys(false, "Id")
 	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("PlayerId").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("DeviceId").SetMaxSize(model.ID_LENGTH)
@@ -51,7 +51,7 @@ func (ts TokenStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := ts.GetMaster().Get(model.Token{}, id); err != nil {
+		if obj, err := ts.GetReplica().Get(model.Token{}, id); err != nil {
 			result.Err = model.NewLocError("TokenStore.Get", "Get token by id error", nil, "token_id="+id+", "+err.Error())
 		} else if obj == nil {
 			result.Err = model.NewLocError("TokenStore.Get", "Missing token error", nil, "token_id="+id)
@@ -73,7 +73,7 @@ func (ts TokenStore) GetTokens(playerId string) StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Token
-		if _, err := ts.GetMaster().Select(&data, "SELECT * FROM Tokens WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
 			result.Err = model.NewLocError("TokenStore.Get", "Get tokens by player id error", nil, err.Error())
 		}
 
@@ -127,7 +127,7 @@ func (ts TokenStore) GetAll() StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Token
-		if _, err := ts.GetMaster().Select(&data, "SELECT * FROM Tokens"); err != nil {
+		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens"); err != nil {
 			result.Err = model.NewLocError("TokenStore.GetAll", "Get all tokens error", nil, err.Error())
 		}
 

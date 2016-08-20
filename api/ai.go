@@ -11,7 +11,7 @@ import (
 func InitAi() {
 	BaseRoutes.Ai.Handle("/stats", ApiHandler(getAiStats)).Methods("GET")
 
-	BaseRoutes.AiNeedGame.Handle("/move", ApiGameRequired(getAiMove)).Methods("GET")
+	BaseRoutes.AiNeedGame.Handle("/move", ApiHandler(getAiMove)).Methods("GET")
 }
 
 func getAiStats(s *Session, w http.ResponseWriter, r *http.Request) {

@@ -11,10 +11,9 @@ import (
 )
 
 func InitMove() {
-	BaseRoutes.Moves.Handle("/get/{move_id:[A-Za-z0-9]+}", ApiHandler(getMove)).Methods("GET")
-	BaseRoutes.Moves.Handle("/get_all", ApiHandler(getAllMoves)).Methods("GET")
-	BaseRoutes.Moves.Handle("/get_game/{game_id:[A-Za-z0-9]+}", ApiHandler(getGameMoves)).Methods("GET")
-	BaseRoutes.Moves.Handle("/get_player/{player_id:[A-Za-z0-9]+}", ApiHandler(getPlayerMoves)).Methods("GET")
+	BaseRoutes.Moves.Handle("/", ApiPlayerRequired(makeMove)).Methods("POST")
+	BaseRoutes.Moves.Handle("/get/{move_id:[A-Za-z0-9]+}", ApiPlayerRequired(getMove)).Methods("GET")
+	BaseRoutes.Moves.Handle("/get", ApiPlayerRequired(getGameMoves)).Methods("GET")
 }
 
 func getMove(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -55,21 +54,42 @@ func GetGameMoves(gameId string) ([]*model.Move, *model.Error) {
 	}
 }
 
-func getPlayerMoves(s *Session, w http.ResponseWriter, r *http.Request) {
+func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
+	move := model.MoveFromJson(r.Body)
 	params := mux.Vars(r)
-	playerId := params["player_id"]
+	gameId := params["game_id"]
 
-	if result, err := GetPlayerMoves(playerId); err != nil {
-		s.Err = err
-	} else {
-		w.Write([]byte(model.MovesToJson(result)))
+	if move == nil {
+		s.SetInvalidParam("makeMove", "move")
+		return
 	}
-}
 
-func GetPlayerMoves(playerId string) ([]*model.Move, *model.Error) {
-	if result := <-Srv.Store.Move().GetByPlayer(playerId); result.Err != nil {
-		return nil, result.Err
+	if move.GameId != gameId {
+		s.SetInvalidParam("makeMove", "move")
+		return
+	}
+
+	var game *model.Game
+	var err *model.Error
+
+	if game, err = GetGame(move.GameId); err != nil {
+		s.Err = err
+		return
+	}
+
+	if !game.HasPlayer(s.Token.PlayerId) {
+		s.SetInvalidParam("makeMove", "move")
+		return
+	}
+
+	if moveErr := move.IsValid(game); moveErr != nil {
+		s.Err = moveErr
+		return
+	}
+
+	if result := <-Srv.Store.Move().Save(move); result.Err != nil {
+		s.Err = result.Err
 	} else {
-		return result.Data.([]*model.Move), nil
+		w.Write([]byte(result.Data.(*model.Move).ToJson()))
 	}
 }
