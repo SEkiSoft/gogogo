@@ -67,7 +67,6 @@ func GetIpAddress(r *http.Request) string {
 }
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	s := &Session{}
 	s.RequestId = model.NewId()
 	s.IpAddress = GetIpAddress(r)
@@ -84,8 +83,6 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get(model.HEADER_AUTH)
 	if len(auth) > 4 && strings.ToUpper(auth[0:4]) == model.HEADER_BEAR {
 		token = auth[5:]
-	} else {
-		return
 	}
 
 	if len(token) > 0 {

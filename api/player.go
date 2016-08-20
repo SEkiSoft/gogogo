@@ -28,10 +28,6 @@ func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := r.URL.Query().Get("d")
-	props := model.MapFromJson(strings.NewReader(data))
-	player.Email = props["email"]
-
 	registeredPlayer, err := CreatePlayer(player)
 	if err != nil {
 		s.Err = err
