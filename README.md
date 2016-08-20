@@ -34,7 +34,7 @@ Before you can build this, make sure you have the following dependencies install
 
 ### Windows
 1. Install [MySQL Server](http://dev.mysql.com/downloads/windows/installer/5.7.html)
-    i. MySQL Workbench is highly recommended for development.
+    * MySQL Workbench is highly recommended for development.
 2. Create an user with username `gouser` and password `gotest`
 3. Create a database called `gogogo`
 4. Ensure the database is listening on `localhost:3306` via TCP
