@@ -18,10 +18,22 @@ func InitAdmin() {
 	BaseRoutes.Admin.Handle("/get_ai", ApiAdminRequired(getAi)).Methods("POST")
 }
 
+func paramsToString(params map[string]string) (returned string) {
+	returned += "\""
+	for key, value := range params {
+		returned += key
+		returned += "="
+		returned += value
+		returned += ", "
+	}
+	returned += "\""
+	return
+}
+
 func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	if !s.IsAdmin() {
-		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err := model.NewLocError("Admin.getAllGames", "Unauthorized admin access", nil, "params="+paramsToString(params))
 		err.StatusCode = http.StatusUnauthorized
 		w.Write([]byte(err.ToJson()))
 		return
@@ -45,7 +57,7 @@ func GetAllGames() ([]*model.Game, *model.Error) {
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	if !s.IsAdmin() {
-		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err := model.NewLocError("Admin.getAllPlayers", "Unauthorized admin access", nil, "params="+paramsToString(params))
 		err.StatusCode = http.StatusUnauthorized
 		w.Write([]byte(err.ToJson()))
 		return
@@ -69,7 +81,7 @@ func GetAllPlayers() ([]*model.Player, *model.Error) {
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	if !s.IsAdmin() {
-		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err := model.NewLocError("Admin.getAllMoves", "Unauthorized admin access", nil, "params="+paramsToString(params))
 		err.StatusCode = http.StatusUnauthorized
 		w.Write([]byte(err.ToJson()))
 		return
@@ -93,7 +105,7 @@ func GetAllMoves() ([]*model.Move, *model.Error) {
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	if !s.IsAdmin() {
-		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err := model.NewLocError("Admin.getAllStats", "Unauthorized admin access", nil, "params="+paramsToString(params))
 		err.StatusCode = http.StatusUnauthorized
 		w.Write([]byte(err.ToJson()))
 		return
