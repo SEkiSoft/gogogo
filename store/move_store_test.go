@@ -10,7 +10,7 @@ import (
 )
 
 func TestMoveStoreSave(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move := model.Move{
 		Id:       model.NewId(),
@@ -30,7 +30,7 @@ func TestMoveStoreSave(t *testing.T) {
 }
 
 func TestMoveStoreDelete(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move := model.Move{
 		Id:       model.NewId(),
@@ -50,7 +50,7 @@ func TestMoveStoreDelete(t *testing.T) {
 }
 
 func TestMoveStoreGet(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move := model.Move{
 		Id:       model.NewId(),
@@ -76,7 +76,7 @@ func TestMoveStoreGet(t *testing.T) {
 }
 
 func TestMoveStoreGetByGame(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move := model.Move{
 		Id:       model.NewId(),
@@ -102,7 +102,7 @@ func TestMoveStoreGetByGame(t *testing.T) {
 }
 
 func TestMoveStoreGetByPlayer(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move := model.Move{
 		Id:       model.NewId(),
@@ -128,7 +128,7 @@ func TestMoveStoreGetByPlayer(t *testing.T) {
 }
 
 func TestMoveStoreGetAll(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move1 := model.Move{
 		Id:       model.NewId(),
@@ -170,7 +170,7 @@ func TestMoveStoreGetAll(t *testing.T) {
 }
 
 func TestMoveStoreGetTotalMovesCount(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	move1 := model.Move{
 		Id:       model.NewId(),
