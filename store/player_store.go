@@ -21,7 +21,9 @@ func NewPlayerStore(sqlStore *SqlStore) SqlPlayerStore {
 	table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
 	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Username").SetMaxSize(64).SetUnique(true)
-	table.ColMap("Password").SetMaxSize(128)
+	table.ColMap("PasswordHash").SetMaxSize(64)
+	table.ColMap("PasswordSalt").SetMaxSize(64)
+	table.ColMap("PasswordIterations").SetMaxSize(9)
 	table.ColMap("Email").SetMaxSize(128).SetUnique(true)
 	table.ColMap("AllowStats").SetMaxSize(1)
 	table.ColMap("Locale").SetMaxSize(5)
@@ -82,7 +84,9 @@ func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 		} else {
 			oldPlayer := oldPlayerResult.(*model.Player)
 			player.CreateAt = oldPlayer.CreateAt
-			player.Password = oldPlayer.Password
+			player.PasswordHash = oldPlayer.PasswordHash
+			player.PasswordSalt = oldPlayer.PasswordSalt
+			player.PasswordIterations = oldPlayer.PasswordIterations
 
 			if count, err := ps.GetMaster().Update(player); err != nil {
 				if IsUniqueConstraintError(err.Error(), []string{"Email", "players_email_key", "idx_players_email_unique"}) {
@@ -106,13 +110,13 @@ func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 	return storeChannel
 }
 
-func (ps PlayerStore) UpdatePassword(playerId string, newPassword string) StoreChannel {
+func (ps PlayerStore) UpdatePassword(playerId string, newPasswordHash string, newPasswordSalt string, newPasswordIterations string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ps.GetMaster().Exec("UPDATE Players SET Password = :Password WHERE Id = :PlayerId", map[string]interface{}{"Password": newPassword, "PlayerId": playerId}); err != nil {
+		if _, err := ps.GetMaster().Exec("UPDATE Players SET PasswordHash = :PasswordHash, PasswordSalt = :PasswordSalt, PasswordIterations = :PasswordIterations WHERE Id = :PlayerId", map[string]interface{}{"PasswordHash": newPasswordHash, "PasswordSalt": newPasswordSalt, "PasswordIterations": newPasswordIterations, "PlayerId": playerId}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.UpdatePassword", "Player update password error", nil, "player_id="+playerId)
 		} else {
 			result.Data = playerId

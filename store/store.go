@@ -47,7 +47,7 @@ type SqlGameStore interface {
 type SqlPlayerStore interface {
 	Save(player *model.Player) StoreChannel
 	Update(player *model.Player) StoreChannel
-	UpdatePassword(id, newPassword string) StoreChannel
+	UpdatePassword(id, newPasswordHash string, newPasswordSalt string, newPasswordIterations string) StoreChannel
 	Get(id string) StoreChannel
 	GetAll() StoreChannel
 	GetPlayerGames(id string) StoreChannel

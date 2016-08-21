@@ -21,16 +21,18 @@ const (
 )
 
 type Player struct {
-	Id         string `json:"id"`
-	CreateAt   int64  `json:"create_at"`
-	UpdateAt   int64  `json:"update_at"`
-	DeleteAt   int64  `json:"delete_at"`
-	Username   string `json:"username"`
-	Password   string `json:"password,omitempty"`
-	Email      string `json:"email"`
-	AllowStats bool   `json:"allow_stats"`
-	Locale     string `json:"locale"`
-	IsAdmin    bool   `json:"is_admin,omitempty"`
+	Id                 string `json:"id"`
+	CreateAt           int64  `json:"create_at"`
+	UpdateAt           int64  `json:"update_at"`
+	DeleteAt           int64  `json:"delete_at"`
+	Username           string `json:"username"`
+	PasswordHash       string `json:"password_hash,omitempty"`
+	PasswordSalt       string `json:"password_salt,omitempty"`
+	PasswordIterations int64  `json:"password_iterations,omitempty"`
+	Email              string `json:"email"`
+	AllowStats         bool   `json:"allow_stats"`
+	Locale             string `json:"locale"`
+	IsAdmin            bool   `json:"is_admin,omitempty"`
 }
 
 func (p *Player) IsValid() *Error {
@@ -52,10 +54,6 @@ func (p *Player) IsValid() *Error {
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
 		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.Id)
-	}
-
-	if len(p.Password) < MIN_PASSWORD_LENGTH || len(p.Password) > MAX_PASSWORD_LENGTH {
-		return NewLocError("Player.IsValid", "Password is invalid", nil, "player_id="+p.Id)
 	}
 
 	return nil
@@ -148,5 +146,7 @@ func (p *Player) Etag() string {
 }
 
 func (p *Player) Sanitize() {
-	p.Password = ""
+	p.PasswordHash = ""
+	p.PasswordSalt = ""
+	p.PasswordIterations = 0
 }
