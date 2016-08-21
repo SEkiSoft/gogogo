@@ -4,7 +4,6 @@
 package store
 
 import (
-	"github.com/SEkiSoft/gogogo/model"
 	"testing"
 )
 

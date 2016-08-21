@@ -4,18 +4,37 @@
 package store
 
 import (
-	"github.com/SEkiSoft/gogogo/model"
 	"testing"
+
+	"github.com/sekisoft/gogogo/utils"
 )
 
-func TestSqlStore(t *testing.T) {
+var store Store
 
+func TestSetUp() {
+	if store == nil {
+		utils.LoadConfig()
+
+		store = NewSqlStore()
+	}
+}
+
+func TestSqlStore(t *testing.T) {
+	TestSetUp()
+
+	if store == nil {
+		t.Fatal("should not fail")
+	}
 }
 
 func TestSqlStoreClose(t *testing.T) {
+	TestSetUp()
 
-}
+	store.Close()
 
-func TestSqlStoreDropAll(t *testing.T) {
+	result := <-store.Game().GetAll()
 
+	if result.Err == nil {
+		t.Fatal("should have errored")
+	}
 }

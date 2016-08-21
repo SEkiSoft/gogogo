@@ -151,12 +151,12 @@ func (ss SqlStore) GetMaxLengthOfColumnIfExists(tableName string, columnName str
 	return result
 }
 
-func (ss SqlStore) AlterColumnTypeIfExists(tableName string, columnName string, mySqlColType string, postgresColType string) bool {
+func (ss SqlStore) AlterColumnTypeIfExists(tableName string, columnName string, colType string) bool {
 	if !ss.DoesColumnExist(tableName, columnName) {
 		return false
 	}
 
-	_, err := ss.GetMaster().Exec("ALTER TABLE " + tableName + " MODIFY " + columnName + " " + mySqlColType)
+	_, err := ss.GetMaster().Exec("ALTER TABLE " + tableName + " MODIFY " + columnName + " " + colType)
 
 	if err != nil {
 		panic(fmt.Sprintf("CRITICAL ERROR: alter column type error: %s", err.Error()))
@@ -243,6 +243,7 @@ func (ss SqlStore) GetReplica() *gorp.DbMap {
 
 func (ss SqlStore) Close() {
 	ss.master.Db.Close()
+	ss.replica.Db.Close()
 }
 
 func (ss SqlStore) Game() SqlGameStore {
