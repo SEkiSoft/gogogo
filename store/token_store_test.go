@@ -10,7 +10,7 @@ import (
 )
 
 func TestTokenStoreSave(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token := model.Token{
 		Id:       model.NewId(),
@@ -29,7 +29,7 @@ func TestTokenStoreSave(t *testing.T) {
 }
 
 func TestTokenStoreDelete(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token := model.Token{
 		Id:       model.NewId(),
@@ -48,7 +48,7 @@ func TestTokenStoreDelete(t *testing.T) {
 }
 
 func TestTokenStoreGet(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token := model.Token{
 		Id:       model.NewId(),
@@ -73,7 +73,7 @@ func TestTokenStoreGet(t *testing.T) {
 }
 
 func TestTokenStoreGetTokens(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token1 := model.Token{
 		Id:       model.NewId(),
@@ -113,7 +113,7 @@ func TestTokenStoreGetTokens(t *testing.T) {
 }
 
 func TestTokenStoreDeleteAll(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token1 := model.Token{
 		Id:       model.NewId(),
@@ -149,7 +149,7 @@ func TestTokenStoreDeleteAll(t *testing.T) {
 }
 
 func TestTokenStoreGetAll(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	token1 := model.Token{
 		Id:       model.NewId(),
