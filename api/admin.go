@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/SEkiSoft/gogogo/model"
-	"github.com/gorilla/mux"
 )
 
 func InitAdmin() {
@@ -19,7 +18,6 @@ func InitAdmin() {
 }
 
 func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
 	if !s.IsAdmin() {
 		err := model.NewLocError("Admin.getAllGames", "Unauthorized admin access", nil, "")
 		err.StatusCode = http.StatusUnauthorized
@@ -43,7 +41,6 @@ func GetAllGames() ([]*model.Game, *model.Error) {
 }
 
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
 	if !s.IsAdmin() {
 		err := model.NewLocError("Admin.getAllPlayers", "Unauthorized admin access", nil, "")
 		err.StatusCode = http.StatusUnauthorized
@@ -67,7 +64,6 @@ func GetAllPlayers() ([]*model.Player, *model.Error) {
 }
 
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
 	if !s.IsAdmin() {
 		err := model.NewLocError("Admin.getAllMoves", "Unauthorized admin access", nil, "")
 		err.StatusCode = http.StatusUnauthorized
@@ -91,7 +87,6 @@ func GetAllMoves() ([]*model.Move, *model.Error) {
 }
 
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
 	if !s.IsAdmin() {
 		err := model.NewLocError("Admin.getAllStats", "Unauthorized admin access", nil, "")
 		err.StatusCode = http.StatusUnauthorized
