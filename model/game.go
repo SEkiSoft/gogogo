@@ -60,9 +60,9 @@ func GameToJson(g *Game) string {
 	b, err := json.Marshal(g)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func (g *Game) IsValid() *Error {

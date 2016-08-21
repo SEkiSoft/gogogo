@@ -122,9 +122,9 @@ func PlayerToJson(p []*Player) string {
 	b, err := json.Marshal(p)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func ComparePassword(hash string, password string) bool {

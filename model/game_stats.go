@@ -44,9 +44,9 @@ func GameStatsToJson(gs *Game) string {
 	b, err := json.Marshal(gs)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func (gs *GameStats) IsValid() *Error {

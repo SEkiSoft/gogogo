@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/SEkiSoft/gogogo/model"
+	"github.com/gorilla/mux"
 )
 
 func InitAdmin() {
@@ -18,8 +19,13 @@ func InitAdmin() {
 }
 
 func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// TODO: check the admin ID
+	params := mux.Vars(r)
+	if !s.IsAdmin() {
+		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err.StatusCode = http.StatusUnauthorized
+		w.Write([]byte(err.ToJson()))
+		return
+	}
 
 	if result, err := GetAllGames(); err != nil {
 		s.Err = err
@@ -37,8 +43,13 @@ func GetAllGames() ([]*model.Game, *model.Error) {
 }
 
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// TODO: check the admin ID
+	params := mux.Vars(r)
+	if !s.IsAdmin() {
+		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err.StatusCode = http.StatusUnauthorized
+		w.Write([]byte(err.ToJson()))
+		return
+	}
 
 	if result, err := GetAllPlayers(); err != nil {
 		s.Err = err
@@ -56,8 +67,13 @@ func GetAllPlayers() ([]*model.Player, *model.Error) {
 }
 
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// TODO: check the admin ID
+	params := mux.Vars(r)
+	if !s.IsAdmin() {
+		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err.StatusCode = http.StatusUnauthorized
+		w.Write([]byte(err.ToJson()))
+		return
+	}
 
 	if result, err := GetAllMoves(); err != nil {
 		s.Err = err
@@ -75,8 +91,13 @@ func GetAllMoves() ([]*model.Move, *model.Error) {
 }
 
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
-	// params := mux.Vars(r)
-	// TODO: check the admin ID
+	params := mux.Vars(r)
+	if !s.IsAdmin() {
+		err := model.NewLocError("api/admin.go", "69", params, "You are not an admin!")
+		err.StatusCode = http.StatusUnauthorized
+		w.Write([]byte(err.ToJson()))
+		return
+	}
 
 	if result := <-Srv.Store.Game().GetAll(); result.Err != nil {
 		s.Err = result.Err
