@@ -11,7 +11,7 @@ import (
 
 var store Store
 
-func TestSetUp() {
+func Setup() {
 	if store == nil {
 		utils.LoadConfig()
 
@@ -20,7 +20,7 @@ func TestSetUp() {
 }
 
 func TestSqlStore(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	if store == nil {
 		t.Fatal("should not fail")
@@ -28,7 +28,7 @@ func TestSqlStore(t *testing.T) {
 }
 
 func TestSqlStoreClose(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	store.Close()
 

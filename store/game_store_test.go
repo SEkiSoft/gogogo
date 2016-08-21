@@ -10,6 +10,8 @@ import (
 )
 
 func TestGameStoreSave(t *testing.T) {
+	Setup()
+
 	game := model.Game{
 		Id:       model.NewId(),
 		IdBlack:  model.NewId(),
@@ -30,6 +32,8 @@ func TestGameStoreSave(t *testing.T) {
 }
 
 func TestGameStoreDelete(t *testing.T) {
+	Setup()
+
 	game := model.Game{
 		Id:       model.NewId(),
 		IdBlack:  model.NewId(),
@@ -50,6 +54,8 @@ func TestGameStoreDelete(t *testing.T) {
 }
 
 func TestGameStoreUpdate(t *testing.T) {
+	Setup()
+
 	game := model.Game{
 		Id:       model.NewId(),
 		IdBlack:  model.NewId(),
@@ -78,6 +84,8 @@ func TestGameStoreUpdate(t *testing.T) {
 }
 
 func TestGameStoreGet(t *testing.T) {
+	Setup()
+
 	game := model.Game{
 		Id:       model.NewId(),
 		IdBlack:  model.NewId(),
@@ -104,6 +112,8 @@ func TestGameStoreGet(t *testing.T) {
 }
 
 func TestGameStoreGetAll(t *testing.T) {
+	Setup()
+
 	game1 := model.Game{
 		Id:       model.NewId(),
 		IdBlack:  model.NewId(),
