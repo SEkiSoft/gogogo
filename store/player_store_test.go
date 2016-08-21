@@ -5,6 +5,8 @@ package store
 
 import (
 	"testing"
+
+	"github.com/SEkiSoft/gogogo/model"
 )
 
 func TestPlayerStoreSave(t *testing.T) {
