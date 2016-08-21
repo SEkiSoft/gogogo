@@ -10,7 +10,7 @@ import (
 )
 
 func TestPlayerStoreSave(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
@@ -31,7 +31,7 @@ func TestPlayerStoreSave(t *testing.T) {
 }
 
 func TestPlayerStoreDelete(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
@@ -52,7 +52,7 @@ func TestPlayerStoreDelete(t *testing.T) {
 }
 
 func TestPlayerStoreUpdate(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
@@ -81,7 +81,7 @@ func TestPlayerStoreUpdate(t *testing.T) {
 }
 
 func TestPlayerStoreGet(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
@@ -108,7 +108,7 @@ func TestPlayerStoreGet(t *testing.T) {
 }
 
 func TestPlayerStoreGetAll(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player1 := model.Player{
 		Id:         model.NewId(),
@@ -152,7 +152,7 @@ func TestPlayerStoreGetAll(t *testing.T) {
 }
 
 func TestPlayerStoreGetByEmail(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
@@ -179,7 +179,7 @@ func TestPlayerStoreGetByEmail(t *testing.T) {
 }
 
 func TestPlayerStoreGetByUsername(t *testing.T) {
-	TestSetUp()
+	Setup()
 
 	player := model.Player{
 		Id:         model.NewId(),
