@@ -5,7 +5,5 @@ before_script:
     - git submodule update --init
 script:
     - make build
+    - make test
 go_import_path: github.com/SEkiSoft/gogogo
-branches:
-    only:
-        - master
