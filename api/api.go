@@ -36,7 +36,7 @@ func InitApi() {
 	BaseRoutes.Ai = BaseRoutes.Root.PathPrefix("/ai").Subrouter()
 	BaseRoutes.AiNeedGame = BaseRoutes.Ai.PathPrefix("/{game_id:[A-Za-z0-9]+}").Subrouter()
 
-	BaseRoutes.Admin = BaseRoutes.Root.PathPrefix("/admin/{admin_id:[A-za-z0-9+}").Subrouter()
+	BaseRoutes.Admin = BaseRoutes.Root.PathPrefix("/admin").Subrouter()
 
 	InitPlayer()
 	InitGame()
