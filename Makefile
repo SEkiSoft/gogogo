@@ -1,5 +1,5 @@
 build:
-	@echo Building server and client
+	@echo Building server
 	go build
 
 check-style:
