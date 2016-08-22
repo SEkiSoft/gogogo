@@ -10,7 +10,6 @@ test:
 	@echo Running unit tests
 	go test -run=. ./api
 	go test -run=. ./model
-	go test -run=. ./store
 	go test -run=. ./utils
 
 run:
