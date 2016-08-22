@@ -1,5 +1,5 @@
 build:
-	@echo Building server and client
+	@echo Building server
 	go build
 
 check-style:
@@ -10,8 +10,6 @@ test:
 	@echo Running unit tests
 	go test -run=. ./api
 	go test -run=. ./model
-	go test -run=. ./store
-	go test -run=. ./utils
 
 run:
 	@echo Running server
