@@ -5,7 +5,6 @@ package api
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/SEkiSoft/gogogo/model"
 	"github.com/gorilla/mux"
@@ -59,10 +58,6 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 		s.SetInvalidParam("updatePlayer", "player")
 		return
 	}
-
-	data := r.URL.Query().Get("d")
-	props := model.MapFromJson(strings.NewReader(data))
-	player.Email = props["email"]
 
 	updatedPlayer, err := UpdatePlayer(player)
 	if err != nil {
