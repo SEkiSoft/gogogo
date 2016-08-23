@@ -73,6 +73,7 @@ func (p *Player) PreSave() {
 	p.Username = strings.ToLower(p.Username)
 	p.Email = strings.ToLower(p.Email)
 	p.Locale = strings.ToLower(p.Locale)
+	p.Password = HashPassword(p.Password)
 
 	p.CreateAt = GetMillis()
 	p.UpdateAt = p.CreateAt
@@ -159,10 +160,6 @@ func IsValidUsername(s string) bool {
 	}
 
 	return true
-}
-
-func (p *Player) Etag() string {
-	return Etag(p.Id, p.UpdateAt)
 }
 
 func (p *Player) Sanitize() {

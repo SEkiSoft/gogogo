@@ -7,7 +7,6 @@ import (
 	"bytes"
 	"encoding/base32"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/mail"
 	"strings"
@@ -42,54 +41,8 @@ func HashPassword(password string) string {
 	return string(hash)
 }
 
-func Etag(parts ...interface{}) string {
-	etag := ""
-	for _, part := range parts {
-		etag += fmt.Sprintf(".%v", part)
-	}
-
-	return etag
-}
-
 func GetMillis() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
-}
-
-func MapToJson(objmap map[string]string) string {
-	if json, err := json.Marshal(objmap); err == nil {
-		return string(json)
-	}
-
-	return ""
-}
-
-func MapFromJson(data io.Reader) map[string]string {
-	decoder := json.NewDecoder(data)
-
-	var objmap map[string]string
-	if err := decoder.Decode(&objmap); err == nil {
-		return objmap
-	}
-
-	return make(map[string]string)
-}
-
-func ArrayToJson(objmap []string) string {
-	if json, err := json.Marshal(objmap); err == nil {
-		return string(json)
-	}
-
-	return ""
-}
-
-func ArrayFromJson(data io.Reader) []string {
-	decoder := json.NewDecoder(data)
-
-	var objmap []string
-	if err := decoder.Decode(&objmap); err == nil {
-		return objmap
-	}
-	return make([]string, 0)
 }
 
 func StringInterfaceToJson(objmap map[string]interface{}) string {
@@ -109,26 +62,6 @@ func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
 	}
 
 	return objmap
-}
-
-func StringToJson(s string) string {
-	json, err := json.Marshal(s)
-	if err == nil {
-		return string(json)
-	}
-
-	return ""
-}
-
-func StringFromJson(data io.Reader) string {
-	decoder := json.NewDecoder(data)
-
-	var s string
-	if err := decoder.Decode(&s); err == nil {
-		return s
-	}
-
-	return ""
 }
 
 func IsLower(s string) bool {
