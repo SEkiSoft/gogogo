@@ -51,6 +51,10 @@ func (t *Token) PreSave() {
 	t.ExpiresAt = t.CreateAt + TOKEN_DURATION
 }
 
+func (t *Token) PreUpdate() {
+	t.LastActivityAt = GetMillis()
+}
+
 func (t *Token) IsExpired() bool {
 	if t.ExpiresAt <= 0 {
 		return false
