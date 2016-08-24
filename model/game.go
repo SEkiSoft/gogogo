@@ -11,7 +11,9 @@ import (
 
 const (
 	MAX_NUMLINES = 19
-	MIN_NUMLINES = 13
+	MIN_NUMLINES = 5
+	WHITE        = 1
+	BLACK        = 2
 )
 
 type Game struct {
@@ -54,15 +56,6 @@ func GamesToJson(g []*Game) string {
 	}
 
 	return "[]"
-}
-
-func GameToJson(g *Game) string {
-	b, err := json.Marshal(g)
-	if err != nil {
-		return ""
-	}
-
-	return string(b)
 }
 
 func (g *Game) IsValid() *Error {
