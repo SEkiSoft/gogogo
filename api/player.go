@@ -12,6 +12,8 @@ import (
 
 func InitPlayer() {
 	BaseRoutes.Players.Handle("/create", ApiHandler(createPlayer)).Methods("POST")
+	BaseRoutes.Players.Handle("/login", ApiHandler(login)).Methods("POST")
+	BaseRoutes.Players.Handle("/logout", ApiPlayerRequired(logout)).Methods("GET")
 	BaseRoutes.Players.Handle("/update", ApiPlayerRequired(updatePlayer)).Methods("POST")
 	BaseRoutes.Players.Handle("/games", ApiPlayerRequired(getPlayerGames)).Methods("GET")
 	BaseRoutes.Players.Handle("/get/{username:[A-Za-z0-9]+}", ApiPlayerRequired(getPlayerByUsername)).Methods("GET")
@@ -44,6 +46,22 @@ func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
 
 		return registeredPlayer, nil
 	}
+}
+
+func login(s *Session, w http.ResponseWriter, r *http.Request) {
+
+}
+
+func Login(username, hashedPassword string) (*model.Token, *model.Error) {
+	return nil, nil
+}
+
+func logout(s *Session, w http.ResponseWriter, r *http.Request) {
+
+}
+
+func Logout(token *model.Token) *model.Error {
+	return nil
 }
 
 func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
