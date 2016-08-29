@@ -49,6 +49,7 @@ func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
 }
 
 func login(s *Session, w http.ResponseWriter, r *http.Request) {
+	props := model.MapFromJson(r.Body)
 
 }
 
