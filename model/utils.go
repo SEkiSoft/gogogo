@@ -65,11 +65,11 @@ func StringInterfaceFromJson(data io.Reader) map[string]interface{} {
 }
 
 func IsLower(s string) bool {
-	if strings.ToLower(s) == s {
-		return true
+	if strings.ToLower(s) != s {
+		return false
 	}
 
-	return false
+	return true
 }
 
 func IsValidEmail(email string) bool {
@@ -78,9 +78,29 @@ func IsValidEmail(email string) bool {
 		return false
 	}
 
-	if _, err := mail.ParseAddress(email); err == nil {
-		return true
+	_, err := mail.ParseAddress(email)
+
+	return err == nil
+}
+
+func MapToJson(objmap map[string]string) string {
+
+	var b []byte
+	var err error
+	if b, err = json.Marshal(objmap); err != nil {
+		return ""
 	}
 
-	return false
+	return string(b)
+}
+
+func MapFromJson(data io.Reader) map[string]string {
+	decoder := json.NewDecoder(data)
+
+	var objmap map[string]string
+	if err := decoder.Decode(&objmap); err != nil {
+		return make(map[string]string)
+	}
+
+	return objmap
 }

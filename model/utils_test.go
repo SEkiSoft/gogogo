@@ -99,3 +99,11 @@ func TestIsValidEmail(t *testing.T) {
 		t.Fatal("should be false")
 	}
 }
+
+func TestMapToJson(t *testing.T) {
+
+}
+
+func TestMapFromJson(t *testing.T) {
+
+}
