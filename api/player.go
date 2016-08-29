@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/SEkiSoft/gogogo/model"
+	"github.com/SEkiSoft/gogogo/store"
 	"github.com/gorilla/mux"
 )
 
@@ -51,18 +52,65 @@ func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
 func login(s *Session, w http.ResponseWriter, r *http.Request) {
 	props := model.MapFromJson(r.Body)
 
+	username := props["username"]
+	password := props["password"]
+
+	if len(password) == 0 {
+		s.Err = model.NewLocError("login", "Blank password", nil, "")
+		s.Err.StatusCode = http.StatusBadRequest
+		return
+	}
+
+	if token, err := Login(username, password); err == nil {
+		s.Token = token
+	} else {
+		s.Err = err
+		return
+	}
+
+	w.Write([]byte(s.Token.ToJson()))
 }
 
-func Login(username, hashedPassword string) (*model.Token, *model.Error) {
-	return nil, nil
+func Login(username, password string) (*model.Token, *model.Error) {
+	var player *model.Player
+	var err *model.Error
+	if player, err = GetPlayerByUsername(username); err != nil {
+		return nil, err
+	}
+
+	if !model.ComparePassword(player.Password, password) {
+		return nil, model.NewLocError("login", "Invalid username or password", nil, "")
+	}
+
+	token := &model.Token{
+		PlayerId: player.Id,
+	}
+
+	if player.IsAdmin {
+		token.Roles = "admin"
+	}
+
+	var result store.StoreResult
+	if result = <-Srv.Store.Token().Save(token); result.Err != nil {
+		return nil, result.Err
+	}
+
+	return result.Data.(*model.Token), nil
 }
 
 func logout(s *Session, w http.ResponseWriter, r *http.Request) {
+	if err := Logout(s.Token); err != nil {
+		s.Err = err
+		return
+	}
 
+	w.Write([]byte("success"))
 }
 
 func Logout(token *model.Token) *model.Error {
-	return nil
+	result := <-Srv.Store.Token().Delete(token.Id)
+
+	return result.Err
 }
 
 func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
