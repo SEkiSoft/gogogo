@@ -52,6 +52,7 @@ func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
 func login(s *Session, w http.ResponseWriter, r *http.Request) {
 	props := model.MapFromJson(r.Body)
 
+	tokenId := props["token_id"]
 	username := props["username"]
 	password := props["password"]
 
@@ -61,10 +62,22 @@ func login(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if token, err := Login(username, password); err == nil {
-		s.Token = token
+	if len(tokenId) > 0 && len(username) > 0 {
+		if token, err := LoginByTokenId(tokenId, username); err == nil {
+			s.Token = token
+		} else {
+			s.Err = err
+			return
+		}
+	} else if len(username) > 0 && len(password) > 0 {
+		if token, err := Login(username, password); err == nil {
+			s.Token = token
+		} else {
+			s.Err = err
+			return
+		}
 	} else {
-		s.Err = err
+		s.Err = NewInvalidParamError("login", "username/password")
 		return
 	}
 
@@ -96,6 +109,31 @@ func Login(username, password string) (*model.Token, *model.Error) {
 	}
 
 	return result.Data.(*model.Token), nil
+}
+
+func LoginByTokenId(tokenId, username string) (*model.Token, *model.Error) {
+	var token *model.Token
+	if result := <-Srv.Store.Token().Get(tokenId); result.Err == nil {
+		token = result.Data.(*model.Token)
+	} else {
+		return nil, result.Err
+	}
+
+	if token.IsExpired() {
+		return nil, model.NewLocError("login", "Token expired", nil, "")
+	}
+
+	var player *model.Player
+	var err *model.Error
+	if player, err = GetPlayerByUsername(username); err != nil {
+		return nil, err
+	}
+
+	if token.PlayerId != player.Id {
+		return nil, model.NewLocError("login", "Invalid player", nil, "")
+	}
+
+	return token, nil
 }
 
 func logout(s *Session, w http.ResponseWriter, r *http.Request) {
