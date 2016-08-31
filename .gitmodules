@@ -22,7 +22,7 @@
 [submodule "vendor/github.com/pborman/uuid"]
 	path = vendor/github.com/pborman/uuid
 	url = https://github.com/pborman/uuid.git
-	[submodule "vendor/github.com/gorilla/websocket"]
+[submodule "vendor/github.com/gorilla/websocket"]
 	path = vendor/github.com/gorilla/websocket
 	url = https://github.com/gorilla/websocket.git
 [submodule "vendor/golang.org/x/crypto"]
