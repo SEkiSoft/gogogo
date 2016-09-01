@@ -30,11 +30,15 @@ func NewWebSocketClient(url, authId string) (*WebSocketClient, *Error) {
 	conn, _, err := websocket.DefaultDialer.Dial(url+WEBSOCKET_URL, header)
 
 	if err != nil {
+<<<<<<< 9b77d4b25fb1af467416d0c310e31b51a6ba4470
 <<<<<<< bf935483bdee38a155347a0daeeb5db6eaef9887
 		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection failed", nil, err.Error())
 =======
 		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection fail", nil, err.Error())
 >>>>>>> added websockets model
+=======
+		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection failed", nil, err.Error())
+>>>>>>> added unit tests
 	}
 
 	return &WebSocketClient{
@@ -55,11 +59,15 @@ func (w *WebSocketClient) Connect() *Error {
 	w.Connection, _, err = websocket.DefaultDialer.Dial(w.Url+WEBSOCKET_URL, header)
 
 	if err != nil {
+<<<<<<< 9b77d4b25fb1af467416d0c310e31b51a6ba4470
 <<<<<<< bf935483bdee38a155347a0daeeb5db6eaef9887
 		return NewLocError("WebSocketClientConnect", "WebSocket client connection failed", nil, err.Error())
 =======
 		return NewLocError("WebSocketClientConnect", "WebSocket client connection fail", nil, err.Error())
 >>>>>>> added websockets model
+=======
+		return NewLocError("WebSocketClientConnect", "WebSocket client connection failed", nil, err.Error())
+>>>>>>> added unit tests
 	}
 
 	return nil

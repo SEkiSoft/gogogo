@@ -3,30 +3,30 @@
 
 package model
 
-// import "testing"
+import "testing"
 
-// func TestNewWebSocketClient(t *testing.T) {
-// 	wsc, err := NewWebSocketClient("localhost", NewId())
+func TestNewWebSocketClient(t *testing.T) {
+	wsc, err := NewWebSocketClient("localhost", NewId())
 
-// 	if err != nil {
-// 		t.Fatal(err.Message)
-// 	}
+	if err != nil {
+		t.Fatal(err.Message)
+	}
 
-// 	if wsc.Connection == nil {
-// 		t.Fatal("nil connection")
-// 	}
+	if wsc.Connection == nil {
+		t.Fatal("nil connection")
+	}
 
-// 	wsc.Close()
-// }
+	wsc.Close()
+}
 
-// func TestWebSocketClientConnect(t *testing.T) {
-// 	wsc, err := NewWebSocketClient("localhost", NewId())
+func TestWebSocketClientConnect(t *testing.T) {
+	wsc, err := NewWebSocketClient("localhost", NewId())
 
-// 	err = wsc.Connect()
+	err = wsc.Connect()
 
-// 	if err != nil {
-// 		t.Fatal(err.Message)
-// 	}
+	if err != nil {
+		t.Fatal(err.Message)
+	}
 
-// 	wsc.Close()
-// }
+	wsc.Close()
+}
