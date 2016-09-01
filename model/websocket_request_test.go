@@ -33,7 +33,7 @@ func TestWebSocketRequestFromJson(t *testing.T) {
 	}
 
 	json := wsr.ToJson()
-	rwsr := WebSocketEventFromJson(strings.NewReader(json))
+	rwsr := WebSocketRequestFromJson(strings.NewReader(json))
 	rjson := rwsr.ToJson()
 
 	if json != rjson {
