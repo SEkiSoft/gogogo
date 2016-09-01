@@ -30,7 +30,7 @@ func NewWebSocketClient(url, authId string) (*WebSocketClient, *Error) {
 	conn, _, err := websocket.DefaultDialer.Dial(url+WEBSOCKET_URL, header)
 
 	if err != nil {
-		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection fail", nil, err.Error())
+		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection failed", nil, err.Error())
 	}
 
 	return &WebSocketClient{
@@ -51,7 +51,7 @@ func (w *WebSocketClient) Connect() *Error {
 	w.Connection, _, err = websocket.DefaultDialer.Dial(w.Url+WEBSOCKET_URL, header)
 
 	if err != nil {
-		return NewLocError("WebSocketClientConnect", "WebSocket client connection fail", nil, err.Error())
+		return NewLocError("WebSocketClientConnect", "WebSocket client connection failed", nil, err.Error())
 	}
 
 	return nil

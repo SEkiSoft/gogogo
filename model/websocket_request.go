@@ -12,7 +12,7 @@ type WebSocketRequest struct {
 	Sequence int64                  `json:"sequence"`
 	Action   string                 `json:"action"`
 	Data     map[string]interface{} `json:"data"`
-	Token    Token                  `json:"-"`
+	Token    *Token                 `json:"-"`
 }
 
 func (w *WebSocketRequest) ToJson() string {
