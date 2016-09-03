@@ -17,6 +17,7 @@ type Routes struct {
 	Ai         *mux.Router
 	AiNeedGame *mux.Router
 	Admin      *mux.Router
+	WebSocket  *mux.Router
 }
 
 var BaseRoutes *Routes
@@ -38,9 +39,12 @@ func InitApi() {
 
 	BaseRoutes.Admin = BaseRoutes.Root.PathPrefix("/admin").Subrouter()
 
+	BaseRoutes.WebSocket = BaseRoutes.Root
+
 	InitPlayer()
 	InitGame()
 	InitMove()
 	InitAdmin()
 	InitAi()
+	InitWebSocket()
 }
