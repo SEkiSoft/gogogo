@@ -13,6 +13,7 @@ const (
 	WEBSOCKET_EVENT_MATCHMAKING_CANCEL = "matchmaking_cancel"
 	WEBSOCKET_EVENT_MATCHMAKING_FOUND  = "matchmaking_found"
 	WEBSOCKET_EVENT_GAME_MOVE          = "game_move"
+	WEBSOCKET_EVENT_HELLO_WORLD        = "hello_world"
 )
 
 type WebSocketEvent struct {

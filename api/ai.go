@@ -5,10 +5,12 @@ package api
 
 import (
 	"net/http"
-	//"github.com/SEkiSoft/gogogo/ai"
+	//"github.com/sekisoft/gogogo/ai"
+	l4g "github.com/alecthomas/log4go"
 )
 
 func InitAi() {
+	l4g.Info("Initializing AI API")
 	BaseRoutes.Ai.Handle("/stats", ApiHandler(getAiStats)).Methods("GET")
 
 	BaseRoutes.AiNeedGame.Handle("/move", ApiHandler(getAiMove)).Methods("GET")

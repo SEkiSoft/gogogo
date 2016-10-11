@@ -6,10 +6,12 @@ package api
 import (
 	"net/http"
 
-	"github.com/SEkiSoft/gogogo/model"
+	l4g "github.com/alecthomas/log4go"
+	"github.com/sekisoft/gogogo/model"
 )
 
 func InitAdmin() {
+	l4g.Info("Initializing Admin API")
 	BaseRoutes.Admin.Handle("/get_games", ApiAdminRequired(getAllGames)).Methods("POST")
 	BaseRoutes.Admin.Handle("/get_players", ApiAdminRequired(getAllPlayers)).Methods("POST")
 	BaseRoutes.Admin.Handle("/get_moves", ApiAdminRequired(getAllMoves)).Methods("POST")

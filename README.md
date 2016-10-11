@@ -1,5 +1,5 @@
 # GoGoGo
-[![Build Status](https://travis-ci.org/SEkiSoft/gogogo.svg?branch=development)](https://travis-ci.org/SEkiSoft/gogogo)
+[![Build Status](https://travis-ci.org/sekisoft/gogogo.svg?branch=development)](https://travis-ci.org/sekisoft/gogogo)
 
 GoGoGo is an online multiplayer implementation of the ancient board game Go, written in Go with a machine learning AI player (inspired by AlphaGo).
 
@@ -10,12 +10,12 @@ Before you can build this, make sure you have the following dependencies install
 
 ### Linux and Mac OS
 1. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
-2. `git clone --recursive` this repository to `$GOPATH/src/github.com/SEkiSoft/gogogo`.
+2. `git clone --recursive` this repository to `$GOPATH/src/github.com/sekisoft/gogogo`.
 3. Run `make build` in that directory.
 
 ### Windows
 1. Make sure you have your [GOPATH](https://golang.org/doc/code.html) environment variable set.
-2. `git clone --recursive` this repository to `%GOPATH%\src\github.com\SEkiSoft\gogogo`.
+2. `git clone --recursive` this repository to `%GOPATH%\src\github.com\sekisoft\gogogo`.
 3. Run `go build` in that directory.
 
 ### Common Build Errors:

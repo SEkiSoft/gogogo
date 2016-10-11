@@ -6,7 +6,7 @@ package store
 import (
 	"testing"
 
-	"github.com/SEkiSoft/gogogo/utils"
+	"github.com/sekisoft/gogogo/utils"
 )
 
 var store Store

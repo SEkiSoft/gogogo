@@ -6,11 +6,13 @@ package api
 import (
 	"net/http"
 
-	"github.com/SEkiSoft/gogogo/model"
+	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
+	"github.com/sekisoft/gogogo/model"
 )
 
 func InitMove() {
+	l4g.Info("Initializing Move API")
 	BaseRoutes.Moves.Handle("/", ApiPlayerRequired(makeMove)).Methods("POST")
 	BaseRoutes.Moves.Handle("/get/{move_id:[A-Za-z0-9]+}", ApiPlayerRequired(getMove)).Methods("GET")
 	BaseRoutes.Moves.Handle("/get", ApiPlayerRequired(getGameMoves)).Methods("GET")
