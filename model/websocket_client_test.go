@@ -1,4 +1,4 @@
-// Copyright (c) 2016 sekisoft
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
