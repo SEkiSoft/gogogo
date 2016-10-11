@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package model
@@ -10,4 +10,6 @@ const (
 	HEADER_REQUEST_ID      = "X-Request-ID"
 	HEADER_AUTH            = "Authorization"
 	HEADER_BEAR            = "Bear"
+	STATUS_OK              = "OK"
+	STATUS_FAIL            = "FAIL"
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package store
@@ -6,7 +6,7 @@ package store
 import (
 	"testing"
 
-	"github.com/SEkiSoft/gogogo/model"
+	"github.com/sekisoft/gogogo/model"
 )
 
 func TestPlayerStoreSave(t *testing.T) {

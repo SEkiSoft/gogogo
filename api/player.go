@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package api
@@ -6,12 +6,14 @@ package api
 import (
 	"net/http"
 
-	"github.com/SEkiSoft/gogogo/model"
-	"github.com/SEkiSoft/gogogo/store"
+	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
+	"github.com/sekisoft/gogogo/model"
+	"github.com/sekisoft/gogogo/store"
 )
 
 func InitPlayer() {
+	l4g.Info("Initializing Player API")
 	BaseRoutes.Players.Handle("/create", ApiHandler(createPlayer)).Methods("POST")
 	BaseRoutes.Players.Handle("/login", ApiHandler(login)).Methods("POST")
 	BaseRoutes.Players.Handle("/logout", ApiPlayerRequired(logout)).Methods("GET")

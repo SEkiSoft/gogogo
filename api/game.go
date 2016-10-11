@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package api
@@ -6,11 +6,13 @@ package api
 import (
 	"net/http"
 
-	"github.com/SEkiSoft/gogogo/model"
+	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
+	"github.com/sekisoft/gogogo/model"
 )
 
 func InitGame() {
+	l4g.Info("Initializing Game API")
 	BaseRoutes.Games.Handle("/create", ApiHandler(createGame)).Methods("POST")
 
 	BaseRoutes.NeedGame.Handle("/update", ApiPlayerRequired(updateGame)).Methods("POST")

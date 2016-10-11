@@ -6,4 +6,4 @@ before_script:
 script:
     - make build
     - make test
-go_import_path: github.com/SEkiSoft/gogogo
+go_import_path: github.com/sekisoft/gogogo

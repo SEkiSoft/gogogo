@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package main
@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/SEkiSoft/gogogo/api"
-	"github.com/SEkiSoft/gogogo/model"
-	"github.com/SEkiSoft/gogogo/utils"
+	"github.com/sekisoft/gogogo/api"
+	"github.com/sekisoft/gogogo/model"
+	"github.com/sekisoft/gogogo/utils"
 
 	l4g "github.com/alecthomas/log4go"
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package store
@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/SEkiSoft/gogogo/model"
+	"github.com/sekisoft/gogogo/model"
 )
 
 type PlayerStore struct {

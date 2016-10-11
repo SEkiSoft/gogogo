@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package store
@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/SEkiSoft/gogogo/utils"
+	"github.com/sekisoft/gogogo/utils"
 	"github.com/go-gorp/gorp"
 	_ "github.com/go-sql-driver/mysql"
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package api
@@ -6,8 +6,8 @@ package api
 import (
 	"net/http"
 
-	"github.com/SEkiSoft/gogogo/store"
-	"github.com/SEkiSoft/gogogo/utils"
+	"github.com/sekisoft/gogogo/store"
+	"github.com/sekisoft/gogogo/utils"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/braintree/manners"
 	"github.com/gorilla/handlers"

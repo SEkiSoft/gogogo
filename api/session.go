@@ -1,4 +1,4 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package api
@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/SEkiSoft/gogogo/model"
 	l4g "github.com/alecthomas/log4go"
+	"github.com/sekisoft/gogogo/model"
 )
 
 var allowedMethods []string = []string{
@@ -50,6 +50,18 @@ func GetProtocol(r *http.Request) string {
 	}
 
 	return "http"
+}
+
+func GetToken(id string) *model.Token {
+	var token *model.Token
+
+	if tokenResult := <-Srv.Store.Token().Get(id); tokenResult.Err != nil {
+		l4g.Error("Invalid token id: %s, %s", id, tokenResult.Err.Message)
+	} else {
+		token = tokenResult.Data.(*model.Token)
+	}
+
+	return token
 }
 
 func GetIpAddress(r *http.Request) string {

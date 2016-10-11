@@ -1,10 +1,10 @@
-// Copyright (c) 2016 SEkiSoft
+// Copyright (c) 2016 sekisoft
 // See License.txt
 
 package store
 
 import (
-	"github.com/SEkiSoft/gogogo/model"
+	"github.com/sekisoft/gogogo/model"
 )
 
 type MoveStore struct {
