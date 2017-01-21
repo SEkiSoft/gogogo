@@ -49,11 +49,12 @@ func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetGame(id string) (*model.Game, *model.Error) {
-	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
+	result := <-Srv.Store.Game().Get(id)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.(*model.Game), nil
 	}
+
+	return result.Data.(*model.Game), nil
 }
 
 func getGameStats(s *Session, w http.ResponseWriter, r *http.Request) {

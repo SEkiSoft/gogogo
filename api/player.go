@@ -42,13 +42,14 @@ func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().Save(player); result.Err != nil {
+	result := <-Srv.Store.Player().Save(player)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		registeredPlayer := result.Data.(*model.Player)
-
-		return registeredPlayer, nil
 	}
+
+	registeredPlayer := result.Data.(*model.Player)
+
+	return registeredPlayer, nil
 }
 
 func login(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -176,13 +177,13 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().Update(player); result.Err != nil {
+	result := <-Srv.Store.Player().Update(player)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		updatedPlayer := result.Data.(*model.Player)
-
-		return updatedPlayer, nil
 	}
+
+	updatedPlayer := result.Data.(*model.Player)
+	return updatedPlayer, nil
 }
 
 func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -205,11 +206,12 @@ func getMe(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPlayer(id string) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().Get(id); result.Err != nil {
+	result := <-Srv.Store.Player().Get(id)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.(*model.Player), nil
 	}
+
+	return result.Data.(*model.Player), nil
 }
 
 func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -223,11 +225,12 @@ func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPlayerGames(id string) ([]*model.Game, *model.Error) {
-	if result := <-Srv.Store.Player().GetPlayerGames(id); result.Err != nil {
+	result := <-Srv.Store.Player().GetPlayerGames(id)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.([]*model.Game), nil
 	}
+
+	return result.Data.([]*model.Game), nil
 }
 
 func getPlayerByUsername(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -242,9 +245,10 @@ func getPlayerByUsername(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPlayerByUsername(username string) (*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().GetByEmail(username); result.Err != nil {
+	result := <-Srv.Store.Player().GetByEmail(username)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.(*model.Player), nil
 	}
+
+	return result.Data.(*model.Player), nil
 }

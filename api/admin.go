@@ -35,11 +35,12 @@ func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllGames() ([]*model.Game, *model.Error) {
-	if result := <-Srv.Store.Game().GetAll(); result.Err != nil {
+	result := <-Srv.Store.Game().GetAll()
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.([]*model.Game), nil
 	}
+
+	return result.Data.([]*model.Game), nil
 }
 
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -58,11 +59,12 @@ func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllPlayers() ([]*model.Player, *model.Error) {
-	if result := <-Srv.Store.Player().GetAll(); result.Err != nil {
+	result := <-Srv.Store.Player().GetAll()
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.([]*model.Player), nil
 	}
+
+	return result.Data.([]*model.Player), nil
 }
 
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -81,11 +83,12 @@ func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllMoves() ([]*model.Move, *model.Error) {
-	if result := <-Srv.Store.Move().GetAll(); result.Err != nil {
+	result := <-Srv.Store.Move().GetAll()
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.([]*model.Move), nil
 	}
+
+	return result.Data.([]*model.Move), nil
 }
 
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
