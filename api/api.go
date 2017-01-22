@@ -42,6 +42,7 @@ func InitApi() {
 	BaseRoutes.WebSocket = NewWebSocketRouter()
 
 	InitPlayer()
+	InitPlayerAuth()
 	InitGame()
 	InitMove()
 	InitAdmin()
