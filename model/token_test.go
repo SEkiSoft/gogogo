@@ -10,9 +10,9 @@ import (
 
 func TestTokenToJson(t *testing.T) {
 	token := Token{
-		Id:       NewId(),
-		PlayerId: NewId(),
-		DeviceId: NewId(),
+		ID:       NewID(),
+		PlayerID: NewID(),
+		DeviceID: NewID(),
 		Roles:    "",
 		IsOAuth:  false,
 	}
@@ -20,16 +20,16 @@ func TestTokenToJson(t *testing.T) {
 	json := token.ToJson()
 	rtoken := TokenFromJson(strings.NewReader(json))
 
-	if rtoken.Id != token.Id {
+	if rtoken.ID != token.ID {
 		t.Fatal("ids do not match")
 	}
 }
 
 func TestTokenFromJson(t *testing.T) {
 	token := Token{
-		Id:       NewId(),
-		PlayerId: NewId(),
-		DeviceId: NewId(),
+		ID:       NewID(),
+		PlayerID: NewID(),
+		DeviceID: NewID(),
 		Roles:    "",
 		IsOAuth:  false,
 	}
@@ -45,9 +45,9 @@ func TestTokenFromJson(t *testing.T) {
 
 func TestTokenPreSave(t *testing.T) {
 	token := Token{
-		Id:             NewId(),
-		PlayerId:       NewId(),
-		DeviceId:       NewId(),
+		ID:             NewID(),
+		PlayerID:       NewID(),
+		DeviceID:       NewID(),
 		CreateAt:       0,
 		LastActivityAt: 0,
 		Roles:          "",
@@ -63,9 +63,9 @@ func TestTokenPreSave(t *testing.T) {
 
 func TestTokenPreUpdate(t *testing.T) {
 	token := Token{
-		Id:             NewId(),
-		PlayerId:       NewId(),
-		DeviceId:       NewId(),
+		ID:             NewID(),
+		PlayerID:       NewID(),
+		DeviceID:       NewID(),
 		CreateAt:       0,
 		LastActivityAt: 0,
 		Roles:          "",
@@ -81,9 +81,9 @@ func TestTokenPreUpdate(t *testing.T) {
 
 func TestTokenIsExpired(t *testing.T) {
 	token := Token{
-		Id:             NewId(),
-		PlayerId:       NewId(),
-		DeviceId:       NewId(),
+		ID:             NewID(),
+		PlayerID:       NewID(),
+		DeviceID:       NewID(),
 		CreateAt:       0,
 		LastActivityAt: 0,
 		Roles:          "",
@@ -105,9 +105,9 @@ func TestTokenIsExpired(t *testing.T) {
 
 func TestTokensToJson(t *testing.T) {
 	token1 := Token{
-		Id:             NewId(),
-		PlayerId:       NewId(),
-		DeviceId:       NewId(),
+		ID:             NewID(),
+		PlayerID:       NewID(),
+		DeviceID:       NewID(),
 		CreateAt:       0,
 		LastActivityAt: 0,
 		Roles:          "",
@@ -115,9 +115,9 @@ func TestTokensToJson(t *testing.T) {
 	}
 
 	token2 := Token{
-		Id:             NewId(),
-		PlayerId:       NewId(),
-		DeviceId:       NewId(),
+		ID:             NewID(),
+		PlayerID:       NewID(),
+		DeviceID:       NewID(),
 		CreateAt:       0,
 		LastActivityAt: 0,
 		Roles:          "",

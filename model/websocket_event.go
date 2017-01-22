@@ -17,16 +17,16 @@ const (
 )
 
 type WebSocketEvent struct {
-	PlayerId string                 `json:"player_id"`
-	GameId   string                 `json:"game_id"`
+	PlayerID string                 `json:"player_id"`
+	GameID   string                 `json:"game_id"`
 	Event    string                 `json:"event"`
 	Data     map[string]interface{} `json:"data"`
 }
 
-func NewWebSocketEvent(playerId, gameId, event string) *WebSocketEvent {
+func NewWebSocketEvent(playerID, gameID, event string) *WebSocketEvent {
 	return &WebSocketEvent{
-		PlayerId: playerId,
-		GameId:   gameId,
+		PlayerID: playerID,
+		GameID:   gameID,
 		Event:    event,
 		Data:     make(map[string]interface{}),
 	}

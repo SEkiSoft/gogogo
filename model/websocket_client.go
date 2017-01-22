@@ -17,15 +17,15 @@ const (
 type WebSocketClient struct {
 	Url             string
 	Connection      *websocket.Conn
-	AuthId          string
+	AuthID          string
 	Sequence        int64
 	EventChannel    chan *WebSocketEvent
 	ResponseChannel chan *WebSocketResponse
 }
 
-func NewWebSocketClient(url, authId string) (*WebSocketClient, *Error) {
+func NewWebSocketClient(url, authID string) (*WebSocketClient, *Error) {
 	header := http.Header{}
-	header.Set(HEADER_AUTH, HEADER_BEAR+authId)
+	header.Set(HEADER_AUTH, HEADER_BEAR+authID)
 
 	conn, _, err := websocket.DefaultDialer.Dial(url+WEBSOCKET_URL, header)
 
@@ -36,7 +36,7 @@ func NewWebSocketClient(url, authId string) (*WebSocketClient, *Error) {
 	return &WebSocketClient{
 		Url:             url,
 		Connection:      conn,
-		AuthId:          authId,
+		AuthID:          authID,
 		Sequence:        1,
 		EventChannel:    make(chan *WebSocketEvent, 100),
 		ResponseChannel: make(chan *WebSocketResponse, 100),
@@ -45,7 +45,7 @@ func NewWebSocketClient(url, authId string) (*WebSocketClient, *Error) {
 
 func (w *WebSocketClient) Connect() *Error {
 	header := http.Header{}
-	header.Set(HEADER_AUTH, HEADER_BEAR+w.AuthId)
+	header.Set(HEADER_AUTH, HEADER_BEAR+w.AuthID)
 
 	var err error
 	w.Connection, _, err = websocket.DefaultDialer.Dial(w.Url+WEBSOCKET_URL, header)

@@ -21,16 +21,16 @@ const (
 type WebConn struct {
 	WebSocket *websocket.Conn
 	Send      chan model.WebSocketMessage
-	TokenId   string
-	PlayerId  string
+	TokenID   string
+	PlayerID  string
 }
 
 func NewWebConn(s *Session, ws *websocket.Conn) *WebConn {
 	return &WebConn{
 		Send:      make(chan model.WebSocketMessage, 64),
 		WebSocket: ws,
-		PlayerId:  s.Token.PlayerId,
-		TokenId:   s.Token.Id,
+		PlayerID:  s.Token.PlayerID,
+		TokenID:   s.Token.ID,
 	}
 }
 

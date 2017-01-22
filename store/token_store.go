@@ -15,10 +15,10 @@ func NewTokenStore(sqlStore *SqlStore) SqlTokenStore {
 	ts := &TokenStore{sqlStore}
 
 	db := sqlStore.GetMaster()
-	table := db.AddTableWithName(model.Token{}, "Tokens").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
-	table.ColMap("PlayerId").SetMaxSize(model.ID_LENGTH)
-	table.ColMap("DeviceId").SetMaxSize(model.ID_LENGTH)
+	table := db.AddTableWithName(model.Token{}, "Tokens").SetKeys(false, "ID")
+	table.ColMap("ID").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("PlayerID").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("DeviceID").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Roles").SetMaxSize(64)
 
 	return ts
@@ -33,7 +33,7 @@ func (ts TokenStore) Save(token *model.Token) StoreChannel {
 		token.PreSave()
 
 		if err := ts.GetMaster().Insert(token); err != nil {
-			result.Err = model.NewLocError("TokenStore.Save", "Token saving error", nil, "token_id="+token.Id+", "+err.Error())
+			result.Err = model.NewLocError("TokenStore.Save", "Token saving error", nil, "token_id="+token.ID+", "+err.Error())
 		} else {
 			result.Data = token
 		}
@@ -66,14 +66,14 @@ func (ts TokenStore) Get(id string) StoreChannel {
 	return storeChannel
 }
 
-func (ts TokenStore) GetTokens(playerId string) StoreChannel {
+func (ts TokenStore) GetTokens(playerID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
 		var data []*model.Token
-		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
 			result.Err = model.NewLocError("TokenStore.Get", "Get tokens by player id error", nil, err.Error())
 		}
 
@@ -92,7 +92,7 @@ func (ts TokenStore) Delete(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ts.GetMaster().Exec("DELETE FROM Tokens WHERE Id = :Id", map[string]interface{}{"Id": id}); err != nil {
+		if _, err := ts.GetMaster().Exec("DELETE FROM Tokens WHERE ID = :ID", map[string]interface{}{"ID": id}); err != nil {
 			result.Err = model.NewLocError("TokenStore.Delete", "Delete token error", nil, "token_id="+id+", "+err.Error())
 		}
 
@@ -103,13 +103,13 @@ func (ts TokenStore) Delete(id string) StoreChannel {
 	return storeChannel
 }
 
-func (ts TokenStore) DeleteAll(playerId string) StoreChannel {
+func (ts TokenStore) DeleteAll(playerID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ts.GetMaster().Exec("DELETE * FROM Tokens WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
+		if _, err := ts.GetMaster().Exec("DELETE * FROM Tokens WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
 			result.Err = model.NewLocError("TokenStore.DeleteAll", "Delete all tokens by player id error", nil, err.Error())
 		}
 

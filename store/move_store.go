@@ -15,10 +15,10 @@ func NewMoveStore(sqlStore *SqlStore) SqlMoveStore {
 	ms := &MoveStore{sqlStore}
 
 	db := sqlStore.GetMaster()
-	table := db.AddTableWithName(model.Move{}, "Moves").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
-	table.ColMap("PlayerId").SetMaxSize(model.ID_LENGTH)
-	table.ColMap("GameId").SetMaxSize(model.ID_LENGTH)
+	table := db.AddTableWithName(model.Move{}, "Moves").SetKeys(false, "ID")
+	table.ColMap("ID").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("PlayerID").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("GameID").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("X").SetMaxSize(2)
 	table.ColMap("Y").SetMaxSize(2)
 	table.ColMap("CreateAt").SetMaxSize(20)
@@ -35,7 +35,7 @@ func (ms MoveStore) Save(move *model.Move) StoreChannel {
 		move.PreSave()
 
 		if err := ms.GetMaster().Insert(move); err != nil {
-			result.Err = model.NewLocError("MoveStore.Save", "Move saving error", nil, "move_id="+move.Id+", "+err.Error())
+			result.Err = model.NewLocError("MoveStore.Save", "Move saving error", nil, "move_id="+move.ID+", "+err.Error())
 		} else {
 			result.Data = move
 		}
@@ -68,7 +68,7 @@ func (ms MoveStore) Get(id string) StoreChannel {
 	return storeChannel
 }
 
-func (ms MoveStore) GetByGame(gameId string) StoreChannel {
+func (ms MoveStore) GetByGame(gameID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -76,8 +76,8 @@ func (ms MoveStore) GetByGame(gameId string) StoreChannel {
 
 		var data []*model.Move
 
-		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE GameId = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetByGame", "Missing game error", nil, "game_id="+gameId+", "+err.Error())
+		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE GameID = :GameID", map[string]interface{}{"GameID": gameID}); err != nil {
+			result.Err = model.NewLocError("MoveStore.GetByGame", "Missing game error", nil, "game_id="+gameID+", "+err.Error())
 		}
 
 		result.Data = data
@@ -108,7 +108,7 @@ func (ms MoveStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
-func (ms MoveStore) GetByPlayer(playerId string) StoreChannel {
+func (ms MoveStore) GetByPlayer(playerID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -116,8 +116,8 @@ func (ms MoveStore) GetByPlayer(playerId string) StoreChannel {
 
 		var data []*model.Move
 
-		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerId = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerId+", "+err.Error())
+		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
+			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerID+", "+err.Error())
 		}
 
 		result.Data = &data
@@ -135,7 +135,7 @@ func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := ms.GetReplica().SelectInt("SELECT COUNT(Id) FROM Moves"); err != nil {
+		if count, err := ms.GetReplica().SelectInt("SELECT COUNT(ID) FROM Moves"); err != nil {
 			result.Err = model.NewLocError("MoveStore.GetTotalMovesCount", "Get total moves count error", nil, err.Error())
 		} else {
 			result.Data = count
@@ -154,8 +154,8 @@ func (ms MoveStore) Delete(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ms.GetMaster().Exec("DELETE FROM Moves WHERE Id = :MoveId", map[string]interface{}{"MoveID": id}); err != nil {
-			result.Err = model.NewLocError("MoveStore.PermanentDelete", "Permanent delete move error", nil, "moveId="+id+", "+err.Error())
+		if _, err := ms.GetMaster().Exec("DELETE FROM Moves WHERE ID = :MoveID", map[string]interface{}{"MoveID": id}); err != nil {
+			result.Err = model.NewLocError("MoveStore.PermanentDelete", "Permanent delete move error", nil, "moveID="+id+", "+err.Error())
 		}
 
 		storeChannel <- result

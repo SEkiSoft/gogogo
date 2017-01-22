@@ -21,7 +21,7 @@ const (
 )
 
 type Player struct {
-	Id         string `json:"id"`
+	ID         string `json:"id"`
 	CreateAt   int64  `json:"create_at"`
 	UpdateAt   int64  `json:"update_at"`
 	DeleteAt   int64  `json:"delete_at"`
@@ -34,40 +34,40 @@ type Player struct {
 }
 
 func (p *Player) IsValid() *Error {
-	if len(p.Id) != ID_LENGTH {
+	if len(p.ID) != ID_LENGTH {
 		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
 	}
 
 	if p.CreateAt <= 0 {
-		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.ID)
 	}
 
 	if p.UpdateAt <= 0 {
-		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.ID)
 	}
 
 	if !IsValidUsername(p.Username) {
-		return NewLocError("Player.IsValid", "Username is invalid", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Username is invalid", nil, "player_id="+p.ID)
 	}
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
-		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.ID)
 	}
 
 	if len(p.Password) < MIN_PASSWORD_LENGTH || len(p.Password) > MAX_PASSWORD_LENGTH {
-		return NewLocError("Player.IsValid", "Password is invalid", nil, "player_id="+p.Id)
+		return NewLocError("Player.IsValid", "Password is invalid", nil, "player_id="+p.ID)
 	}
 
 	return nil
 }
 
 func (p *Player) PreSave() {
-	if p.Id == "" {
-		p.Id = NewId()
+	if p.ID == "" {
+		p.ID = NewID()
 	}
 
 	if p.Username == "" {
-		p.Username = NewId()
+		p.Username = NewID()
 	}
 
 	p.Username = strings.ToLower(p.Username)

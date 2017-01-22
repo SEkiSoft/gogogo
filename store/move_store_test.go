@@ -13,9 +13,9 @@ func TestMoveStoreSave(t *testing.T) {
 	Setup()
 
 	move := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -24,7 +24,7 @@ func TestMoveStoreSave(t *testing.T) {
 		t.Fatal("save move failed")
 	}
 
-	if result := <-store.Move().Delete(move.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move.ID); result.Err != nil {
 		t.Fatal("save move failed, delete")
 	}
 }
@@ -33,9 +33,9 @@ func TestMoveStoreDelete(t *testing.T) {
 	Setup()
 
 	move := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -44,7 +44,7 @@ func TestMoveStoreDelete(t *testing.T) {
 		t.Fatal("delete move failed, save")
 	}
 
-	if result := <-store.Move().Delete(move.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move.ID); result.Err != nil {
 		t.Fatal("delete move failed")
 	}
 }
@@ -53,9 +53,9 @@ func TestMoveStoreGet(t *testing.T) {
 	Setup()
 
 	move := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -64,13 +64,13 @@ func TestMoveStoreGet(t *testing.T) {
 		t.Fatal("get move failed, save")
 	}
 
-	if result := <-store.Move().Get(move.Id); result.Err != nil {
+	if result := <-store.Move().Get(move.ID); result.Err != nil {
 		t.Fatal("get move failed, store")
-	} else if result.Data.(*model.Move).GameId != move.GameId {
+	} else if result.Data.(*model.Move).GameID != move.GameID {
 		t.Fatal("get move failed, not equal")
 	}
 
-	if result := <-store.Move().Delete(move.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move.ID); result.Err != nil {
 		t.Fatal("get move failed, delete")
 	}
 }
@@ -79,9 +79,9 @@ func TestMoveStoreGetByGame(t *testing.T) {
 	Setup()
 
 	move := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -90,13 +90,13 @@ func TestMoveStoreGetByGame(t *testing.T) {
 		t.Fatal("get move failed, save")
 	}
 
-	if result := <-store.Move().GetByGame(move.GameId); result.Err != nil {
+	if result := <-store.Move().GetByGame(move.GameID); result.Err != nil {
 		t.Fatal("get move failed, store")
-	} else if result.Data.(*model.Move).GameId != move.GameId {
+	} else if result.Data.(*model.Move).GameID != move.GameID {
 		t.Fatal("get move failed, not equal")
 	}
 
-	if result := <-store.Move().Delete(move.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move.ID); result.Err != nil {
 		t.Fatal("get move failed, delete")
 	}
 }
@@ -105,9 +105,9 @@ func TestMoveStoreGetByPlayer(t *testing.T) {
 	Setup()
 
 	move := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -116,13 +116,13 @@ func TestMoveStoreGetByPlayer(t *testing.T) {
 		t.Fatal("get move failed, save")
 	}
 
-	if result := <-store.Move().GetByPlayer(move.PlayerId); result.Err != nil {
+	if result := <-store.Move().GetByPlayer(move.PlayerID); result.Err != nil {
 		t.Fatal("get move failed, store")
-	} else if result.Data.(*model.Move).GameId != move.GameId {
+	} else if result.Data.(*model.Move).GameID != move.GameID {
 		t.Fatal("get move failed, not equal")
 	}
 
-	if result := <-store.Move().Delete(move.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move.ID); result.Err != nil {
 		t.Fatal("get move failed, delete")
 	}
 }
@@ -131,17 +131,17 @@ func TestMoveStoreGetAll(t *testing.T) {
 	Setup()
 
 	move1 := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
 
 	move2 := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -160,11 +160,11 @@ func TestMoveStoreGetAll(t *testing.T) {
 		t.Fatal("get all moves failed, wrong size")
 	}
 
-	if result := <-store.Move().Delete(move1.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move1.ID); result.Err != nil {
 		t.Fatal("get all moves failed, delete")
 	}
 
-	if result := <-store.Move().Delete(move2.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move2.ID); result.Err != nil {
 		t.Fatal("get all moves failed, delete")
 	}
 }
@@ -173,17 +173,17 @@ func TestMoveStoreGetTotalMovesCount(t *testing.T) {
 	Setup()
 
 	move1 := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
 
 	move2 := model.Move{
-		Id:       model.NewId(),
-		PlayerId: model.NewId(),
-		GameId:   model.NewId(),
+		ID:       model.NewID(),
+		PlayerID: model.NewID(),
+		GameID:   model.NewID(),
 		X:        1,
 		Y:        1,
 	}
@@ -202,11 +202,11 @@ func TestMoveStoreGetTotalMovesCount(t *testing.T) {
 		t.Fatal("get all moves count failed, wrong size")
 	}
 
-	if result := <-store.Move().Delete(move1.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move1.ID); result.Err != nil {
 		t.Fatal("get all moves count failed, delete")
 	}
 
-	if result := <-store.Move().Delete(move2.Id); result.Err != nil {
+	if result := <-store.Move().Delete(move2.ID); result.Err != nil {
 		t.Fatal("get all moves count failed, delete")
 	}
 }

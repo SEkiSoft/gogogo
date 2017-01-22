@@ -28,7 +28,7 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if s.Token.PlayerId != player.Id {
+	if s.Token.PlayerID != player.ID {
 		s.SetInvalidParam("updatePlayer", "player")
 		return
 	}
@@ -54,9 +54,9 @@ func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
 
 func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	playerId := params["player_id"]
+	playerID := params["player_id"]
 
-	if result, err := GetPlayer(playerId); err != nil {
+	if result, err := GetPlayer(playerID); err != nil {
 		s.Err = err
 	} else {
 		w.Write([]byte(result.ToJson()))
@@ -64,7 +64,7 @@ func getPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 }
 
 func getMe(s *Session, w http.ResponseWriter, r *http.Request) {
-	if result, err := GetPlayer(s.Token.PlayerId); err != nil {
+	if result, err := GetPlayer(s.Token.PlayerID); err != nil {
 		s.Err = err
 	} else {
 		w.Write([]byte(result.ToJson()))
@@ -81,9 +81,9 @@ func GetPlayer(id string) (*model.Player, *model.Error) {
 }
 
 func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
-	playerId := s.Token.PlayerId
+	playerID := s.Token.PlayerID
 
-	if result, err := GetPlayerGames(playerId); err != nil {
+	if result, err := GetPlayerGames(playerID); err != nil {
 		s.Err = err
 	} else {
 		w.Write([]byte(model.GamesToJson(result)))

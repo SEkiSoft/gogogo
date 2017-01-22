@@ -10,9 +10,9 @@ import (
 
 func TestGameToJson(t *testing.T) {
 	game := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -25,16 +25,16 @@ func TestGameToJson(t *testing.T) {
 	json := game.ToJson()
 	rgame := GameFromJson(strings.NewReader(json))
 
-	if rgame.Id != game.Id {
+	if rgame.ID != game.ID {
 		t.Fatal("ids do not match")
 	}
 }
 
 func TestGameFromJson(t *testing.T) {
 	game := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -55,9 +55,9 @@ func TestGameFromJson(t *testing.T) {
 
 func TestGamesToJson(t *testing.T) {
 	game1 := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -68,9 +68,9 @@ func TestGamesToJson(t *testing.T) {
 	}
 
 	game2 := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -95,9 +95,9 @@ func TestGameIsValid(t *testing.T) {
 
 func TestGamePreSave(t *testing.T) {
 	game := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -116,9 +116,9 @@ func TestGamePreSave(t *testing.T) {
 
 func TestGamePreUpdate(t *testing.T) {
 	game := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -141,9 +141,9 @@ func TestGameGetStats(t *testing.T) {
 
 func TestGameHasPlayer(t *testing.T) {
 	game := Game{
-		Id:       NewId(),
-		IdBlack:  NewId(),
-		IdWhite:  NewId(),
+		ID:       NewID(),
+		IDBlack:  NewID(),
+		IDWhite:  NewID(),
 		Board:    "",
 		NumLines: MAX_NUMLINES,
 		Turn:     0,
@@ -153,15 +153,15 @@ func TestGameHasPlayer(t *testing.T) {
 		Finished: false,
 	}
 
-	if game.HasPlayer(game.IdBlack) == false {
+	if game.HasPlayer(game.IDBlack) == false {
 		t.Fatal("should be true")
 	}
 
-	if game.HasPlayer(game.IdWhite) == false {
+	if game.HasPlayer(game.IDWhite) == false {
 		t.Fatal("should be true")
 	}
 
-	if game.HasPlayer(NewId()) == true {
+	if game.HasPlayer(NewID()) == true {
 		t.Fatal("should be false")
 	}
 }

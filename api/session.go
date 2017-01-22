@@ -18,7 +18,7 @@ var allowedMethods []string = []string{
 }
 
 type Session struct {
-	RequestId string
+	RequestID string
 	IpAddress string
 	Path      string
 	Err       *model.Error
@@ -80,14 +80,14 @@ func GetIpAddress(r *http.Request) string {
 
 func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s := &Session{}
-	s.RequestId = model.NewId()
+	s.RequestID = model.NewID()
 	s.IpAddress = GetIpAddress(r)
 	s.RootUrl = GetProtocol(r) + "://" + r.Host
 	s.Err = nil
 	s.Token = nil
 	s.Path = r.URL.Path
 
-	w.Header().Set(model.HEADER_REQUEST_ID, s.RequestId)
+	w.Header().Set(model.HEADER_REQUEST_ID, s.RequestID)
 	w.Header().Set("Content-Type", "application/json")
 
 	token := ""
@@ -136,14 +136,14 @@ func (s *Session) SetInvalidParam(location string, name string) {
 }
 
 func (s *Session) CheckPlayerRequired() {
-	if len(s.Token.PlayerId) == 0 {
+	if len(s.Token.PlayerID) == 0 {
 		s.Err = model.NewLocError("CheckPlayerRequired", "Player invalid", nil, "")
 		s.Err.StatusCode = http.StatusUnauthorized
 	}
 }
 
 func (s *Session) CheckAdminRequired() {
-	if len(s.Token.PlayerId) == 0 {
+	if len(s.Token.PlayerID) == 0 {
 		s.Err = model.NewLocError("CheckAdminRequired", "Player invalid", nil, "")
 		s.Err.StatusCode = http.StatusUnauthorized
 	} else if !s.IsAdmin() {
@@ -153,7 +153,7 @@ func (s *Session) CheckAdminRequired() {
 }
 
 func (s *Session) IsAdmin() bool {
-	if player, err := GetPlayer(s.Token.PlayerId); err == nil {
+	if player, err := GetPlayer(s.Token.PlayerID); err == nil {
 		return player.IsAdmin
 	}
 	return false

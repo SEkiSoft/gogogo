@@ -13,12 +13,12 @@ const (
 )
 
 type Token struct {
-	Id             string `json:"id"`
+	ID             string `json:"id"`
 	CreateAt       int64  `json:"create_at"`
 	ExpiresAt      int64  `json:"expires_at"`
 	LastActivityAt int64  `json:"last_activity_at"`
-	PlayerId       string `json:"player_id"`
-	DeviceId       string `json:"device_id"`
+	PlayerID       string `json:"player_id"`
+	DeviceID       string `json:"device_id"`
 	Roles          string `json:"roles"`
 	IsOAuth        bool   `json:"is_oauth"`
 }
@@ -45,7 +45,7 @@ func TokenFromJson(data io.Reader) *Token {
 }
 
 func (t *Token) PreSave() {
-	t.Id = NewId()
+	t.ID = NewID()
 	t.CreateAt = GetMillis()
 	t.LastActivityAt = t.CreateAt
 	t.ExpiresAt = t.CreateAt + TOKEN_DURATION

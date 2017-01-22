@@ -80,7 +80,7 @@ func updateGame(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !game.HasPlayer(s.Token.PlayerId) {
+	if !game.HasPlayer(s.Token.PlayerID) {
 		s.SetInvalidParam("makeMove", "move")
 		return
 	}

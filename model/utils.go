@@ -22,7 +22,7 @@ const (
 	ID_LENGTH = 24
 )
 
-func NewId() string {
+func NewID() string {
 	var b bytes.Buffer
 	encoder := base32.NewEncoder(encoding, &b)
 	encoder.Write(uuid.NewRandom())

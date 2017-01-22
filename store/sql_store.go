@@ -10,9 +10,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sekisoft/gogogo/utils"
 	"github.com/go-gorp/gorp"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/sekisoft/gogogo/utils"
 )
 
 const (

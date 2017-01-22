@@ -10,9 +10,9 @@ import (
 
 func TestMoveToJson(t *testing.T) {
 	move := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        0,
 		Y:        0,
@@ -21,16 +21,16 @@ func TestMoveToJson(t *testing.T) {
 	json := move.ToJson()
 	rMove := MoveFromJson(strings.NewReader(json))
 
-	if rMove.Id != move.Id {
-		t.Fatal("Ids do not match")
+	if rMove.ID != move.ID {
+		t.Fatal("IDs do not match")
 	}
 }
 
 func TestMoveFromJson(t *testing.T) {
 	move := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        0,
 		Y:        0,
@@ -47,18 +47,18 @@ func TestMoveFromJson(t *testing.T) {
 
 func TestMovesToJson(t *testing.T) {
 	move0 := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        0,
 		Y:        0,
 	}
 
 	move1 := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        1,
 		Y:        1,
@@ -69,25 +69,25 @@ func TestMovesToJson(t *testing.T) {
 	json := MovesToJson(moves)
 	rMoves := MovesFromJson(strings.NewReader(json))
 
-	if rMoves[0].Id != move0.Id || rMoves[1].Id != move1.Id {
-		t.Fatal("Ids do not match")
+	if rMoves[0].ID != move0.ID || rMoves[1].ID != move1.ID {
+		t.Fatal("IDs do not match")
 	}
 }
 
 func TestMovesFromJson(t *testing.T) {
 	move0 := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        0,
 		Y:        0,
 	}
 
 	move1 := Move{
-		Id:       NewId(),
-		GameId:   NewId(),
-		PlayerId: NewId(),
+		ID:       NewID(),
+		GameID:   NewID(),
+		PlayerID: NewID(),
 		CreateAt: GetMillis(),
 		X:        1,
 		Y:        1,
@@ -106,16 +106,16 @@ func TestMovesFromJson(t *testing.T) {
 
 func TestMovePreSave(t *testing.T) {
 	move := Move{
-		PlayerId: NewId(),
-		GameId:   NewId(),
-		Id:       "",
+		PlayerID: NewID(),
+		GameID:   NewID(),
+		ID:       "",
 		CreateAt: 0,
 	}
 
 	move.PreSave()
 
-	if len(move.Id) == 0 {
-		t.Fatal("Id should not be empty")
+	if len(move.ID) == 0 {
+		t.Fatal("ID should not be empty")
 	}
 
 	if move.CreateAt == 0 {

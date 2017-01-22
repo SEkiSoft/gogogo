@@ -12,7 +12,7 @@ import (
 
 func TestPlayerIsValid(t *testing.T) {
 	o := Player{
-		Id:         NewId(),
+		ID:         NewID(),
 		CreateAt:   GetMillis(),
 		UpdateAt:   GetMillis(),
 		DeleteAt:   GetMillis(),
@@ -27,12 +27,12 @@ func TestPlayerIsValid(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	o.Id = ""
+	o.ID = ""
 	if err := o.IsValid(); err == nil {
 		t.Fatal("should be invalid")
 	}
 
-	o.Id = NewId()
+	o.ID = NewID()
 
 	o.CreateAt = 0
 	if err := o.IsValid(); err == nil {
@@ -104,7 +104,7 @@ func TestPlayerPreSave(t *testing.T) {
 		Email:    "AAAAA@A.com"}
 	o.PreSave()
 
-	if len(o.Id) == 0 {
+	if len(o.ID) == 0 {
 		t.Fatal("should not be empty")
 	}
 
@@ -172,7 +172,7 @@ func TestPlayerPreUpdate(t *testing.T) {
 
 func TestPlayerToJson(t *testing.T) {
 	player := Player{
-		Id:         NewId(),
+		ID:         NewID(),
 		CreateAt:   GetMillis(),
 		UpdateAt:   GetMillis(),
 		DeleteAt:   GetMillis(),
@@ -186,14 +186,14 @@ func TestPlayerToJson(t *testing.T) {
 	json := player.ToJson()
 	rPlayer := PlayerFromJson(strings.NewReader(json))
 
-	if rPlayer.Id != player.Id {
-		t.Fatal("Ids do not match")
+	if rPlayer.ID != player.ID {
+		t.Fatal("IDs do not match")
 	}
 }
 
 func TestPlayerFromJson(t *testing.T) {
 	player := Player{
-		Id:         NewId(),
+		ID:         NewID(),
 		CreateAt:   GetMillis(),
 		UpdateAt:   GetMillis(),
 		DeleteAt:   GetMillis(),

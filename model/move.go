@@ -9,9 +9,9 @@ import (
 )
 
 type Move struct {
-	PlayerId string `json:"player_id"`
-	GameId   string `json:"game_id"`
-	Id       string `json:"id"`
+	PlayerID string `json:"player_id"`
+	GameID   string `json:"game_id"`
+	ID       string `json:"id"`
 	X        uint   `json:"move_x"`
 	Y        uint   `json:"move_y"`
 	CreateAt int64  `json:"create_at"`
@@ -29,8 +29,8 @@ func (m *Move) ToJson() string {
 func (m *Move) PreSave() {
 	m.CreateAt = GetMillis()
 
-	if m.Id == "" {
-		m.Id = NewId()
+	if m.ID == "" {
+		m.ID = NewID()
 	}
 }
 

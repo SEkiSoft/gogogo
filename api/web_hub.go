@@ -34,7 +34,7 @@ func Publish(message *model.WebSocketEvent) {
 func (h *WebHub) Register(webConn *WebConn) {
 	h.register <- webConn
 
-	msg := model.NewWebSocketEvent(webConn.PlayerId, "", model.WEBSOCKET_EVENT_HELLO_WORLD)
+	msg := model.NewWebSocketEvent(webConn.PlayerID, "", model.WEBSOCKET_EVENT_HELLO_WORLD)
 	msg.Add("server_version", fmt.Sprintf("%v", model.CurrentVersion))
 	go Publish(msg)
 }

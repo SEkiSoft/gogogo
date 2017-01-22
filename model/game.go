@@ -17,9 +17,9 @@ const (
 )
 
 type Game struct {
-	Id       string `json:"id"`
-	IdBlack  string `json:"id_black"`
-	IdWhite  string `json:"id_white"`
+	ID       string `json:"id"`
+	IDBlack  string `json:"id_black"`
+	IDWhite  string `json:"id_white"`
 	Board    string `json:"board"`
 	NumLines uint   `json:"numlines"`
 	Turn     uint   `json:"turn"`
@@ -69,10 +69,10 @@ func (g *Game) IsValid() *Error {
 }
 
 func (g *Game) PreSave() {
-	if g.Id == "" {
-		g.Id = NewId()
-		g.IdBlack = NewId()
-		g.IdWhite = NewId()
+	if g.ID == "" {
+		g.ID = NewID()
+		g.IDBlack = NewID()
+		g.IDWhite = NewID()
 	}
 	g.CreateAt = GetMillis()
 	g.UpdateAt = g.CreateAt
@@ -91,8 +91,8 @@ func (g *Game) GetStats() *GameStats {
 	return &gs
 }
 
-func (g *Game) HasPlayer(playerId string) bool {
-	return g.IdBlack == playerId || g.IdWhite == playerId
+func (g *Game) HasPlayer(playerID string) bool {
+	return g.IDBlack == playerID || g.IDWhite == playerID
 }
 
 func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {

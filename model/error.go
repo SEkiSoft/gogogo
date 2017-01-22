@@ -10,9 +10,9 @@ import (
 )
 
 type Error struct {
-	Id         string                 `json:"id"`
+	ID         string                 `json:"id"`
 	Message    string                 `json:"message"`
-	RequestId  string                 `json:"request_id"`
+	RequestID  string                 `json:"request_id"`
 	StatusCode int                    `json:"status_code"`
 	Where      string                 `json:"-"`
 	params     map[string]interface{} `json:"-"`
@@ -44,7 +44,7 @@ func ErrorFromJson(data io.Reader) *Error {
 
 func NewLocError(where string, id string, params map[string]interface{}, details string) *Error {
 	er := &Error{}
-	er.Id = id
+	er.ID = id
 	er.params = params
 	er.Message = id
 	er.Where = where
