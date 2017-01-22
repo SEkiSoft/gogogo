@@ -36,16 +36,14 @@ func (wr *WebSocketRouter) ServeWebSocket(conn *WebConn, r *model.WebSocketReque
 		return
 	}
 
-	var handler *webSocketHandler
-	if h, ok := wr.handlers[r.Action]; !ok {
+	h, ok := wr.handlers[r.Action]
+	if !ok {
 		err := model.NewLocError("ServeWebSocket", "Websocket not ok", nil, "")
 		wr.ReturnWebSocketError(conn, r, err)
 		return
-	} else {
-		handler = h
 	}
 
-	handler.ServeWebSocket(conn, r)
+	h.ServeWebSocket(conn, r)
 }
 
 func (wr *WebSocketRouter) ReturnWebSocketError(conn *WebConn, r *model.WebSocketRequest, err *model.Error) {

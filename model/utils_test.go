@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-func TestNewId(t *testing.T) {
-	id := NewId()
+func TestNewID(t *testing.T) {
+	id := NewID()
 
 	if len(id) != ID_LENGTH {
 		t.Fatal("wrong id length")

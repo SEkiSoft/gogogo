@@ -10,9 +10,9 @@ import (
 
 func TestErrorToString(t *testing.T) {
 	error := Error{
-		Id:         NewId(),
+		ID:         NewID(),
 		Message:    "test",
-		RequestId:  NewId(),
+		RequestID:  NewID(),
 		StatusCode: 500,
 		Where:      "here",
 		params:     nil,
@@ -27,9 +27,9 @@ func TestErrorToString(t *testing.T) {
 
 func TestErrorToJson(t *testing.T) {
     error := Error{
-		Id:         NewId(),
+		ID:         NewID(),
 		Message:    "test",
-		RequestId:  NewId(),
+		RequestID:  NewID(),
 		StatusCode: 500,
 		Where:      "here",
 		params:     nil,
@@ -38,16 +38,16 @@ func TestErrorToJson(t *testing.T) {
     json := error.ToJson()
     rerror := ErrorFromJson(strings.NewReader(json))
 
-    if rerror.Id != error.Id {
+    if rerror.ID != error.ID {
         t.Fatal("ids do not match")
     }
 }
 
 func TestErrorFromJson(t *testing.T) {
     error := Error{
-		Id:         NewId(),
+		ID:         NewID(),
 		Message:    "test",
-		RequestId:  NewId(),
+		RequestID:  NewID(),
 		StatusCode: 500,
 		Where:      "here",
 		params:     nil,

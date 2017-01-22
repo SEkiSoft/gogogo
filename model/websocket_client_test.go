@@ -6,7 +6,7 @@ package model
 // import "testing"
 
 // func TestNewWebSocketClient(t *testing.T) {
-// 	wsc, err := NewWebSocketClient("localhost", NewId())
+// 	wsc, err := NewWebSocketClient("localhost", NewID())
 
 // 	if err != nil {
 // 		t.Fatal(err.Message)
@@ -20,7 +20,7 @@ package model
 // }
 
 // func TestWebSocketClientConnect(t *testing.T) {
-// 	wsc, err := NewWebSocketClient("localhost", NewId())
+// 	wsc, err := NewWebSocketClient("localhost", NewID())
 
 // 	err = wsc.Connect()
 

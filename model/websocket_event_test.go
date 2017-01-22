@@ -19,19 +19,19 @@ func TestNewWebSocketEvent(t *testing.T) {
 		t.Fatal("WebSocketEvent not created")
 	}
 
-	if wse.PlayerId != "dummy id1" {
+	if wse.PlayerID != "dummy id1" {
 		t.Fatal("WebSocketEvent creation failed")
 	}
 
-	if wse.GameId != "dummy id2" {
+	if wse.GameID != "dummy id2" {
 		t.Fatal("WebSocketEvent creation failed")
 	}
 }
 
 func TestWebSocketEventAdd(t *testing.T) {
 	wse := NewWebSocketEvent(
-		NewId(),
-		NewId(),
+		NewID(),
+		NewID(),
 		WEBSOCKET_EVENT_MATCHMAKING_START,
 	)
 
@@ -44,8 +44,8 @@ func TestWebSocketEventAdd(t *testing.T) {
 
 func TestWebSocketEventIsValid(t *testing.T) {
 	wse := NewWebSocketEvent(
-		NewId(),
-		NewId(),
+		NewID(),
+		NewID(),
 		WEBSOCKET_EVENT_MATCHMAKING_START,
 	)
 
@@ -62,23 +62,23 @@ func TestWebSocketEventIsValid(t *testing.T) {
 
 func TestWebSocketEventToJson(t *testing.T) {
 	wse := NewWebSocketEvent(
-		NewId(),
-		NewId(),
+		NewID(),
+		NewID(),
 		WEBSOCKET_EVENT_MATCHMAKING_START,
 	)
 
 	json := wse.ToJson()
 	rwse := WebSocketEventFromJson(strings.NewReader(json))
 
-	if rwse.PlayerId != wse.PlayerId {
-		t.Fatal("Player Ids do not match")
+	if rwse.PlayerID != wse.PlayerID {
+		t.Fatal("Player IDs do not match")
 	}
 }
 
 func TestWebSocketEventFromJson(t *testing.T) {
 	wse := NewWebSocketEvent(
-		NewId(),
-		NewId(),
+		NewID(),
+		NewID(),
 		WEBSOCKET_EVENT_MATCHMAKING_START,
 	)
 

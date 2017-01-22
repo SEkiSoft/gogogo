@@ -71,7 +71,7 @@ func TestWebSocketResponseToJson(t *testing.T) {
 	rwsr := WebSocketResponseFromJson(strings.NewReader(json))
 
 	if rwsr.Status != wsr.Status {
-		t.Fatal("Player Ids do not match")
+		t.Fatal("Player IDs do not match")
 	}
 }
 

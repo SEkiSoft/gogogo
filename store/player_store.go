@@ -18,8 +18,8 @@ func NewPlayerStore(sqlStore *SqlStore) SqlPlayerStore {
 	ps := &PlayerStore{sqlStore}
 
 	db := sqlStore.GetMaster()
-	table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(model.ID_LENGTH)
+	table := db.AddTableWithName(model.Player{}, "Players").SetKeys(false, "ID")
+	table.ColMap("ID").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Username").SetMaxSize(64).SetUnique(true)
 	table.ColMap("Password").SetMaxSize(128)
 	table.ColMap("Email").SetMaxSize(128).SetUnique(true)
@@ -44,11 +44,11 @@ func (ps PlayerStore) Save(player *model.Player) StoreChannel {
 
 		if err := ps.GetMaster().Insert(player); err != nil {
 			if IsUniqueConstraintError(err.Error(), []string{"Email", "players_email_key", "idx_players_email_unique"}) {
-				result.Err = model.NewLocError("PlayerStore.Save", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Email already exists", nil, "player_id="+player.ID+", "+err.Error())
 			} else if IsUniqueConstraintError(err.Error(), []string{"Playername", "players_username_key", "idx_players_username_unique"}) {
-				result.Err = model.NewLocError("PlayerStore.Save", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Username already exists", nil, "player_id="+player.ID+", "+err.Error())
 			} else {
-				result.Err = model.NewLocError("PlayerStore.Save", "Player saving error", nil, "player_id="+player.Id+", "+err.Error())
+				result.Err = model.NewLocError("PlayerStore.Save", "Player saving error", nil, "player_id="+player.ID+", "+err.Error())
 			}
 		} else {
 			result.Data = player
@@ -75,10 +75,10 @@ func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 			return
 		}
 
-		if oldPlayerResult, err := ps.GetMaster().Get(model.Player{}, player.Id); err != nil {
-			result.Err = model.NewLocError("PlayerStore.Update", "", nil, "player_id="+player.Id+", "+err.Error())
+		if oldPlayerResult, err := ps.GetMaster().Get(model.Player{}, player.ID); err != nil {
+			result.Err = model.NewLocError("PlayerStore.Update", "", nil, "player_id="+player.ID+", "+err.Error())
 		} else if oldPlayerResult == nil {
-			result.Err = model.NewLocError("PlayerStore.Update", "Cannot find player to update", nil, "player_id="+player.Id)
+			result.Err = model.NewLocError("PlayerStore.Update", "Cannot find player to update", nil, "player_id="+player.ID)
 		} else {
 			oldPlayer := oldPlayerResult.(*model.Player)
 			player.CreateAt = oldPlayer.CreateAt
@@ -86,14 +86,14 @@ func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 
 			if count, err := ps.GetMaster().Update(player); err != nil {
 				if IsUniqueConstraintError(err.Error(), []string{"Email", "players_email_key", "idx_players_email_unique"}) {
-					result.Err = model.NewLocError("PlayerStore.Update", "Email already exists", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Email already exists", nil, "player_id="+player.ID+", "+err.Error())
 				} else if IsUniqueConstraintError(err.Error(), []string{"Username", "players_username_key", "idx_players_username_unique"}) {
-					result.Err = model.NewLocError("PlayerStore.Update", "Username already exists", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Username already exists", nil, "player_id="+player.ID+", "+err.Error())
 				} else {
-					result.Err = model.NewLocError("PlayerStore.Update", "Player updating error", nil, "player_id="+player.Id+", "+err.Error())
+					result.Err = model.NewLocError("PlayerStore.Update", "Player updating error", nil, "player_id="+player.ID+", "+err.Error())
 				}
 			} else if count != 1 {
-				result.Err = model.NewLocError("PlayerStore.Update", "Player not unique", nil, fmt.Sprintf("player_id=%v, count=%v", player.Id, count))
+				result.Err = model.NewLocError("PlayerStore.Update", "Player not unique", nil, fmt.Sprintf("player_id=%v, count=%v", player.ID, count))
 			} else {
 				result.Data = [2]*model.Player{player, oldPlayer}
 			}
@@ -106,16 +106,16 @@ func (ps PlayerStore) Update(player *model.Player) StoreChannel {
 	return storeChannel
 }
 
-func (ps PlayerStore) UpdatePassword(playerId string, newPassword string) StoreChannel {
+func (ps PlayerStore) UpdatePassword(playerID string, newPassword string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ps.GetMaster().Exec("UPDATE Players SET Password = :Password WHERE Id = :PlayerId", map[string]interface{}{"Password": newPassword, "PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("PlayerStore.UpdatePassword", "Player update password error", nil, "player_id="+playerId)
+		if _, err := ps.GetMaster().Exec("UPDATE Players SET Password = :Password WHERE ID = :PlayerID", map[string]interface{}{"Password": newPassword, "PlayerID": playerID}); err != nil {
+			result.Err = model.NewLocError("PlayerStore.UpdatePassword", "Player update password error", nil, "player_id="+playerID)
 		} else {
-			result.Data = playerId
+			result.Data = playerID
 		}
 
 		storeChannel <- result
@@ -175,7 +175,7 @@ func (ps PlayerStore) GetPlayerGames(id string) StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := ps.GetReplica().Select(&data, "SELECT * FROM Games WHERE IdBlack = :Id OR IdWhite = :Id", map[string]interface{}{"Id": id}); err != nil {
+		if _, err := ps.GetReplica().Select(&data, "SELECT * FROM Games WHERE IDBlack = :ID OR IDWhite = :ID", map[string]interface{}{"ID": id}); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetPlayerGames", "Get player games error", nil, err.Error())
 		}
 
@@ -240,7 +240,7 @@ func (ps PlayerStore) GetTotalPlayersCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := ps.GetReplica().SelectInt("SELECT COUNT(Id) FROM Players"); err != nil {
+		if count, err := ps.GetReplica().SelectInt("SELECT COUNT(ID) FROM Players"); err != nil {
 			result.Err = model.NewLocError("PlayerStore.GetTotalPlayersCount", "Get total players count error", nil, err.Error())
 		} else {
 			result.Data = count
@@ -253,14 +253,14 @@ func (ps PlayerStore) GetTotalPlayersCount() StoreChannel {
 	return storeChannel
 }
 
-func (ps PlayerStore) Delete(playerId string) StoreChannel {
+func (ps PlayerStore) Delete(playerID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if _, err := ps.GetMaster().Exec("DELETE FROM Players WHERE Id = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("PlayerStore.PermanentDelete", "Permanent delete player error", nil, "player_id="+playerId+", "+err.Error())
+		if _, err := ps.GetMaster().Exec("DELETE FROM Players WHERE ID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
+			result.Err = model.NewLocError("PlayerStore.PermanentDelete", "Permanent delete player error", nil, "player_id="+playerID+", "+err.Error())
 		}
 
 		storeChannel <- result

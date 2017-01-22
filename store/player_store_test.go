@@ -13,7 +13,7 @@ func TestPlayerStoreSave(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -25,7 +25,7 @@ func TestPlayerStoreSave(t *testing.T) {
 		t.Fatal("save player failed")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("save player failed, delete")
 	}
 }
@@ -34,7 +34,7 @@ func TestPlayerStoreDelete(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -46,7 +46,7 @@ func TestPlayerStoreDelete(t *testing.T) {
 		t.Fatal("delete player failed")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("delete player failed, delete")
 	}
 }
@@ -55,7 +55,7 @@ func TestPlayerStoreUpdate(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -75,7 +75,7 @@ func TestPlayerStoreUpdate(t *testing.T) {
 		t.Fatal("update player failed, not equal")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("update player failed, delete")
 	}
 }
@@ -84,7 +84,7 @@ func TestPlayerStoreGet(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -96,13 +96,13 @@ func TestPlayerStoreGet(t *testing.T) {
 		t.Fatal("get player failed, save")
 	}
 
-	if result := <-store.Player().Get(player.Id); result.Err != nil {
+	if result := <-store.Player().Get(player.ID); result.Err != nil {
 		t.Fatal("get player failed, store")
-	} else if result.Data.(*model.Player).Id == player.Id {
+	} else if result.Data.(*model.Player).ID == player.ID {
 		t.Fatal("get player failed, not equal")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("get player failed, delete")
 	}
 }
@@ -111,7 +111,7 @@ func TestPlayerStoreGetAll(t *testing.T) {
 	Setup()
 
 	player1 := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -120,7 +120,7 @@ func TestPlayerStoreGetAll(t *testing.T) {
 	}
 
 	player2 := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "bbbbb",
 		Password:   "bbbbb",
 		Email:      "b@b.com",
@@ -142,11 +142,11 @@ func TestPlayerStoreGetAll(t *testing.T) {
 		t.Fatal("get all players failed, wrong size")
 	}
 
-	if result := <-store.Player().Delete(player1.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player1.ID); result.Err != nil {
 		t.Fatal("get all players failed, delete")
 	}
 
-	if result := <-store.Player().Delete(player2.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player2.ID); result.Err != nil {
 		t.Fatal("get all players failed, delete")
 	}
 }
@@ -155,7 +155,7 @@ func TestPlayerStoreGetByEmail(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -169,11 +169,11 @@ func TestPlayerStoreGetByEmail(t *testing.T) {
 
 	if result := <-store.Player().GetByEmail(player.Email); result.Err != nil {
 		t.Fatal("get player by email failed, store")
-	} else if result.Data.(*model.Player).Id == player.Id {
+	} else if result.Data.(*model.Player).ID == player.ID {
 		t.Fatal("get player by email failed, not equal")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("get player by email failed, delete")
 	}
 }
@@ -182,7 +182,7 @@ func TestPlayerStoreGetByUsername(t *testing.T) {
 	Setup()
 
 	player := model.Player{
-		Id:         model.NewId(),
+		ID:         model.NewID(),
 		Username:   "aaaaa",
 		Password:   "aaaaa",
 		Email:      "a@a.com",
@@ -196,11 +196,11 @@ func TestPlayerStoreGetByUsername(t *testing.T) {
 
 	if result := <-store.Player().GetByEmail(player.Username); result.Err != nil {
 		t.Fatal("get player by username failed, store")
-	} else if result.Data.(*model.Player).Id == player.Id {
+	} else if result.Data.(*model.Player).ID == player.ID {
 		t.Fatal("get player by username failed, not equal")
 	}
 
-	if result := <-store.Player().Delete(player.Id); result.Err != nil {
+	if result := <-store.Player().Delete(player.ID); result.Err != nil {
 		t.Fatal("get player by username failed, delete")
 	}
 }

@@ -13,9 +13,9 @@ func TestGameStoreSave(t *testing.T) {
 	Setup()
 
 	game := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -26,7 +26,7 @@ func TestGameStoreSave(t *testing.T) {
 		t.Fatal("save game failed")
 	}
 
-	if result := <-store.Game().Delete(game.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game.ID); result.Err != nil {
 		t.Fatal("save game failed, delete")
 	}
 }
@@ -35,9 +35,9 @@ func TestGameStoreDelete(t *testing.T) {
 	Setup()
 
 	game := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -48,7 +48,7 @@ func TestGameStoreDelete(t *testing.T) {
 		t.Fatal("save game failed")
 	}
 
-	if result := <-store.Game().Delete(game.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game.ID); result.Err != nil {
 		t.Fatal("save game failed, delete")
 	}
 }
@@ -57,9 +57,9 @@ func TestGameStoreUpdate(t *testing.T) {
 	Setup()
 
 	game := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -78,7 +78,7 @@ func TestGameStoreUpdate(t *testing.T) {
 		t.Fatal("update game failed, update")
 	}
 
-	if result := <-store.Game().Delete(game.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game.ID); result.Err != nil {
 		t.Fatal("update game failed, delete")
 	}
 }
@@ -87,9 +87,9 @@ func TestGameStoreGet(t *testing.T) {
 	Setup()
 
 	game := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -100,13 +100,13 @@ func TestGameStoreGet(t *testing.T) {
 		t.Fatal("get game failed, save")
 	}
 
-	if result := <-store.Game().Get(game.Id); result.Err != nil {
+	if result := <-store.Game().Get(game.ID); result.Err != nil {
 		t.Fatal("get game failed, store")
-	} else if result.Data.(*model.Game).IdBlack != game.IdBlack {
+	} else if result.Data.(*model.Game).IDBlack != game.IDBlack {
 		t.Fatal("get game failed, not equal")
 	}
 
-	if result := <-store.Game().Delete(game.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game.ID); result.Err != nil {
 		t.Fatal("update game failed, delete")
 	}
 }
@@ -115,9 +115,9 @@ func TestGameStoreGetAll(t *testing.T) {
 	Setup()
 
 	game1 := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -125,9 +125,9 @@ func TestGameStoreGetAll(t *testing.T) {
 	}
 
 	game2 := model.Game{
-		Id:       model.NewId(),
-		IdBlack:  model.NewId(),
-		IdWhite:  model.NewId(),
+		ID:       model.NewID(),
+		IDBlack:  model.NewID(),
+		IDWhite:  model.NewID(),
 		Board:    "",
 		NumLines: 9,
 		Turn:     0,
@@ -148,11 +148,11 @@ func TestGameStoreGetAll(t *testing.T) {
 		t.Fatal("get all games failed, wrong size")
 	}
 
-	if result := <-store.Game().Delete(game1.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game1.ID); result.Err != nil {
 		t.Fatal("get all games failed, delete")
 	}
 
-	if result := <-store.Game().Delete(game2.Id); result.Err != nil {
+	if result := <-store.Game().Delete(game2.ID); result.Err != nil {
 		t.Fatal("get all games failed, delete")
 	}
 }

@@ -20,13 +20,13 @@ type webSocketHandler struct {
 func (wh *webSocketHandler) ServeWebSocket(conn *WebConn, r *model.WebSocketRequest) {
 	l4g.Debug("/api/websocket:%s", r.Action)
 
-	r.Token = GetToken(conn.TokenId)
+	r.Token = GetToken(conn.TokenID)
 
 	var data map[string]interface{}
 	var err *model.Error
 
 	if data, err = wh.handlerFunc(r); err != nil {
-		l4g.Error("Websocket handler error: action: %s seq: %s playerId: %s", r.Action, r.Sequence, r.Token.PlayerId)
+		l4g.Error("Websocket handler error: action: %s seq: %s playerID: %s", r.Action, r.Sequence, r.Token.PlayerID)
 		conn.Send <- model.NewWebSocketError(r.Sequence, err)
 		return
 	}
