@@ -1,7 +1,9 @@
 language: go
 go:
     - tip
+before_script:
+    - git submodule update --init
 script:
     - make build
-    - make check-style
-go_import_path: github.com/davidlu1997/gogogo
+    - make test
+go_import_path: github.com/sekisoft/gogogo

@@ -1,15 +1,15 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package store
 
 import (
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/sekisoft/gogogo/model"
 )
 
 type StoreResult struct {
 	Data interface{}
-	Err  *model.Error
+	Err  *model.AppError
 }
 
 type StoreChannel chan StoreResult
@@ -27,6 +27,7 @@ type Store interface {
 	Game() SqlGameStore
 	Player() SqlPlayerStore
 	Move() SqlMoveStore
+	Token() SqlTokenStore
 	Close()
 	DropAllTables()
 }
@@ -36,11 +37,11 @@ type SqlGameStore interface {
 	Update(game *model.Game) StoreChannel
 	Get(id string) StoreChannel
 	GetAll() StoreChannel
-	GetGamesByOnePlayerId(playerId string) StoreChannel
-	GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChannel
+	GetGamesByOnePlayerID(playerID string) StoreChannel
+	GetGamesByTwoPlayerID(player1ID, player2ID string) StoreChannel
 	GetTotalGamesCount() StoreChannel
 	GetTotalFinishedGamesCount() StoreChannel
-	Delete(gameId string) StoreChannel
+	Delete(gameID string) StoreChannel
 }
 
 type SqlPlayerStore interface {
@@ -59,9 +60,18 @@ type SqlPlayerStore interface {
 type SqlMoveStore interface {
 	Save(move *model.Move) StoreChannel
 	Get(id string) StoreChannel
-	GetByGame(gameId string) StoreChannel
+	GetByGame(gameID string) StoreChannel
 	GetAll() StoreChannel
-	GetByPlayer(playerId string) StoreChannel
+	GetByPlayer(playerID string) StoreChannel
 	GetTotalMovesCount() StoreChannel
 	Delete(id string) StoreChannel
+}
+
+type SqlTokenStore interface {
+	Save(token *model.Token) StoreChannel
+	Get(id string) StoreChannel
+	GetTokens(playerID string) StoreChannel
+	Delete(id string) StoreChannel
+	DeleteAll(playerID string) StoreChannel
+	GetAll() StoreChannel
 }

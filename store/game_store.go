@@ -1,11 +1,14 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package store
 
 import (
 	"fmt"
-	"github.com/davidlu1997/gogogo/model"
+
+	"net/http"
+
+	"github.com/sekisoft/gogogo/model"
 )
 
 type GameStore struct {
@@ -16,10 +19,10 @@ func NewGameStore(sqlStore *SqlStore) SqlGameStore {
 	gs := &GameStore{sqlStore}
 
 	db := sqlStore.GetMaster()
-	table := db.AddTableWithName(model.Game{}, "Games").SetKeys(false, "Id")
-	table.ColMap("Id").SetMaxSize(24)
-	table.ColMap("IdBlack").SetMaxSize(24)
-	table.ColMap("IdWhite").SetMaxSize(24)
+	table := db.AddTableWithName(model.Game{}, "Games").SetKeys(false, "ID")
+	table.ColMap("ID").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("IDBlack").SetMaxSize(model.ID_LENGTH)
+	table.ColMap("IDWhite").SetMaxSize(model.ID_LENGTH)
 	table.ColMap("Board").SetMaxSize(400)
 	table.ColMap("NumLines").SetMaxSize(2)
 	table.ColMap("Turn").SetMaxSize(1)
@@ -45,7 +48,7 @@ func (gs GameStore) Save(game *model.Game) StoreChannel {
 		}
 
 		if err := gs.GetMaster().Insert(game); err != nil {
-			result.Err = model.NewLocError("GameStore.Save", "Game saving error", nil, "game_id="+game.Id+", "+err.Error())
+			result.Err = model.NewAppError("GameStore.Save", fmt.Sprintf("Game saving error: %s", err.Error()), http.StatusBadGateway)
 		} else {
 			result.Data = game
 		}
@@ -71,18 +74,18 @@ func (gs GameStore) Update(game *model.Game) StoreChannel {
 			return
 		}
 
-		if oldGameResult, err := gs.GetMaster().Get(model.Game{}, game.Id); err != nil {
-			result.Err = model.NewLocError("GameStore.Update", "", nil, "game_id="+game.Id+", "+err.Error())
+		if oldGameResult, err := gs.GetMaster().Get(model.Game{}, game.ID); err != nil {
+			result.Err = model.NewAppError("GameStore.Update", fmt.Sprintf("Get game error: %s", err.Error()), http.StatusBadGateway)
 		} else if oldGameResult == nil {
-			result.Err = model.NewLocError("GameStore.Update", "Cannot find game to update", nil, "game_id="+game.Id+", "+err.Error())
+			result.Err = model.NewAppError("GameStore.Update", fmt.Sprintf("Update game error: %s", err.Error()), http.StatusBadGateway)
 		} else {
 			oldGame := oldGameResult.(*model.Game)
 			game.CreateAt = oldGame.CreateAt
 
 			if count, err := gs.GetMaster().Update(game); err != nil {
-				result.Err = model.NewLocError("GameStore.Update", "Game updating error", nil, "game_id="+game.Id+", "+err.Error())
+				result.Err = model.NewAppError("GameStore.Update", fmt.Sprintf("Update game error: %s", err.Error()), http.StatusBadGateway)
 			} else if count != 1 {
-				result.Err = model.NewLocError("GameStore.Update", "Game not unique", nil, fmt.Sprintf("game_id=%v, count=%v", game.Id, count))
+				result.Err = model.NewAppError("GameStore.Update", fmt.Sprintf("Game not unique: %s", err.Error()), http.StatusBadGateway)
 			} else {
 				result.Data = [2]*model.Game{game, oldGame}
 			}
@@ -101,10 +104,10 @@ func (gs GameStore) Get(id string) StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if obj, err := gs.GetMaster().Get(model.Game{}, id); err != nil {
-			result.Err = model.NewLocError("GameStore.Get", "Get game by id error", nil, "game_id="+id+", "+err.Error())
+		if obj, err := gs.GetReplica().Get(model.Game{}, id); err != nil {
+			result.Err = model.NewAppError("GameStore.Update", err.Error(), http.StatusBadGateway)
 		} else if obj == nil {
-			result.Err = model.NewLocError("GameStore.Get", "Missing game error", nil, "player_id="+id)
+			result.Err = model.NewAppError("GameStore.Get", fmt.Sprintf("Missing game: %s", err.Error()), http.StatusBadGateway)
 		} else {
 			result.Data = obj.(*model.Game)
 		}
@@ -123,8 +126,8 @@ func (gs GameStore) GetAll() StoreChannel {
 		result := StoreResult{}
 
 		var data []*model.Game
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games"); err != nil {
-			result.Err = model.NewLocError("GameStore.GetAll", "Get all games error", nil, err.Error())
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games"); err != nil {
+			result.Err = model.NewAppError("GameStore.GetAll", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data
@@ -137,7 +140,7 @@ func (gs GameStore) GetAll() StoreChannel {
 	return storeChannel
 }
 
-func (gs GameStore) GetGamesByOnePlayerId(playerId string) StoreChannel {
+func (gs GameStore) GetGamesByOnePlayerID(playerID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -145,8 +148,8 @@ func (gs GameStore) GetGamesByOnePlayerId(playerId string) StoreChannel {
 
 		var data []*model.Game
 
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games WHERE IdBlack = :PlayerId OR IdWhite = :PlayerId", map[string]interface{}{"PlayerId": playerId}); err != nil {
-			result.Err = model.NewLocError("GameStore.GetGamesByOnePlayerId", "Missing game error", nil, "player_id="+playerId+", "+err.Error())
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games WHERE IDBlack = :PlayerID OR IDWhite = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
+			result.Err = model.NewAppError("GameStore.GetGamesByOnePlayerID", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data
@@ -158,7 +161,7 @@ func (gs GameStore) GetGamesByOnePlayerId(playerId string) StoreChannel {
 	return storeChannel
 }
 
-func (gs GameStore) GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChannel {
+func (gs GameStore) GetGamesByTwoPlayerID(player1ID, player2ID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
@@ -166,8 +169,8 @@ func (gs GameStore) GetGamesByTwoPlayerId(player1Id, player2Id string) StoreChan
 
 		var data []*model.Game
 
-		if _, err := gs.GetMaster().Select(&data, "SELECT * FROM Games WHERE (IdBlack = :Player1Id AND IdWhite = :Player2Id) OR (IdBlack = :Player2Id AND IdWhite = :Player1Id)", map[string]interface{}{"Player1Id": player1Id, "Player2Id": player2Id}); err != nil {
-			result.Err = model.NewLocError("GameStore.GetGamesByTwoPlayerId", "Missing game error", nil, "player1_id="+player1Id+", player2_id="+player2Id+", "+err.Error())
+		if _, err := gs.GetReplica().Select(&data, "SELECT * FROM Games WHERE (IDBlack = :Player1ID AND IDWhite = :Player2ID) OR (IDBlack = :Player2ID AND IDWhite = :Player1ID)", map[string]interface{}{"Player1ID": player1ID, "Player2ID": player2ID}); err != nil {
+			result.Err = model.NewAppError("GameStore.GetGamesByTwoPlayerID", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data
@@ -185,8 +188,8 @@ func (gs GameStore) GetTotalGamesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games"); err != nil {
-			result.Err = model.NewLocError("GameStore.GetTotalPlayersCount", "Get total games count error", nil, err.Error())
+		if count, err := gs.GetReplica().SelectInt("SELECT COUNT(ID) FROM Games"); err != nil {
+			result.Err = model.NewAppError("GameStore.GetTotalPlayersCount", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = count
 		}
@@ -204,8 +207,8 @@ func (gs GameStore) GetTotalFinishedGamesCount() StoreChannel {
 	go func() {
 		result := StoreResult{}
 
-		if count, err := gs.GetMaster().SelectInt("SELECT COUNT(Id) FROM Games WHERE Finished = 1"); err != nil {
-			result.Err = model.NewLocError("GameStore.GetTotalFinishedGamesCount", "Get total finished games count error", nil, err.Error())
+		if count, err := gs.GetReplica().SelectInt("SELECT COUNT(ID) FROM Games WHERE Finished = 1"); err != nil {
+			result.Err = model.NewAppError("GameStore.GetTotalFinishedGamesCount", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = count
 		}
@@ -217,14 +220,14 @@ func (gs GameStore) GetTotalFinishedGamesCount() StoreChannel {
 	return storeChannel
 }
 
-func (gs GameStore) Delete(gameId string) StoreChannel {
+func (gs GameStore) Delete(gameID string) StoreChannel {
 	storeChannel := make(StoreChannel)
 
 	go func() {
 		result := StoreResult{}
 
-		if _, err := gs.GetMaster().Exec("DELETE FROM Games WHERE Id = :GameId", map[string]interface{}{"GameId": gameId}); err != nil {
-			result.Err = model.NewLocError("GameStore.PermanentDelete", "Permanent delete game error", nil, "game_id="+gameId+", "+err.Error())
+		if _, err := gs.GetMaster().Exec("DELETE FROM Games WHERE ID = :GameID", map[string]interface{}{"GameID": gameID}); err != nil {
+			result.Err = model.NewAppError("GameStore.PermanentDelete", err.Error(), http.StatusBadGateway)
 		}
 
 		storeChannel <- result

@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
@@ -6,36 +6,44 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 type Move struct {
-	PlayerId string `json:"player_id"`
-	GameId   string `json:"game_id"`
-	Id       string `json:"id"`
+	PlayerID string `json:"player_id"`
+	GameID   string `json:"game_id"`
+	ID       string `json:"id"`
 	X        uint   `json:"move_x"`
 	Y        uint   `json:"move_y"`
 	CreateAt int64  `json:"create_at"`
 }
 
 func (m *Move) ToJson() string {
-	s, err := json.Marshal(m)
+	json, err := json.Marshal(m)
 	if err != nil {
 		return ""
-	} else {
-		return string(s)
 	}
+
+	return string(json)
 }
 
 func (m *Move) PreSave() {
 	m.CreateAt = GetMillis()
 
-	if m.Id == "" {
-		m.Id = NewId()
+	if m.ID == "" {
+		m.ID = NewID()
 	}
 }
 
-func (m *Move) IsValid(game *Game) *Error {
-	// TODO
+func (m *Move) IsValid(game *Game) *AppError {
+	currentPiece, err := game.GetBoardPiece(m.X, m.Y)
+
+	if err != nil {
+		return err
+	} else if currentPiece != 0 {
+		return NewAppError("Move.IsValid", "Spot is occupied", http.StatusBadRequest)
+	}
+
 	return nil
 }
 
@@ -45,18 +53,17 @@ func MoveFromJson(data io.Reader) *Move {
 	err := decoder.Decode(&m)
 	if err == nil {
 		return &m
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func MovesToJson(m []*Move) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
-	} else {
-		return string(b)
+	json, err := json.Marshal(m)
+	if err == nil {
+		return string(json)
 	}
+
+	return "[]"
 }
 
 func MovesFromJson(data io.Reader) []*Move {
@@ -65,7 +72,7 @@ func MovesFromJson(data io.Reader) []*Move {
 	err := decoder.Decode(&o)
 	if err == nil {
 		return o
-	} else {
-		return nil
 	}
+
+	return nil
 }

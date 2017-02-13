@@ -1,25 +1,29 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
 
 import (
 	"encoding/json"
-	"golang.org/x/crypto/bcrypt"
 	"io"
 	"regexp"
 	"strings"
+
+	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
 	DEFAULT_LOCALE      = "en"
 	MIN_PASSWORD_LENGTH = 5
+	MAX_PASSWORD_LENGTH = 64
 	MIN_USERNAME_LENGTH = 4
 	MAX_USERNAME_LENGTH = 24
 )
 
 type Player struct {
-	Id         string `json:"id"`
+	ID         string `json:"id"`
 	CreateAt   int64  `json:"create_at"`
 	UpdateAt   int64  `json:"update_at"`
 	DeleteAt   int64  `json:"delete_at"`
@@ -28,54 +32,56 @@ type Player struct {
 	Email      string `json:"email"`
 	AllowStats bool   `json:"allow_stats"`
 	Locale     string `json:"locale"`
+	IsAdmin    bool   `json:"is_admin,omitempty"`
 }
 
-func (p *Player) IsValid() *Error {
-	if len(p.Id) != 24 {
-		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
+func (p *Player) IsValid() *AppError {
+	if len(p.ID) != ID_LENGTH {
+		return NewAppError("Player.IsValid", "Player ID is invalid", http.StatusBadRequest)
 	}
 
-	if p.CreateAt == 0 {
-		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.Id)
+	if p.CreateAt <= 0 {
+		return NewAppError("Player.IsValid", "Created at is 0", http.StatusUnprocessableEntity)
 	}
 
-	if p.UpdateAt == 0 {
-		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.Id)
+	if p.UpdateAt <= 0 {
+		return NewAppError("Player.IsValid", "Updated at is 0", http.StatusUnprocessableEntity)
 	}
 
 	if !IsValidUsername(p.Username) {
-		return NewLocError("Player.IsValid", "Username is invalid", nil, "player_id="+p.Id)
+		return NewAppError("Player.IsValid", "Username is invalid", http.StatusUnprocessableEntity)
 	}
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
-		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.Id)
+		return NewAppError("Player.IsValid", "Email is invalid", http.StatusBadRequest)
+	}
+
+	if len(p.Password) < MIN_PASSWORD_LENGTH || len(p.Password) > MAX_PASSWORD_LENGTH {
+		return NewAppError("Player.IsValid", "Password is invalid", http.StatusBadRequest)
 	}
 
 	return nil
 }
 
 func (p *Player) PreSave() {
-	if p.Id == "" {
-		p.Id = NewId()
+	if p.ID == "" {
+		p.ID = NewID()
 	}
 
 	if p.Username == "" {
-		p.Username = NewId()
+		p.Username = NewID()
 	}
 
 	p.Username = strings.ToLower(p.Username)
 	p.Email = strings.ToLower(p.Email)
 	p.Locale = strings.ToLower(p.Locale)
+	p.Password = HashPassword(p.Password)
 
 	p.CreateAt = GetMillis()
 	p.UpdateAt = p.CreateAt
 
 	if p.Locale == "" {
 		p.Locale = DEFAULT_LOCALE
-	}
-
-	if len(p.Password) > 0 {
-		p.Password = HashPassword(p.Password)
 	}
 }
 
@@ -87,12 +93,12 @@ func (p *Player) PreUpdate() {
 }
 
 func (p *Player) ToJson() string {
-	b, err := json.Marshal(p)
+	json, err := json.Marshal(p)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(json)
 }
 
 func PlayerFromJson(data io.Reader) *Player {
@@ -101,9 +107,27 @@ func PlayerFromJson(data io.Reader) *Player {
 	err := decoder.Decode(&p)
 	if err == nil {
 		return &p
-	} else {
-		return nil
 	}
+
+	return nil
+}
+
+func PlayersToJson(p []*Player) string {
+	json, err := json.Marshal(p)
+	if err == nil {
+		return string(json)
+	}
+
+	return "[]"
+}
+
+func PlayerToJson(p []*Player) string {
+	b, err := json.Marshal(p)
+	if err != nil {
+		return ""
+	}
+
+	return string(b)
 }
 
 func ComparePassword(hash string, password string) bool {
@@ -111,6 +135,7 @@ func ComparePassword(hash string, password string) bool {
 		return false
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+
 	return err == nil
 }
 
@@ -139,19 +164,6 @@ func IsValidUsername(s string) bool {
 	return true
 }
 
-func (p *Player) Etag() string {
-	return Etag(p.Id, p.UpdateAt)
-}
-
 func (p *Player) Sanitize() {
 	p.Password = ""
-}
-
-func GamesToJson(m []*Game) string {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return ""
-	} else {
-		return string(b)
-	}
 }

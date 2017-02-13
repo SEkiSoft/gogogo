@@ -1,53 +1,24 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
 
-import (
-	"encoding/json"
-	"io"
-	"strconv"
-)
+import "strconv"
 
-type Error struct {
-	Id         string                 `json:"id"`
-	Message    string                 `json:"message"`
-	RequestId  string                 `json:"request_id"`
-	StatusCode int                    `json:"status_code"`
-	Where      string                 `json:"-"`
-	params     map[string]interface{} `json:"-"`
+type AppError struct {
+	Where      string
+	Message    string
+	StatusCode int
 }
 
-func (er *Error) ToString() string {
+func (er *AppError) Error() string {
 	return er.Where + ": " + er.Message + ", " + strconv.Itoa(er.StatusCode)
 }
 
-func (er *Error) ToJson() string {
-	b, err := json.Marshal(er)
-	if err != nil {
-		return ""
-	} else {
-		return string(b)
+func NewAppError(where, message string, statusCode int) *AppError {
+	return &AppError{
+		Where:      where,
+		Message:    message,
+		StatusCode: statusCode,
 	}
-}
-
-func ErrorFromJson(data io.Reader) *Error {
-	decoder := json.NewDecoder(data)
-	var er Error
-	err := decoder.Decode(&er)
-	if err == nil {
-		return &er
-	} else {
-		return NewLocError("ErrorFromJson", "JSON decoding error", nil, err.Error())
-	}
-}
-
-func NewLocError(where string, id string, params map[string]interface{}, details string) *Error {
-	er := &Error{}
-	er.Id = id
-	er.params = params
-	er.Message = id
-	er.Where = where
-	er.StatusCode = 500
-	return er
 }

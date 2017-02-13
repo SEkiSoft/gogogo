@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package main
@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/davidlu1997/gogogo/api"
-	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/utils"
+	"github.com/sekisoft/gogogo/api"
+	"github.com/sekisoft/gogogo/model"
+	"github.com/sekisoft/gogogo/utils"
 
 	l4g "github.com/alecthomas/log4go"
 )
@@ -27,7 +27,7 @@ func doLoadConfig() (err string) {
 
 func main() {
 	if err := doLoadConfig(); err != "" {
-		l4g.Exit("Unable to load configuration file: %s", err)
+		l4g.Exit("Unable to load configuration file:", err)
 		return
 	}
 

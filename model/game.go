@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
@@ -6,17 +6,21 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"net/http"
+	"strconv"
 )
 
 const (
 	MAX_NUMLINES = 19
-	MIN_NUMLINES = 13
+	MIN_NUMLINES = 5
+	WHITE        = 1
+	BLACK        = 2
 )
 
 type Game struct {
-	Id       string `json:"id"`
-	IdBlack  string `json:"id_black"`
-	IdWhite  string `json:"id_white"`
+	ID       string `json:"id"`
+	IDBlack  string `json:"id_black"`
+	IDWhite  string `json:"id_white"`
 	Board    string `json:"board"`
 	NumLines uint   `json:"numlines"`
 	Turn     uint   `json:"turn"`
@@ -27,12 +31,12 @@ type Game struct {
 }
 
 func (g *Game) ToJson() string {
-	s, err := json.Marshal(g)
+	json, err := json.Marshal(g)
 	if err != nil {
 		return ""
-	} else {
-		return string(s)
 	}
+
+	return string(json)
 }
 
 func GameFromJson(data io.Reader) *Game {
@@ -41,24 +45,35 @@ func GameFromJson(data io.Reader) *Game {
 	err := decoder.Decode(&g)
 	if err == nil {
 		return &g
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
-func (g *Game) IsValid() *Error {
-	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
-		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
-	} else {
-		return nil
+func GamesToJson(g []*Game) string {
+	json, err := json.Marshal(g)
+	if err == nil {
+		return string(json)
 	}
+
+	return "[]"
+}
+
+func (g *Game) IsValid() *AppError {
+	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
+		return NewAppError("Game.IsValid", "Too many/few lines", http.StatusUnprocessableEntity)
+	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
+		return NewAppError("Game.IsValid", "Board does not match line number", http.StatusUnprocessableEntity)
+	}
+
+	return nil
 }
 
 func (g *Game) PreSave() {
-	if g.Id == "" {
-		g.Id = NewId()
-		g.IdBlack = NewId()
-		g.IdWhite = NewId()
+	if g.ID == "" {
+		g.ID = NewID()
+		g.IDBlack = NewID()
+		g.IDWhite = NewID()
 	}
 	g.CreateAt = GetMillis()
 	g.UpdateAt = g.CreateAt
@@ -72,5 +87,19 @@ func (g *Game) PreUpdate() {
 func (g *Game) GetStats() *GameStats {
 	var gs GameStats
 
+	// TODO GetGameStats
+
 	return &gs
+}
+
+func (g *Game) HasPlayer(playerID string) bool {
+	return g.IDBlack == playerID || g.IDWhite == playerID
+}
+
+func (g *Game) GetBoardPiece(x, y uint) (int, *AppError) {
+	if x < g.NumLines && y < g.NumLines {
+		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)
+		return int(piece), nil
+	}
+	return -1, NewAppError("Game.GetBoardPiece", "row/col out of range", http.StatusUnprocessableEntity)
 }

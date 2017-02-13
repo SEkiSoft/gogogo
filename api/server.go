@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package api
@@ -6,10 +6,10 @@ package api
 import (
 	"net/http"
 
+	"github.com/sekisoft/gogogo/store"
+	"github.com/sekisoft/gogogo/utils"
 	l4g "github.com/alecthomas/log4go"
 	"github.com/braintree/manners"
-	"github.com/davidlu1997/gogogo/store"
-	"github.com/davidlu1997/gogogo/utils"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )

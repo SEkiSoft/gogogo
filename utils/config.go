@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package utils
@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/davidlu1997/gogogo/model"
+	"github.com/sekisoft/gogogo/model"
 )
 
 var Cfg *model.Config = &model.Config{}

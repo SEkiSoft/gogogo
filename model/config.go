@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package model
@@ -18,8 +18,6 @@ type SqlConfiguration struct {
 
 type ServerConfiguration struct {
 	ListenPort string
-	HttpPort   int
-	HttpsPort  int
 }
 
 type Config struct {
@@ -31,9 +29,9 @@ func (c *Config) ToJson() string {
 	b, err := json.Marshal(c)
 	if err != nil {
 		return ""
-	} else {
-		return string(b)
 	}
+
+	return string(b)
 }
 
 func ConfigFromJson(data io.Reader) *Config {
@@ -42,7 +40,7 @@ func ConfigFromJson(data io.Reader) *Config {
 	err := decoder.Decode(&c)
 	if err == nil {
 		return &c
-	} else {
-		return nil
 	}
+
+	return nil
 }

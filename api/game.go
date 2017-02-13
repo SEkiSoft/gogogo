@@ -1,4 +1,4 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package api
@@ -6,17 +6,18 @@ package api
 import (
 	"net/http"
 
-	"github.com/davidlu1997/gogogo/model"
+	l4g "github.com/alecthomas/log4go"
 	"github.com/gorilla/mux"
+	"github.com/sekisoft/gogogo/model"
 )
 
 func InitGame() {
+	l4g.Info("Initializing Game API")
 	BaseRoutes.Games.Handle("/create", ApiHandler(createGame)).Methods("POST")
 
-	BaseRoutes.NeedGame.Handle("/update", ApiGameRequired(updateGame)).Methods("POST")
-	BaseRoutes.NeedGame.Handle("/move", ApiGameRequired(makeMove)).Methods("POST")
-	BaseRoutes.NeedGame.Handle("/stats", ApiGameRequired(getGameStats)).Methods("GET")
-	BaseRoutes.NeedGame.Handle("/get", ApiGameRequired(getGame)).Methods("GET")
+	BaseRoutes.NeedGame.Handle("/update", ApiPlayerRequired(updateGame)).Methods("POST")
+	BaseRoutes.NeedGame.Handle("/stats", ApiPlayerRequired(getGameStats)).Methods("GET")
+	BaseRoutes.NeedGame.Handle("/get", ApiPlayerRequired(getGame)).Methods("GET")
 }
 
 func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,7 @@ func createGame(s *Session, w http.ResponseWriter, r *http.Request) {
 
 func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id := params["user_id"]
+	id := params["game_id"]
 
 	if result, err := GetGame(id); err != nil {
 		s.Err = err
@@ -47,12 +48,13 @@ func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetGame(id string) (*model.Game, *model.Error) {
-	if result := <-Srv.Store.Game().Get(id); result.Err != nil {
+func GetGame(id string) (*model.Game, *model.AppError) {
+	result := <-Srv.Store.Game().Get(id)
+	if result.Err != nil {
 		return nil, result.Err
-	} else {
-		return result.Data.(*model.Game), nil
 	}
+
+	return result.Data.(*model.Game), nil
 }
 
 func getGameStats(s *Session, w http.ResponseWriter, r *http.Request) {
@@ -78,39 +80,16 @@ func updateGame(s *Session, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !game.HasPlayer(s.Token.PlayerID) {
+		s.SetInvalidParam("makeMove", "move")
+		return
+	}
+
 	game.PreUpdate()
 
 	if result := <-Srv.Store.Game().Update(game); result.Err != nil {
 		s.Err = result.Err
 	} else {
 		w.Write([]byte(result.Data.(*model.Game).ToJson()))
-	}
-}
-
-func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
-	move := model.MoveFromJson(r.Body)
-
-	if move == nil {
-		s.SetInvalidParam("makeMove", "move")
-		return
-	}
-
-	var game *model.Game
-	var err *model.Error
-
-	if game, err = GetGame(move.GameId); err != nil {
-		s.Err = err
-		return
-	}
-
-	if moveErr := move.IsValid(game); moveErr != nil {
-		s.Err = moveErr
-		return
-	}
-
-	if result := <-Srv.Store.Move().Save(move); result.Err != nil {
-		s.Err = result.Err
-	} else {
-		w.Write([]byte(result.Data.(*model.Move).ToJson()))
 	}
 }

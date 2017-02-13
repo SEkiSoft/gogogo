@@ -1,12 +1,12 @@
-// Copyright (c) 2016 David Lu
+// Copyright (c) 2016 SEkiSoft
 // See License.txt
 
 package ai
 
 import (
-	"github.com/davidlu1997/gogogo/api"
-	"github.com/davidlu1997/gogogo/model"
-	"github.com/davidlu1997/gogogo/store"
+	"github.com/sekisoft/gogogo/api"
+	"github.com/sekisoft/gogogo/model"
+	"github.com/sekisoft/gogogo/store"
 )
 
 //NextMove based on board state, whether the player is a 1 or a 2
