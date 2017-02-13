@@ -4,6 +4,8 @@
 package store
 
 import (
+	"net/http"
+
 	"github.com/sekisoft/gogogo/model"
 )
 
@@ -33,7 +35,7 @@ func (ts TokenStore) Save(token *model.Token) StoreChannel {
 		token.PreSave()
 
 		if err := ts.GetMaster().Insert(token); err != nil {
-			result.Err = model.NewLocError("TokenStore.Save", "Token saving error", nil, "token_id="+token.ID+", "+err.Error())
+			result.Err = model.NewAppError("TokenStore.Save", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = token
 		}
@@ -52,9 +54,9 @@ func (ts TokenStore) Get(id string) StoreChannel {
 		result := StoreResult{}
 
 		if obj, err := ts.GetReplica().Get(model.Token{}, id); err != nil {
-			result.Err = model.NewLocError("TokenStore.Get", "Get token by id error", nil, "token_id="+id+", "+err.Error())
+			result.Err = model.NewAppError("TokenStore.Get", err.Error(), http.StatusBadGateway)
 		} else if obj == nil {
-			result.Err = model.NewLocError("TokenStore.Get", "Missing token error", nil, "token_id="+id)
+			result.Err = model.NewAppError("TokenStore.Get", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = obj.(*model.Token)
 		}
@@ -74,7 +76,7 @@ func (ts TokenStore) GetTokens(playerID string) StoreChannel {
 
 		var data []*model.Token
 		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
-			result.Err = model.NewLocError("TokenStore.Get", "Get tokens by player id error", nil, err.Error())
+			result.Err = model.NewAppError("TokenStore.Get", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data
@@ -93,7 +95,7 @@ func (ts TokenStore) Delete(id string) StoreChannel {
 		result := StoreResult{}
 
 		if _, err := ts.GetMaster().Exec("DELETE FROM Tokens WHERE ID = :ID", map[string]interface{}{"ID": id}); err != nil {
-			result.Err = model.NewLocError("TokenStore.Delete", "Delete token error", nil, "token_id="+id+", "+err.Error())
+			result.Err = model.NewAppError("TokenStore.Delete", err.Error(), http.StatusBadGateway)
 		}
 
 		storeChannel <- result
@@ -110,7 +112,7 @@ func (ts TokenStore) DeleteAll(playerID string) StoreChannel {
 		result := StoreResult{}
 
 		if _, err := ts.GetMaster().Exec("DELETE * FROM Tokens WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
-			result.Err = model.NewLocError("TokenStore.DeleteAll", "Delete all tokens by player id error", nil, err.Error())
+			result.Err = model.NewAppError("TokenStore.DeleteAll", err.Error(), http.StatusBadGateway)
 		}
 
 		storeChannel <- result
@@ -128,7 +130,7 @@ func (ts TokenStore) GetAll() StoreChannel {
 
 		var data []*model.Token
 		if _, err := ts.GetReplica().Select(&data, "SELECT * FROM Tokens"); err != nil {
-			result.Err = model.NewLocError("TokenStore.GetAll", "Get all tokens error", nil, err.Error())
+			result.Err = model.NewAppError("TokenStore.GetAll", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data

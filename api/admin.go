@@ -21,9 +21,9 @@ func InitAdmin() {
 
 func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	if !s.IsAdmin() {
-		err := model.NewLocError("Admin.getAllGames", "Unauthorized admin access", nil, "")
+		err := model.NewAppError("Admin.getAllGames", "Unauthorized admin access", http.StatusUnauthorized)
 		err.StatusCode = http.StatusUnauthorized
-		w.Write([]byte(err.ToJson()))
+		http.Error(w, err.Error(), err.StatusCode)
 		return
 	}
 
@@ -34,7 +34,7 @@ func getAllGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAllGames() ([]*model.Game, *model.Error) {
+func GetAllGames() ([]*model.Game, *model.AppError) {
 	result := <-Srv.Store.Game().GetAll()
 	if result.Err != nil {
 		return nil, result.Err
@@ -45,9 +45,9 @@ func GetAllGames() ([]*model.Game, *model.Error) {
 
 func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
 	if !s.IsAdmin() {
-		err := model.NewLocError("Admin.getAllPlayers", "Unauthorized admin access", nil, "")
+		err := model.NewAppError("Admin.getAllGames", "Unauthorized admin access", http.StatusUnauthorized)
 		err.StatusCode = http.StatusUnauthorized
-		w.Write([]byte(err.ToJson()))
+		http.Error(w, err.Error(), err.StatusCode)
 		return
 	}
 
@@ -58,7 +58,7 @@ func getAllPlayers(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAllPlayers() ([]*model.Player, *model.Error) {
+func GetAllPlayers() ([]*model.Player, *model.AppError) {
 	result := <-Srv.Store.Player().GetAll()
 	if result.Err != nil {
 		return nil, result.Err
@@ -69,9 +69,9 @@ func GetAllPlayers() ([]*model.Player, *model.Error) {
 
 func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	if !s.IsAdmin() {
-		err := model.NewLocError("Admin.getAllMoves", "Unauthorized admin access", nil, "")
+		err := model.NewAppError("Admin.getAllGames", "Unauthorized admin access", http.StatusUnauthorized)
 		err.StatusCode = http.StatusUnauthorized
-		w.Write([]byte(err.ToJson()))
+		http.Error(w, err.Error(), err.StatusCode)
 		return
 	}
 
@@ -82,7 +82,7 @@ func getAllMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetAllMoves() ([]*model.Move, *model.Error) {
+func GetAllMoves() ([]*model.Move, *model.AppError) {
 	result := <-Srv.Store.Move().GetAll()
 	if result.Err != nil {
 		return nil, result.Err
@@ -93,9 +93,9 @@ func GetAllMoves() ([]*model.Move, *model.Error) {
 
 func getAllStats(s *Session, w http.ResponseWriter, r *http.Request) {
 	if !s.IsAdmin() {
-		err := model.NewLocError("Admin.getAllStats", "Unauthorized admin access", nil, "")
+		err := model.NewAppError("Admin.getAllGames", "Unauthorized admin access", http.StatusUnauthorized)
 		err.StatusCode = http.StatusUnauthorized
-		w.Write([]byte(err.ToJson()))
+		http.Error(w, err.Error(), err.StatusCode)
 		return
 	}
 

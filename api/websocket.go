@@ -30,7 +30,7 @@ func connect(s *Session, w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		l4g.Error("Websocket connection error: %s", err.Error())
-		s.Err = model.NewLocError("connect", "Upgrade to websocket connection failed", nil, "")
+		s.Err = model.NewAppError("connect", "Upgrade to websocket connection failed", http.StatusBadRequest)
 		return
 	}
 

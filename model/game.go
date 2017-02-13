@@ -6,6 +6,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 	"strconv"
 )
 
@@ -58,11 +59,11 @@ func GamesToJson(g []*Game) string {
 	return "[]"
 }
 
-func (g *Game) IsValid() *Error {
+func (g *Game) IsValid() *AppError {
 	if g.NumLines < MIN_NUMLINES || g.NumLines > MAX_NUMLINES {
-		return NewLocError("Game.IsValid", "Too many/few lines", nil, "")
+		return NewAppError("Game.IsValid", "Too many/few lines", http.StatusUnprocessableEntity)
 	} else if len(g.Board) != int(g.NumLines*g.NumLines) {
-		return NewLocError("Game.IsValid", "Board does not match line number", nil, "")
+		return NewAppError("Game.IsValid", "Board does not match line number", http.StatusUnprocessableEntity)
 	}
 
 	return nil
@@ -95,10 +96,10 @@ func (g *Game) HasPlayer(playerID string) bool {
 	return g.IDBlack == playerID || g.IDWhite == playerID
 }
 
-func (g *Game) GetBoardPiece(x, y uint) (int, *Error) {
+func (g *Game) GetBoardPiece(x, y uint) (int, *AppError) {
 	if x < g.NumLines && y < g.NumLines {
 		piece, _ := strconv.ParseInt(string(g.Board[y*g.NumLines+x]), 10, 0)
 		return int(piece), nil
 	}
-	return -1, NewLocError("Game.GetBoardPiece", "row/col out of range", nil, "")
+	return -1, NewAppError("Game.GetBoardPiece", "row/col out of range", http.StatusUnprocessableEntity)
 }

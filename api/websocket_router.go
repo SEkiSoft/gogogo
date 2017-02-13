@@ -4,6 +4,8 @@
 package api
 
 import (
+	"net/http"
+
 	l4g "github.com/alecthomas/log4go"
 
 	"github.com/sekisoft/gogogo/model"
@@ -25,20 +27,20 @@ func (wr *WebSocketRouter) Handle(action string, handler *webSocketHandler) {
 
 func (wr *WebSocketRouter) ServeWebSocket(conn *WebConn, r *model.WebSocketRequest) {
 	if r.Action == "" {
-		err := model.NewLocError("ServeWebSocket", "No websocket action", nil, "")
+		err := model.NewAppError("ServeWebSocket", "No websocket action", http.StatusBadRequest)
 		wr.ReturnWebSocketError(conn, r, err)
 		return
 	}
 
 	if r.Sequence <= 0 {
-		err := model.NewLocError("ServeWebSocket", "No websocket sequence", nil, "")
+		err := model.NewAppError("ServeWebSocket", "No websocket sequence", http.StatusBadRequest)
 		wr.ReturnWebSocketError(conn, r, err)
 		return
 	}
 
 	h, ok := wr.handlers[r.Action]
 	if !ok {
-		err := model.NewLocError("ServeWebSocket", "Websocket not ok", nil, "")
+		err := model.NewAppError("ServeWebSocket", "Websocket not ok", http.StatusBadRequest)
 		wr.ReturnWebSocketError(conn, r, err)
 		return
 	}
@@ -46,7 +48,7 @@ func (wr *WebSocketRouter) ServeWebSocket(conn *WebConn, r *model.WebSocketReque
 	h.ServeWebSocket(conn, r)
 }
 
-func (wr *WebSocketRouter) ReturnWebSocketError(conn *WebConn, r *model.WebSocketRequest, err *model.Error) {
+func (wr *WebSocketRouter) ReturnWebSocketError(conn *WebConn, r *model.WebSocketRequest, err *model.AppError) {
 	l4g.Error("Websocket server error: %s", err.Message)
 
 	errorResp := model.NewWebSocketError(r.Sequence, err)

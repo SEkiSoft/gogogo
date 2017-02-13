@@ -9,7 +9,7 @@ import (
 
 type StoreResult struct {
 	Data interface{}
-	Err  *model.Error
+	Err  *model.AppError
 }
 
 type StoreChannel chan StoreResult

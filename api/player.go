@@ -42,7 +42,7 @@ func updatePlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(updatedPlayer.ToJson()))
 }
 
-func UpdatePlayer(player *model.Player) (*model.Player, *model.Error) {
+func UpdatePlayer(player *model.Player) (*model.Player, *model.AppError) {
 	result := <-Srv.Store.Player().Update(player)
 	if result.Err != nil {
 		return nil, result.Err
@@ -71,7 +71,7 @@ func getMe(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetPlayer(id string) (*model.Player, *model.Error) {
+func GetPlayer(id string) (*model.Player, *model.AppError) {
 	result := <-Srv.Store.Player().Get(id)
 	if result.Err != nil {
 		return nil, result.Err
@@ -90,7 +90,7 @@ func getPlayerGames(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetPlayerGames(id string) ([]*model.Game, *model.Error) {
+func GetPlayerGames(id string) ([]*model.Game, *model.AppError) {
 	result := <-Srv.Store.Player().GetPlayerGames(id)
 	if result.Err != nil {
 		return nil, result.Err
@@ -110,7 +110,7 @@ func getPlayerByUsername(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetPlayerByUsername(username string) (*model.Player, *model.Error) {
+func GetPlayerByUsername(username string) (*model.Player, *model.AppError) {
 	result := <-Srv.Store.Player().GetByEmail(username)
 	if result.Err != nil {
 		return nil, result.Err
