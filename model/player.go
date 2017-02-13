@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strings"
 
+	"net/http"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -33,29 +35,29 @@ type Player struct {
 	IsAdmin    bool   `json:"is_admin,omitempty"`
 }
 
-func (p *Player) IsValid() *Error {
+func (p *Player) IsValid() *AppError {
 	if len(p.ID) != ID_LENGTH {
-		return NewLocError("Player.IsValid", "Player ID is invalid", nil, "")
+		return NewAppError("Player.IsValid", "Player ID is invalid", http.StatusBadRequest)
 	}
 
 	if p.CreateAt <= 0 {
-		return NewLocError("Player.IsValid", "Created at is 0", nil, "player_id="+p.ID)
+		return NewAppError("Player.IsValid", "Created at is 0", http.StatusUnprocessableEntity)
 	}
 
 	if p.UpdateAt <= 0 {
-		return NewLocError("Player.IsValid", "Updated at is 0", nil, "player_id="+p.ID)
+		return NewAppError("Player.IsValid", "Updated at is 0", http.StatusUnprocessableEntity)
 	}
 
 	if !IsValidUsername(p.Username) {
-		return NewLocError("Player.IsValid", "Username is invalid", nil, "player_id="+p.ID)
+		return NewAppError("Player.IsValid", "Username is invalid", http.StatusUnprocessableEntity)
 	}
 
 	if len(p.Email) > 128 || len(p.Email) == 0 || !strings.Contains(p.Email, "@") {
-		return NewLocError("Player.IsValid", "Email is invalid", nil, "player_id="+p.ID)
+		return NewAppError("Player.IsValid", "Email is invalid", http.StatusBadRequest)
 	}
 
 	if len(p.Password) < MIN_PASSWORD_LENGTH || len(p.Password) > MAX_PASSWORD_LENGTH {
-		return NewLocError("Player.IsValid", "Password is invalid", nil, "player_id="+p.ID)
+		return NewAppError("Player.IsValid", "Password is invalid", http.StatusBadRequest)
 	}
 
 	return nil

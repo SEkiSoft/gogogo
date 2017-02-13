@@ -4,17 +4,19 @@
 package api
 
 import (
+	"net/http"
+
 	l4g "github.com/alecthomas/log4go"
 
 	"github.com/sekisoft/gogogo/model"
 )
 
-func ApiWebSocketHandler(wh func(*model.WebSocketRequest) (map[string]interface{}, *model.Error)) *webSocketHandler {
+func ApiWebSocketHandler(wh func(*model.WebSocketRequest) (map[string]interface{}, *model.AppError)) *webSocketHandler {
 	return &webSocketHandler{wh}
 }
 
 type webSocketHandler struct {
-	handlerFunc func(*model.WebSocketRequest) (map[string]interface{}, *model.Error)
+	handlerFunc func(*model.WebSocketRequest) (map[string]interface{}, *model.AppError)
 }
 
 func (wh *webSocketHandler) ServeWebSocket(conn *WebConn, r *model.WebSocketRequest) {
@@ -23,7 +25,7 @@ func (wh *webSocketHandler) ServeWebSocket(conn *WebConn, r *model.WebSocketRequ
 	r.Token = GetToken(conn.TokenID)
 
 	var data map[string]interface{}
-	var err *model.Error
+	var err *model.AppError
 
 	if data, err = wh.handlerFunc(r); err != nil {
 		l4g.Error("Websocket handler error: action: %s seq: %s playerID: %s", r.Action, r.Sequence, r.Token.PlayerID)
@@ -34,6 +36,6 @@ func (wh *webSocketHandler) ServeWebSocket(conn *WebConn, r *model.WebSocketRequ
 	conn.Send <- model.NewWebSocketResponse(model.STATUS_OK, r.Sequence, data)
 }
 
-func NewInvalidWebSocketParamError(action string, name string) *model.Error {
-	return model.NewLocError("/api/websocket:"+action, "Invalid parameters", map[string]interface{}{"Name": name}, "")
+func NewInvalidWebSocketParamError(action string, name string) *model.AppError {
+	return model.NewAppError("/api/websocket:"+action, "Invalid parameters", http.StatusBadRequest)
 }

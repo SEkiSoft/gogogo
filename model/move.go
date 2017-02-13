@@ -6,6 +6,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 type Move struct {
@@ -34,13 +35,13 @@ func (m *Move) PreSave() {
 	}
 }
 
-func (m *Move) IsValid(game *Game) *Error {
+func (m *Move) IsValid(game *Game) *AppError {
 	currentPiece, err := game.GetBoardPiece(m.X, m.Y)
 
 	if err != nil {
 		return err
 	} else if currentPiece != 0 {
-		return NewLocError("Move.IsValid", "Spot is occupied", nil, "")
+		return NewAppError("Move.IsValid", "Spot is occupied", http.StatusBadRequest)
 	}
 
 	return nil

@@ -23,14 +23,14 @@ type WebSocketClient struct {
 	ResponseChannel chan *WebSocketResponse
 }
 
-func NewWebSocketClient(url, authID string) (*WebSocketClient, *Error) {
+func NewWebSocketClient(url, authID string) (*WebSocketClient, *AppError) {
 	header := http.Header{}
 	header.Set(HEADER_AUTH, HEADER_BEAR+authID)
 
 	conn, _, err := websocket.DefaultDialer.Dial(url+WEBSOCKET_URL, header)
 
 	if err != nil {
-		return nil, NewLocError("NewWebSocketClient", "WebSocket client connection failed", nil, err.Error())
+		return nil, NewAppError("NewWebSocketClient", "WebSocket client connection failed", http.StatusBadGateway)
 	}
 
 	return &WebSocketClient{
@@ -43,7 +43,7 @@ func NewWebSocketClient(url, authID string) (*WebSocketClient, *Error) {
 	}, nil
 }
 
-func (w *WebSocketClient) Connect() *Error {
+func (w *WebSocketClient) Connect() *AppError {
 	header := http.Header{}
 	header.Set(HEADER_AUTH, HEADER_BEAR+w.AuthID)
 
@@ -51,7 +51,7 @@ func (w *WebSocketClient) Connect() *Error {
 	w.Connection, _, err = websocket.DefaultDialer.Dial(w.Url+WEBSOCKET_URL, header)
 
 	if err != nil {
-		return NewLocError("WebSocketClientConnect", "WebSocket client connection failed", nil, err.Error())
+		return NewAppError("WebSocketClientConnect", "WebSocket client connection failed", http.StatusBadGateway)
 	}
 
 	return nil

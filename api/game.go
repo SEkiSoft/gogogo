@@ -48,7 +48,7 @@ func getGame(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetGame(id string) (*model.Game, *model.Error) {
+func GetGame(id string) (*model.Game, *model.AppError) {
 	result := <-Srv.Store.Game().Get(id)
 	if result.Err != nil {
 		return nil, result.Err

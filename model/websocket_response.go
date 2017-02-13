@@ -12,7 +12,7 @@ type WebSocketResponse struct {
 	Status        string                 `json:"status"`
 	ReplySequence int64                  `json:"reply_sequence,omitempty"`
 	Data          map[string]interface{} `json:"data,omitempty"`
-	Error         *Error                 `json:"error,omitempty"`
+	Error         *AppError              `json:"error,omitempty"`
 }
 
 func NewWebSocketResponse(status string, replySequence int64, data map[string]interface{}) *WebSocketResponse {

@@ -35,7 +35,7 @@ func createPlayer(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(registeredPlayer.ToJson()))
 }
 
-func CreatePlayer(player *model.Player) (*model.Player, *model.Error) {
+func CreatePlayer(player *model.Player) (*model.Player, *model.AppError) {
 	result := <-Srv.Store.Player().Save(player)
 	if result.Err != nil {
 		return nil, result.Err
@@ -78,16 +78,16 @@ func login(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(s.Token.ToJson()))
 }
 
-func validateLoginProps(tokenID, username, password string) *model.Error {
+func validateLoginProps(tokenID, username, password string) *model.AppError {
 
 	if len(password) == 0 && len(tokenID) == 0 {
-		err := model.NewLocError("login", "Invalid parameters", nil, "")
+		err := model.NewAppError("login", "Invalid parameters", http.StatusBadRequest)
 		err.StatusCode = http.StatusBadRequest
 		return err
 	}
 
 	if len(username) == 0 {
-		err := model.NewLocError("login", "Blank username", nil, "")
+		err := model.NewAppError("login", "Blank username", http.StatusBadRequest)
 		err.StatusCode = http.StatusBadRequest
 		return err
 	}
@@ -95,15 +95,15 @@ func validateLoginProps(tokenID, username, password string) *model.Error {
 	return nil
 }
 
-func Login(username, password string) (*model.Token, *model.Error) {
+func Login(username, password string) (*model.Token, *model.AppError) {
 	var player *model.Player
-	var err *model.Error
+	var err *model.AppError
 	if player, err = GetPlayerByUsername(username); err != nil {
 		return nil, err
 	}
 
 	if !model.ComparePassword(player.Password, password) {
-		return nil, model.NewLocError("login", "Invalid username or password", nil, "")
+		return nil, model.NewAppError("login", "Invalid username or password", http.StatusBadRequest)
 	}
 
 	token := &model.Token{
@@ -122,7 +122,7 @@ func Login(username, password string) (*model.Token, *model.Error) {
 	return result.Data.(*model.Token), nil
 }
 
-func LoginByTokenID(tokenID, username string) (*model.Token, *model.Error) {
+func LoginByTokenID(tokenID, username string) (*model.Token, *model.AppError) {
 	var token *model.Token
 	if result := <-Srv.Store.Token().Get(tokenID); result.Err == nil {
 		token = result.Data.(*model.Token)
@@ -131,17 +131,17 @@ func LoginByTokenID(tokenID, username string) (*model.Token, *model.Error) {
 	}
 
 	if token.IsExpired() {
-		return nil, model.NewLocError("login", "Token expired", nil, "")
+		return nil, model.NewAppError("login", "Token expired", http.StatusUnauthorized)
 	}
 
 	var player *model.Player
-	var err *model.Error
+	var err *model.AppError
 	if player, err = GetPlayerByUsername(username); err != nil {
 		return nil, err
 	}
 
 	if token.PlayerID != player.ID {
-		return nil, model.NewLocError("login", "Invalid player", nil, "")
+		return nil, model.NewAppError("login", "Invalid player", http.StatusUnauthorized)
 	}
 
 	return token, nil
@@ -156,7 +156,7 @@ func logout(s *Session, w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("success"))
 }
 
-func Logout(token *model.Token) *model.Error {
+func Logout(token *model.Token) *model.AppError {
 	result := <-Srv.Store.Token().Delete(token.ID)
 
 	return result.Err

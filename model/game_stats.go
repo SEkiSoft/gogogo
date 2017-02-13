@@ -49,6 +49,6 @@ func GameStatsToJson(gs *Game) string {
 	return string(b)
 }
 
-func (gs *GameStats) IsValid() *Error {
+func (gs *GameStats) IsValid() *AppError {
 	return nil
 }

@@ -8,6 +8,6 @@ type WebSocketMessage interface {
 	IsValid() bool
 }
 
-func NewWebSocketError(seqReply int64, err *Error) *WebSocketResponse {
+func NewWebSocketError(seqReply int64, err *AppError) *WebSocketResponse {
 	return &WebSocketResponse{Status: STATUS_FAIL, ReplySequence: seqReply, Error: err}
 }

@@ -29,7 +29,7 @@ func getMove(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetMove(id string) (*model.Move, *model.Error) {
+func GetMove(id string) (*model.Move, *model.AppError) {
 	result := <-Srv.Store.Move().Get(id)
 	if result.Err != nil {
 		return nil, result.Err
@@ -49,7 +49,7 @@ func getGameMoves(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetGameMoves(gameID string) ([]*model.Move, *model.Error) {
+func GetGameMoves(gameID string) ([]*model.Move, *model.AppError) {
 	result := <-Srv.Store.Move().GetByGame(gameID)
 	if result.Err != nil {
 		return nil, result.Err
@@ -74,7 +74,7 @@ func makeMove(s *Session, w http.ResponseWriter, r *http.Request) {
 	}
 
 	var game *model.Game
-	var err *model.Error
+	var err *model.AppError
 
 	if game, err = GetGame(move.GameID); err != nil {
 		s.Err = err

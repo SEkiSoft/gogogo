@@ -21,7 +21,7 @@ type Session struct {
 	RequestID string
 	IpAddress string
 	Path      string
-	Err       *model.Error
+	Err       *model.AppError
 	RootUrl   string
 	Token     *model.Token
 }
@@ -117,18 +117,16 @@ func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if s.Err != nil {
-		w.WriteHeader(s.Err.StatusCode)
-		w.Write([]byte(s.Err.ToJson()))
+		http.Error(w, s.Err.Error(), s.Err.StatusCode)
 	}
 }
 
 func Handle404(w http.ResponseWriter, r *http.Request) {
-	err := model.NewLocError("Handle404", "404 not found", nil, "")
+	err := model.NewAppError("Handle404", "404 not found", http.StatusBadGateway)
 	err.StatusCode = http.StatusNotFound
 	l4g.Error("%v: code=404 ip=%v", r.URL.Path, GetIpAddress(r))
 
-	w.WriteHeader(err.StatusCode)
-	w.Write([]byte(err.ToJson()))
+	http.Error(w, err.Error(), err.StatusCode)
 }
 
 func (s *Session) SetInvalidParam(location string, name string) {
@@ -137,17 +135,17 @@ func (s *Session) SetInvalidParam(location string, name string) {
 
 func (s *Session) CheckPlayerRequired() {
 	if len(s.Token.PlayerID) == 0 {
-		s.Err = model.NewLocError("CheckPlayerRequired", "Player invalid", nil, "")
+		s.Err = model.NewAppError("CheckPlayerRequired", "Player invalid", http.StatusBadRequest)
 		s.Err.StatusCode = http.StatusUnauthorized
 	}
 }
 
 func (s *Session) CheckAdminRequired() {
 	if len(s.Token.PlayerID) == 0 {
-		s.Err = model.NewLocError("CheckAdminRequired", "Player invalid", nil, "")
+		s.Err = model.NewAppError("CheckAdminRequired", "Player invalid", http.StatusBadRequest)
 		s.Err.StatusCode = http.StatusUnauthorized
 	} else if !s.IsAdmin() {
-		s.Err = model.NewLocError("CheckAdminRequired", "Admin invalid", nil, "")
+		s.Err = model.NewAppError("CheckAdminRequired", "Admin invalid", http.StatusBadRequest)
 		s.Err.StatusCode = http.StatusUnauthorized
 	}
 }
@@ -159,8 +157,8 @@ func (s *Session) IsAdmin() bool {
 	return false
 }
 
-func NewInvalidParamError(location string, name string) *model.Error {
-	err := model.NewLocError(location, "Invalid parameters error", map[string]interface{}{"Name": name}, "")
+func NewInvalidParamError(location string, name string) *model.AppError {
+	err := model.NewAppError(location, "Invalid parameters error", http.StatusBadRequest)
 	err.StatusCode = http.StatusBadRequest
 	return err
 }

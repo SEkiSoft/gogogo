@@ -4,6 +4,8 @@
 package store
 
 import (
+	"net/http"
+
 	"github.com/sekisoft/gogogo/model"
 )
 
@@ -35,7 +37,7 @@ func (ms MoveStore) Save(move *model.Move) StoreChannel {
 		move.PreSave()
 
 		if err := ms.GetMaster().Insert(move); err != nil {
-			result.Err = model.NewLocError("MoveStore.Save", "Move saving error", nil, "move_id="+move.ID+", "+err.Error())
+			result.Err = model.NewAppError("MoveStore.Save", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = move
 		}
@@ -54,9 +56,9 @@ func (ms MoveStore) Get(id string) StoreChannel {
 		result := StoreResult{}
 
 		if obj, err := ms.GetReplica().Get(model.Move{}, id); err != nil {
-			result.Err = model.NewLocError("MoveStore.Get", "Get move by id error", nil, "move_id="+id+", "+err.Error())
+			result.Err = model.NewAppError("MoveStore.Get", err.Error(), http.StatusBadGateway)
 		} else if obj == nil {
-			result.Err = model.NewLocError("MoveStore.Get", "Missing move error", nil, "move_id="+id)
+			result.Err = model.NewAppError("MoveStore.Get", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = obj.(*model.Move)
 		}
@@ -77,7 +79,7 @@ func (ms MoveStore) GetByGame(gameID string) StoreChannel {
 		var data []*model.Move
 
 		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE GameID = :GameID", map[string]interface{}{"GameID": gameID}); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetByGame", "Missing game error", nil, "game_id="+gameID+", "+err.Error())
+			result.Err = model.NewAppError("MoveStore.GetByGame", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = data
@@ -97,7 +99,7 @@ func (ms MoveStore) GetAll() StoreChannel {
 		var data []*model.Move
 
 		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves"); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetAll", "Couldn't retrieve moves", nil, err.Error())
+			result.Err = model.NewAppError("MoveStore.GetAll", err.Error(), http.StatusBadGateway)
 		}
 		result.Data = data
 
@@ -117,7 +119,7 @@ func (ms MoveStore) GetByPlayer(playerID string) StoreChannel {
 		var data []*model.Move
 
 		if err := ms.GetReplica().SelectOne(&data, "SELECT * FROM Moves WHERE PlayerID = :PlayerID", map[string]interface{}{"PlayerID": playerID}); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetByPlayer", "Missing player error", nil, "player_id="+playerID+", "+err.Error())
+			result.Err = model.NewAppError("MoveStore.GetByPlayer", err.Error(), http.StatusBadGateway)
 		}
 
 		result.Data = &data
@@ -136,7 +138,7 @@ func (ms MoveStore) GetTotalMovesCount() StoreChannel {
 		result := StoreResult{}
 
 		if count, err := ms.GetReplica().SelectInt("SELECT COUNT(ID) FROM Moves"); err != nil {
-			result.Err = model.NewLocError("MoveStore.GetTotalMovesCount", "Get total moves count error", nil, err.Error())
+			result.Err = model.NewAppError("MoveStore.GetTotalMovesCount", err.Error(), http.StatusBadGateway)
 		} else {
 			result.Data = count
 		}
@@ -155,7 +157,7 @@ func (ms MoveStore) Delete(id string) StoreChannel {
 		result := StoreResult{}
 
 		if _, err := ms.GetMaster().Exec("DELETE FROM Moves WHERE ID = :MoveID", map[string]interface{}{"MoveID": id}); err != nil {
-			result.Err = model.NewLocError("MoveStore.PermanentDelete", "Permanent delete move error", nil, "moveID="+id+", "+err.Error())
+			result.Err = model.NewAppError("MoveStore.PermanentDelete", err.Error(), http.StatusBadGateway)
 		}
 
 		storeChannel <- result

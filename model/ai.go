@@ -6,6 +6,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 type Ai struct {
@@ -20,7 +21,7 @@ func (ai *Ai) ToJson() string {
 	return string(b)
 }
 
-func AiFromJson(data io.Reader) (*Ai, *Error) {
+func AiFromJson(data io.Reader) (*Ai, *AppError) {
 	decoder := json.NewDecoder(data)
 	var ai Ai
 	err := decoder.Decode(&ai)
@@ -28,5 +29,5 @@ func AiFromJson(data io.Reader) (*Ai, *Error) {
 		return &ai, nil
 	}
 
-	return nil, NewLocError("AiFromJson", "JSON decoding error", nil, err.Error())
+	return nil, NewAppError("AiFromJson", "JSON decoding error", http.StatusBadRequest)
 }
